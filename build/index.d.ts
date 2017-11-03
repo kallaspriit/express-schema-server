@@ -52,9 +52,6 @@ export interface IRouteSchema {
     requestSchema: JSONSchema4;
     responseSchema: JSONSchema4;
 }
-export interface IRouteBaseContext<Context> {
-    routes?: Array<IRoute<Context>>;
-}
 export interface IJsonSchemaValidationResult {
     isValid: boolean;
     errors: zSchema.SchemaErrorDetail[];
@@ -105,7 +102,7 @@ export declare class DetailedError extends Error {
     constructor(message: string, details?: IErrorDetails | null);
 }
 export declare const paginationOptionsSchema: JSONSchema4;
-export default function jsonSchemaServerMiddleware<Context extends IRouteBaseContext<Context>>(options: IJsonSchemaServerOptions<Context>): Router;
+export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router;
 export declare function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Array<IRoute<Context>>): RequestHandler;
 export declare function getRouteSchema<Context>(route: IRoute<Context>, baseUrl: string): IRouteSchema;
 export declare function buildRoutePath(components: string[]): string;

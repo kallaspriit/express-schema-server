@@ -43,20 +43,14 @@ exports.paginationOptionsSchema = {
 };
 function jsonSchemaServerMiddleware(options) {
     const router = express_1.Router();
-    let routes = [];
+    const routes = [];
     // register dynamic routes
-    options.routes.forEach(route => {
+    options.routes.forEach(routeSource => {
         // setup the route to get the route definition
-        const routeDefinition = route.setup();
-        const endpoint = buildRoutePath([route.group, routeDefinition.path]);
-        // initialize routes if not already present
-        if (options.context.routes === undefined) {
-            options.context.routes = [];
-        }
-        routes = options.context.routes;
+        const routeDefinition = routeSource.setup();
+        const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
         // register the route info
-        const routeInfo = Object.assign({}, route, routeDefinition, { endpoint });
-        options.context.routes.push(routeInfo);
+        routes.push(Object.assign({}, routeSource, routeDefinition, { endpoint }));
         // type safe method name
         const appMethodName = routeDefinition.method;
         // handler can be either a single handler function or array of handlers, treat it always as an array
@@ -70,7 +64,7 @@ function jsonSchemaServerMiddleware(options) {
             });
         });
         // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
-        if (route.group !== '') {
+        if (routeSource.group !== '') {
             const schemaPath = buildRoutePath(['schema', getRouteWithoutParameters(endpoint), routeDefinition.method]);
             router.get(schemaPath, (_request, response, _next) => {
                 response.send({
@@ -291,7 +285,7 @@ function buildPaginatedResponseSchema(payloadSchema, maximumItemsPerPage = 100) 
 exports.buildPaginatedResponseSchema = buildPaginatedResponseSchema;
 function getRoutes(baseDirectory) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test).+(js|ts)');
+        const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test|*.d).+(js|ts)');
         return new Promise((resolve, reject) => {
             glob(pattern, (error, matches) => {
                 if (error) {

@@ -84,10 +84,6 @@ export interface IRouteSchema {
 	responseSchema: JSONSchema4;
 }
 
-export interface IRouteBaseContext<Context> {
-	routes?: Array<IRoute<Context>>;
-}
-
 export interface IJsonSchemaValidationResult {
 	isValid: boolean;
 	errors: zSchema.SchemaErrorDetail[];
@@ -172,32 +168,22 @@ export const paginationOptionsSchema: JSONSchema4 = {
 	},
 };
 
-export default function jsonSchemaServerMiddleware<Context extends IRouteBaseContext<Context>>(
-	options: IJsonSchemaServerOptions<Context>,
-): Router {
+export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router {
 	const router = Router();
-	let routes: Array<IRoute<Context>> = [];
+	const routes: Array<IRoute<Context>> = [];
 
 	// register dynamic routes
-	options.routes.forEach(route => {
+	options.routes.forEach(routeSource => {
 		// setup the route to get the route definition
-		const routeDefinition = route.setup();
-		const endpoint = buildRoutePath([route.group, routeDefinition.path]);
-
-		// initialize routes if not already present
-		if (options.context.routes === undefined) {
-			options.context.routes = [];
-		}
-
-		routes = options.context.routes;
+		const routeDefinition = routeSource.setup();
+		const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
 		// register the route info
-		const routeInfo: IRoute<Context> = {
-			...route,
+		routes.push({
+			...routeSource,
 			...routeDefinition,
 			endpoint,
-		};
-		options.context.routes.push(routeInfo);
+		});
 
 		// type safe method name
 		const appMethodName: keyof Application = routeDefinition.method;
@@ -215,7 +201,7 @@ export default function jsonSchemaServerMiddleware<Context extends IRouteBaseCon
 		});
 
 		// create schema endpoint (so /group/path schema is available at GET /schema/group/path)
-		if (route.group !== '') {
+		if (routeSource.group !== '') {
 			const schemaPath = buildRoutePath(['schema', getRouteWithoutParameters(endpoint), routeDefinition.method]);
 
 			router.get(schemaPath, (_request, response, _next) => {
@@ -456,7 +442,7 @@ export function buildPaginatedResponseSchema(
 }
 
 export async function getRoutes<Context>(baseDirectory: string): Promise<Array<IRouteSource<Context>>> {
-	const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test).+(js|ts)');
+	const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test|*.d).+(js|ts)');
 
 	return new Promise<Array<IRouteSource<Context>>>((resolve, reject) => {
 		glob(pattern, (error, matches) => {

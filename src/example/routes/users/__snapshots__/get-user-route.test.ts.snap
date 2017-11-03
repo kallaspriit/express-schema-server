@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-user-route should return 404 not found for non-existing user 1`] = `undefined`;
+
+exports[`get-user-route should return registered user info 1`] = `
+Object {
+  "email": "jack@daniels.com",
+  "id": 1,
+  "name": "Jack Daniels",
+}
+`;
+
+exports[`get-user-route should return registered user info 2`] = `
+Object {
+  "email": "jack@daniels.com",
+  "id": 1,
+  "name": "Jack Daniels",
+}
+`;
+
+exports[`get-user-route should return validation error for invalid user id 1`] = `null`;
