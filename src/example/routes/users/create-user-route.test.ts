@@ -1,5 +1,4 @@
 import * as supertest from 'supertest';
-import 'ts-jest';
 import setupApp from '../../app';
 
 let app: supertest.SuperTest<supertest.Test>;
