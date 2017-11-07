@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = (db) => ({
     name: 'unique-email',
     validate: (email) => __awaiter(this, void 0, void 0, function* () {
-        const user = yield db.find('email', email);
+        const user = yield db.getWhere('email', email);
         return user === undefined;
     }),
 });

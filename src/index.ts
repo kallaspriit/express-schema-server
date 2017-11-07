@@ -497,12 +497,12 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
 	});
 }
 
-export function getPaginationPageOptions(query: any): IPaginationOptions {
+export function getPaginationPageOptions(query: any, defaultItemsPerPage: number = 10): IPaginationOptions {
 	const options = normalizeType<IPaginationOptionsPartial>(query);
 
 	return {
 		page: options.page || 1,
-		itemsPerPage: options.itemsPerPage || 10,
+		itemsPerPage: options.itemsPerPage || defaultItemsPerPage,
 	};
 }
 

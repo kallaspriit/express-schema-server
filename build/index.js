@@ -324,11 +324,11 @@ function getRoutes(baseDirectory) {
     });
 }
 exports.getRoutes = getRoutes;
-function getPaginationPageOptions(query) {
+function getPaginationPageOptions(query, defaultItemsPerPage = 10) {
     const options = normalize_type_1.default(query);
     return {
         page: options.page || 1,
-        itemsPerPage: options.itemsPerPage || 10,
+        itemsPerPage: options.itemsPerPage || defaultItemsPerPage,
     };
 }
 exports.getPaginationPageOptions = getPaginationPageOptions;

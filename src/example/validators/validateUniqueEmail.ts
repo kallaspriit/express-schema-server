@@ -6,7 +6,7 @@ import User from '../models/User';
 export default (db: Database<User>): ICustomValidator => ({
 	name: 'unique-email',
 	validate: async (email: string) => {
-		const user = await db.find('email', email);
+		const user = await db.getWhere('email', email);
 
 		return user === undefined;
 	},

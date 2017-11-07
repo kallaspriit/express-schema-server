@@ -114,5 +114,5 @@ export declare function validateJsonSchema(data: any, schema: JSONSchema4, custo
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;
 export declare function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage?: number): JSONSchema4;
 export declare function getRoutes<Context>(baseDirectory: string): Promise<Array<IRouteSource<Context>>>;
-export declare function getPaginationPageOptions(query: any): IPaginationOptions;
+export declare function getPaginationPageOptions(query: any, defaultItemsPerPage?: number): IPaginationOptions;
 export declare function getPaginationFindOptions<Entity>(paginationOptions: IPaginationOptions, where: Partial<Entity>): IPaginationFindOptions<Entity>;
