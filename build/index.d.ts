@@ -3,6 +3,7 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
 import { JSONSchema4 } from 'json-schema';
 import * as zSchema from 'z-schema';
+export { JSONSchema4 } from 'json-schema';
 export interface IRouteResponsePayload<T> {
     payload: T | null;
     success: boolean;
@@ -100,6 +101,9 @@ export interface IPaginationFindOptions<Entity> {
 export declare class DetailedError extends Error {
     details: IErrorDetails | null;
     constructor(message: string, details?: IErrorDetails | null);
+}
+export declare class InvalidApiResponseError extends DetailedError {
+    constructor(responseData: IRouteResponsePayload<any>, responseSchema: JSONSchema4, validationErrors: zSchema.SchemaErrorDetail[]);
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router;

@@ -20,6 +20,17 @@ class DetailedError extends Error {
     }
 }
 exports.DetailedError = DetailedError;
+// tslint:disable-next-line:max-classes-per-file
+class InvalidApiResponseError extends DetailedError {
+    constructor(responseData, responseSchema, validationErrors) {
+        super('Validating generated response against schema failed', {
+            validationErrors,
+            responseData,
+            responseSchema,
+        });
+    }
+}
+exports.InvalidApiResponseError = InvalidApiResponseError;
 exports.paginationOptionsSchema = {
     title: 'Pagination options',
     description: 'Paginated request options',
@@ -288,6 +299,7 @@ function getRoutes(baseDirectory) {
         const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test|*.d).+(js|ts)');
         return new Promise((resolve, reject) => {
             glob(pattern, (error, matches) => {
+                /* istanbul ignore if */
                 if (error) {
                     reject(error);
                     return;
@@ -298,6 +310,7 @@ function getRoutes(baseDirectory) {
                     filename: match,
                     setup: () => {
                         const routeSetupFn = require(match).default;
+                        /* istanbul ignore if */
                         if (typeof routeSetupFn !== 'function') {
                             throw new Error(`Export of route "${getRouteName(match)}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`);
                         }
@@ -365,16 +378,6 @@ function buildErrorMessage(validationErrors) {
     });
     const message = combineMessages(messages);
     return `Validation failed: ${message}`;
-}
-// tslint:disable-next-line:max-classes-per-file
-class InvalidApiResponseError extends DetailedError {
-    constructor(responseData, responseSchema, validationErrors) {
-        super('Validating generated response against schema failed', {
-            validationErrors,
-            responseData,
-            responseSchema,
-        });
-    }
 }
 function augmentExpressRequest(request, context) {
     // tslint:disable-next-line prefer-object-spread

@@ -5,6 +5,8 @@ import normalizeType from 'normalize-type';
 import * as path from 'path';
 import * as zSchema from 'z-schema';
 
+export {JSONSchema4} from 'json-schema';
+
 export interface IRouteResponsePayload<T> {
 	payload: T | null;
 	success: boolean;
@@ -143,6 +145,21 @@ export interface IPaginationFindOptions<Entity> {
 export class DetailedError extends Error {
 	constructor(message: string, public details: IErrorDetails | null = null) {
 		super(message);
+	}
+}
+
+// tslint:disable-next-line:max-classes-per-file
+export class InvalidApiResponseError extends DetailedError {
+	constructor(
+		responseData: IRouteResponsePayload<any>,
+		responseSchema: JSONSchema4,
+		validationErrors: zSchema.SchemaErrorDetail[],
+	) {
+		super('Validating generated response against schema failed', {
+			validationErrors,
+			responseData,
+			responseSchema,
+		});
 	}
 }
 
@@ -446,6 +463,7 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
 
 	return new Promise<Array<IRouteSource<Context>>>((resolve, reject) => {
 		glob(pattern, (error, matches) => {
+			/* istanbul ignore if */
 			if (error) {
 				reject(error);
 
@@ -459,6 +477,7 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
 				setup: (): IRouteDefinition<Context> => {
 					const routeSetupFn: RouteSetupFn<Context> = require(match).default;
 
+					/* istanbul ignore if */
 					if (typeof routeSetupFn !== 'function') {
 						throw new Error(
 							`Export of route "${getRouteName(
@@ -542,21 +561,6 @@ function buildErrorMessage(validationErrors: zSchema.SchemaErrorDetail[]) {
 	const message = combineMessages(messages);
 
 	return `Validation failed: ${message}`;
-}
-
-// tslint:disable-next-line:max-classes-per-file
-class InvalidApiResponseError extends DetailedError {
-	constructor(
-		responseData: IRouteResponsePayload<any>,
-		responseSchema: JSONSchema4,
-		validationErrors: zSchema.SchemaErrorDetail[],
-	) {
-		super('Validating generated response against schema failed', {
-			validationErrors,
-			responseData,
-			responseSchema,
-		});
-	}
 }
 
 function augmentExpressRequest<Context>(request: Request, context: Context): IRouteRequest<Context> {
