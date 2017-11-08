@@ -9,38 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("../../../");
+const users_1 = require("./users");
 exports.responseSchema = _1.buildPaginatedResponseSchema({
     title: 'Users',
     description: 'List of paginated users',
-    items: {
-        title: 'User info',
-        description: 'Registered user info',
-        type: 'object',
-        properties: {
-            id: {
-                type: 'number',
-                title: 'Id',
-                description: 'User id',
-                minimum: 1,
-            },
-            name: {
-                type: 'string',
-                title: 'Name',
-                description: 'User name',
-                minLength: 3,
-                maxLength: 100,
-            },
-            email: {
-                type: 'string',
-                title: 'Email',
-                description: 'Email address',
-                minLength: 3,
-                maxLength: 256,
-                format: 'email',
-            },
-        },
-        required: ['name', 'email'],
-    },
+    type: 'array',
+    items: users_1.userSchema,
 });
 exports.default = () => ({
     path: '',

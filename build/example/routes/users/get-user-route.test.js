@@ -33,12 +33,12 @@ describe('get-user-route', () => {
         const getResponse = yield app.get('/users/abc').send();
         expect(getResponse.status).toEqual(400);
         expect(getResponse.body.success).toBe(false);
-        expect(getResponse.body.payload).toMatchSnapshot();
+        expect(getResponse.body.validationErrors).toMatchSnapshot();
     }));
     it('should return 404 not found for non-existing user', () => __awaiter(this, void 0, void 0, function* () {
         const getResponse = yield app.get(`/users/666`).send();
         expect(getResponse.status).toEqual(404);
-        expect(getResponse.body.text).toMatchSnapshot();
+        expect(getResponse.text).toMatchSnapshot();
     }));
     it('transformUser removes excessive data', () => __awaiter(this, void 0, void 0, function* () {
         const fullInfo = {

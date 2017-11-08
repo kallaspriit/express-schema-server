@@ -31,14 +31,14 @@ describe('get-user-route', () => {
 
 		expect(getResponse.status).toEqual(400);
 		expect(getResponse.body.success).toBe(false);
-		expect(getResponse.body.payload).toMatchSnapshot();
+		expect(getResponse.body.validationErrors).toMatchSnapshot();
 	});
 
 	it('should return 404 not found for non-existing user', async () => {
 		const getResponse = await app.get(`/users/666`).send();
 
 		expect(getResponse.status).toEqual(404);
-		expect(getResponse.body.text).toMatchSnapshot();
+		expect(getResponse.text).toMatchSnapshot();
 	});
 
 	it('transformUser removes excessive data', async () => {
