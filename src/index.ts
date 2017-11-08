@@ -480,9 +480,9 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
 					/* istanbul ignore if */
 					if (typeof routeSetupFn !== 'function') {
 						throw new Error(
-							`Export of route "${getRouteName(
-								match,
-							)}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`,
+							`Export of route "${getRouteName(match)}" in "${
+								match
+							}" is expected to be a function but got ${typeof routeSetupFn}`,
 						);
 					}
 
@@ -503,17 +503,6 @@ export function getPaginationPageOptions(query: any, defaultItemsPerPage: number
 	return {
 		page: options.page !== undefined ? options.page : 1,
 		itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage,
-	};
-}
-
-export function getPaginationFindOptions<Entity>(
-	paginationOptions: IPaginationOptions,
-	where: Partial<Entity>,
-): IPaginationFindOptions<Entity> {
-	return {
-		skip: (paginationOptions.page - 1) * paginationOptions.itemsPerPage,
-		take: paginationOptions.itemsPerPage,
-		where,
 	};
 }
 

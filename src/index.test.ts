@@ -51,13 +51,20 @@ function validateThrowsError(): ICustomValidator {
 	};
 }
 
-describe('get-user-route', () => {
+describe('express-schema-server', () => {
 	beforeEach(async () => {
 		app = supertest(await setupApp());
 	});
 
-	it('provides schema endpoint', async () => {
+	it('provides schema endpoint for all endpoints', async () => {
 		const getResponse = await app.get(`/schema`).send();
+
+		expect(getResponse.status).toEqual(200);
+		expect(getResponse.body.text).toMatchSnapshot();
+	});
+
+	it('provides schema endpoint for specific endpoints', async () => {
+		const getResponse = await app.get(`/schema/users/post`).send();
 
 		expect(getResponse.status).toEqual(200);
 		expect(getResponse.body.text).toMatchSnapshot();

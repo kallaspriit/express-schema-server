@@ -49,12 +49,17 @@ function validateThrowsError() {
         }),
     };
 }
-describe('get-user-route', () => {
+describe('express-schema-server', () => {
     beforeEach(() => __awaiter(this, void 0, void 0, function* () {
         app = supertest(yield app_1.default());
     }));
-    it('provides schema endpoint', () => __awaiter(this, void 0, void 0, function* () {
+    it('provides schema endpoint for all endpoints', () => __awaiter(this, void 0, void 0, function* () {
         const getResponse = yield app.get(`/schema`).send();
+        expect(getResponse.status).toEqual(200);
+        expect(getResponse.body.text).toMatchSnapshot();
+    }));
+    it('provides schema endpoint for specific endpoints', () => __awaiter(this, void 0, void 0, function* () {
+        const getResponse = yield app.get(`/schema/users/post`).send();
         expect(getResponse.status).toEqual(200);
         expect(getResponse.body.text).toMatchSnapshot();
     }));

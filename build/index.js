@@ -332,14 +332,6 @@ function getPaginationPageOptions(query, defaultItemsPerPage = 10) {
     };
 }
 exports.getPaginationPageOptions = getPaginationPageOptions;
-function getPaginationFindOptions(paginationOptions, where) {
-    return {
-        skip: (paginationOptions.page - 1) * paginationOptions.itemsPerPage,
-        take: paginationOptions.itemsPerPage,
-        where,
-    };
-}
-exports.getPaginationFindOptions = getPaginationFindOptions;
 /* istanbul ignore next */
 function formatJsonPath(jsonPath) {
     if (jsonPath.substring(0, 2) === '#/') {
