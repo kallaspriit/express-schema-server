@@ -19,3 +19,11 @@ Object {
 `;
 
 exports[`get-user-route should return validation error for invalid user id 1`] = `null`;
+
+exports[`get-user-route transformUser removes excessive data 1`] = `
+Object {
+  "email": "jack@daniels.com",
+  "id": 0,
+  "name": "Jack Daniels",
+}
+`;

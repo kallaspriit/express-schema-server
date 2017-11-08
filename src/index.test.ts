@@ -1,6 +1,13 @@
 import * as supertest from 'supertest';
 import setupApp from './example/app';
-import {ICustomValidator, JSONSchema4, validateJsonSchema} from './index';
+import {
+	combineMessages,
+	DetailedError,
+	getPaginationPageOptions,
+	ICustomValidator,
+	JSONSchema4,
+	validateJsonSchema,
+} from './index';
 
 let app: supertest.SuperTest<supertest.Test>;
 
@@ -84,5 +91,50 @@ describe('get-user-route', () => {
 		const validationResult = await validateJsonSchema(data, errorSchema, [validateThrowsError()]);
 
 		expect(validationResult).toMatchSnapshot();
+	});
+
+	it('provides detailed error class', async () => {
+		const error = new DetailedError('Message', {foo: 'bar'});
+
+		expect(error).toMatchSnapshot();
+	});
+
+	it('provides detailed error class, details are optional', async () => {
+		const error = new DetailedError('Message');
+
+		expect(error).toMatchSnapshot();
+	});
+
+	it('provides helper for pagination page options', async () => {
+		const options = getPaginationPageOptions({
+			page: '2',
+			itemsPerPage: '5',
+		});
+
+		expect(options).toMatchSnapshot();
+	});
+
+	it('provides helper for pagination page options, one can specify default items per page', async () => {
+		const options = getPaginationPageOptions(
+			{
+				page: '2',
+				itemsPerPage: '5',
+			},
+			5,
+		);
+
+		expect(options).toMatchSnapshot();
+	});
+
+	it('provides helper for combining messages', async () => {
+		const message1 = combineMessages([]);
+		const message2 = combineMessages(['Test1']);
+		const message3 = combineMessages(['Test1', 'Test2']);
+		const message4 = combineMessages(['Test1', 'Test2', 'Test3']);
+
+		expect(message1).toMatchSnapshot();
+		expect(message2).toMatchSnapshot();
+		expect(message3).toMatchSnapshot();
+		expect(message4).toMatchSnapshot();
 	});
 });

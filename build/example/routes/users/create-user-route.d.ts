@@ -1,5 +1,4 @@
-import { JSONSchema4 } from 'json-schema';
-import { IRouteDefinition } from '../../../';
+import { IRouteDefinition, JSONSchema4 } from '../../../';
 import { IServerContext } from '../../app';
 export interface ICreateUserRequest {
     name: string;

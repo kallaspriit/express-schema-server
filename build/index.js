@@ -327,8 +327,8 @@ exports.getRoutes = getRoutes;
 function getPaginationPageOptions(query, defaultItemsPerPage = 10) {
     const options = normalize_type_1.default(query);
     return {
-        page: options.page || 1,
-        itemsPerPage: options.itemsPerPage || defaultItemsPerPage,
+        page: options.page !== undefined ? options.page : 1,
+        itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage,
     };
 }
 exports.getPaginationPageOptions = getPaginationPageOptions;
@@ -340,6 +340,7 @@ function getPaginationFindOptions(paginationOptions, where) {
     };
 }
 exports.getPaginationFindOptions = getPaginationFindOptions;
+/* istanbul ignore next */
 function formatJsonPath(jsonPath) {
     if (jsonPath.substring(0, 2) === '#/') {
         return jsonPath.substring(2);
@@ -371,6 +372,7 @@ function combineMessages(messages) {
         return `${firstMessages.join(', ')} and ${lastMessage}`;
     }
 }
+exports.combineMessages = combineMessages;
 function buildErrorMessage(validationErrors) {
     const messages = validationErrors.map(error => {
         const formattedPath = formatJsonPath(error.path);
@@ -430,6 +432,7 @@ function augmentExpressResponse(response) {
                 validationErrors,
             };
             const schemaValidationResult = yield validateJsonSchema(responseData, responseSchema, customValidators);
+            /* istanbul ignore if */
             if (!schemaValidationResult.isValid) {
                 const error = new InvalidApiResponseError(responseData, responseSchema, schemaValidationResult.errors);
                 const errorResponseData = {

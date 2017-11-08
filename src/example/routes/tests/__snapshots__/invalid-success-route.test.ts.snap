@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-user-route should return validation error for return value not matching response schema 1`] = `
+Array [
+  Object {
+    "code": "ONE_OF_MISSING",
+    "inner": Array [
+      Object {
+        "code": "INVALID_TYPE",
+        "message": "Expected type null but found type object",
+        "params": Array [
+          "null",
+          "object",
+        ],
+        "path": "#/payload",
+      },
+      Object {
+        "code": "INVALID_TYPE",
+        "message": "Expected type number but found type string",
+        "params": Array [
+          "number",
+          "string",
+        ],
+        "path": "#/payload/id",
+      },
+    ],
+    "message": "Data does not match any schemas from 'oneOf'",
+    "params": Array [],
+    "path": "#/payload",
+  },
+]
+`;

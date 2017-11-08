@@ -1,5 +1,6 @@
 import * as supertest from 'supertest';
 import setupApp from '../../app';
+import {transformUser} from './users';
 
 let app: supertest.SuperTest<supertest.Test>;
 
@@ -38,5 +39,17 @@ describe('get-user-route', () => {
 
 		expect(getResponse.status).toEqual(404);
 		expect(getResponse.body.text).toMatchSnapshot();
+	});
+
+	it('transformUser removes excessive data', async () => {
+		const fullInfo = {
+			name: 'Jack Daniels',
+			email: 'jack@daniels.com',
+			password: 'xxx',
+		};
+
+		const transformedInfo = transformUser(fullInfo);
+
+		expect(transformedInfo).toMatchSnapshot();
 	});
 });

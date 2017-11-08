@@ -13,6 +13,7 @@ export interface IDatabaseManager {
 // context provided to all routes
 export interface IServerContext {
 	db: IDatabaseManager;
+	loggedInUser?: User;
 }
 
 // use a async function to be able to use async/await

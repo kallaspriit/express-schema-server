@@ -1,5 +1,6 @@
 export default class User {
-    id?: number;
     name: string;
     email: string;
+    id?: number;
+    constructor(name: string, email: string);
 }

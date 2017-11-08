@@ -26,6 +26,32 @@ Object {
 }
 `;
 
+exports[`get-user-route provides detailed error class 1`] = `[Error: Message]`;
+
+exports[`get-user-route provides detailed error class, details are optional 1`] = `[Error: Message]`;
+
+exports[`get-user-route provides helper for combining messages 1`] = `""`;
+
+exports[`get-user-route provides helper for combining messages 2`] = `"Test1"`;
+
+exports[`get-user-route provides helper for combining messages 3`] = `"Test1 and Test2"`;
+
+exports[`get-user-route provides helper for combining messages 4`] = `"Test1, Test2 and Test3"`;
+
+exports[`get-user-route provides helper for pagination page options 1`] = `
+Object {
+  "itemsPerPage": 5,
+  "page": 2,
+}
+`;
+
+exports[`get-user-route provides helper for pagination page options, one can specify default items per page 1`] = `
+Object {
+  "itemsPerPage": 5,
+  "page": 2,
+}
+`;
+
 exports[`get-user-route provides schema endpoint 1`] = `undefined`;
 
 exports[`get-user-route schema validation fails if missing validator 1`] = `

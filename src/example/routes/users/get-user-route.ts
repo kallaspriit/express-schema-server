@@ -2,7 +2,7 @@ import {JSONSchema4} from 'json-schema';
 import {normalizeType} from 'normalize-type';
 import {buildResponseSchema, IRouteDefinition, validateJsonSchema} from '../../../';
 import {IServerContext} from '../../app';
-import User from '../../models/User';
+import {IUser, transformUser, userSchema} from './users';
 
 export interface IGetUserParameters {
 	id: number;
@@ -14,44 +14,16 @@ export const requestSchema: JSONSchema4 = {
 	type: 'object',
 	properties: {
 		id: {
-			type: 'number',
 			title: 'Id',
 			description: 'User id',
+			type: 'number',
 			minimum: 1,
 		},
 	},
 	required: ['id'],
 };
 
-export const responseSchema: JSONSchema4 = buildResponseSchema({
-	title: 'User info',
-	description: 'Registered user info',
-	type: 'object',
-	properties: {
-		id: {
-			type: 'number',
-			title: 'Id',
-			description: 'User id',
-			minimum: 1,
-		},
-		name: {
-			type: 'string',
-			title: 'Name',
-			description: 'User name',
-			minLength: 3,
-			maxLength: 100,
-		},
-		email: {
-			type: 'string',
-			title: 'Email',
-			description: 'Email address',
-			minLength: 3,
-			maxLength: 256,
-			format: 'email',
-		},
-	},
-	required: ['name', 'email'],
-});
+export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
 export default (): IRouteDefinition<IServerContext> => ({
 	path: '/:id',
@@ -82,6 +54,6 @@ export default (): IRouteDefinition<IServerContext> => ({
 			return;
 		}
 
-		response.success<User>(user, responseSchema);
+		response.success<IUser>(transformUser(user), responseSchema);
 	},
 });

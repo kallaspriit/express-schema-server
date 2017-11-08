@@ -1,9 +1,8 @@
-import {JSONSchema4} from 'json-schema';
 import {normalizeType} from 'normalize-type';
-import {buildResponseSchema, ICustomValidator, IRouteDefinition, validateJsonSchema} from '../../../';
+import {buildResponseSchema, ICustomValidator, IRouteDefinition, JSONSchema4, validateJsonSchema} from '../../../';
 import {IServerContext} from '../../app';
-import User from '../../models/User';
 import validateUniqueEmail from '../../validators/validateUniqueEmail';
+import {IUser, transformUser, userSchema} from './users';
 
 export interface ICreateUserRequest {
 	name: string;
@@ -41,35 +40,7 @@ export const requestSchema: JSONSchema4 = {
 	required: ['name', 'email'],
 };
 
-export const responseSchema: JSONSchema4 = buildResponseSchema({
-	title: 'User info',
-	description: 'Registered user info',
-	type: 'object',
-	properties: {
-		id: {
-			type: 'number',
-			title: 'Id',
-			description: 'User id',
-			minimum: 1,
-		},
-		name: {
-			type: 'string',
-			title: 'Name',
-			description: 'User name',
-			minLength: 3,
-			maxLength: 100,
-		},
-		email: {
-			type: 'string',
-			title: 'Email',
-			description: 'Email address',
-			minLength: 3,
-			maxLength: 256,
-			format: 'email',
-		},
-	},
-	required: ['id', 'name', 'email'],
-});
+export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
 export default (): IRouteDefinition<IServerContext> => ({
 	path: '',
@@ -95,6 +66,6 @@ export default (): IRouteDefinition<IServerContext> => ({
 
 		const user = await request.db.user.save(requestData);
 
-		response.success<User>(user, responseSchema, validators);
+		response.success<IUser>(transformUser(user), responseSchema, validators);
 	},
 });

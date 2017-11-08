@@ -10,49 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const normalize_type_1 = require("normalize-type");
 const _1 = require("../../../");
+const users_1 = require("./users");
 exports.requestSchema = {
     title: 'Get user parameters',
     description: 'Parameters for getting user info',
     type: 'object',
     properties: {
         id: {
-            type: 'number',
             title: 'Id',
             description: 'User id',
+            type: 'number',
             minimum: 1,
         },
     },
     required: ['id'],
 };
-exports.responseSchema = _1.buildResponseSchema({
-    title: 'User info',
-    description: 'Registered user info',
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            title: 'Id',
-            description: 'User id',
-            minimum: 1,
-        },
-        name: {
-            type: 'string',
-            title: 'Name',
-            description: 'User name',
-            minLength: 3,
-            maxLength: 100,
-        },
-        email: {
-            type: 'string',
-            title: 'Email',
-            description: 'Email address',
-            minLength: 3,
-            maxLength: 256,
-            format: 'email',
-        },
-    },
-    required: ['name', 'email'],
-});
+exports.responseSchema = _1.buildResponseSchema(users_1.userSchema);
 exports.default = () => ({
     path: '/:id',
     method: 'get',
@@ -76,7 +49,7 @@ exports.default = () => ({
             response.status(404).send(`User with id "${requestData.id}" could not be found`);
             return;
         }
-        response.success(user, exports.responseSchema);
+        response.success(users_1.transformUser(user), exports.responseSchema);
     }),
 });
 //# sourceMappingURL=get-user-route.js.map

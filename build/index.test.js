@@ -79,5 +79,37 @@ describe('get-user-route', () => {
         const validationResult = yield index_1.validateJsonSchema(data, errorSchema, [validateThrowsError()]);
         expect(validationResult).toMatchSnapshot();
     }));
+    it('provides detailed error class', () => __awaiter(this, void 0, void 0, function* () {
+        const error = new index_1.DetailedError('Message', { foo: 'bar' });
+        expect(error).toMatchSnapshot();
+    }));
+    it('provides detailed error class, details are optional', () => __awaiter(this, void 0, void 0, function* () {
+        const error = new index_1.DetailedError('Message');
+        expect(error).toMatchSnapshot();
+    }));
+    it('provides helper for pagination page options', () => __awaiter(this, void 0, void 0, function* () {
+        const options = index_1.getPaginationPageOptions({
+            page: '2',
+            itemsPerPage: '5',
+        });
+        expect(options).toMatchSnapshot();
+    }));
+    it('provides helper for pagination page options, one can specify default items per page', () => __awaiter(this, void 0, void 0, function* () {
+        const options = index_1.getPaginationPageOptions({
+            page: '2',
+            itemsPerPage: '5',
+        }, 5);
+        expect(options).toMatchSnapshot();
+    }));
+    it('provides helper for combining messages', () => __awaiter(this, void 0, void 0, function* () {
+        const message1 = index_1.combineMessages([]);
+        const message2 = index_1.combineMessages(['Test1']);
+        const message3 = index_1.combineMessages(['Test1', 'Test2']);
+        const message4 = index_1.combineMessages(['Test1', 'Test2', 'Test3']);
+        expect(message1).toMatchSnapshot();
+        expect(message2).toMatchSnapshot();
+        expect(message3).toMatchSnapshot();
+        expect(message4).toMatchSnapshot();
+    }));
 });
 //# sourceMappingURL=index.test.js.map

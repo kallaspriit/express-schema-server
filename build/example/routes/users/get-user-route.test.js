@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest = require("supertest");
 const app_1 = require("../../app");
+const users_1 = require("./users");
 let app;
 describe('get-user-route', () => {
     beforeEach(() => __awaiter(this, void 0, void 0, function* () {
@@ -38,6 +39,15 @@ describe('get-user-route', () => {
         const getResponse = yield app.get(`/users/666`).send();
         expect(getResponse.status).toEqual(404);
         expect(getResponse.body.text).toMatchSnapshot();
+    }));
+    it('transformUser removes excessive data', () => __awaiter(this, void 0, void 0, function* () {
+        const fullInfo = {
+            name: 'Jack Daniels',
+            email: 'jack@daniels.com',
+            password: 'xxx',
+        };
+        const transformedInfo = users_1.transformUser(fullInfo);
+        expect(transformedInfo).toMatchSnapshot();
     }));
 });
 //# sourceMappingURL=get-user-route.test.js.map

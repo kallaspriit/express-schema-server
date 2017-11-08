@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const normalize_type_1 = require("normalize-type");
 const _1 = require("../../../");
 const validateUniqueEmail_1 = require("../../validators/validateUniqueEmail");
+const users_1 = require("./users");
 exports.requestSchema = {
     title: 'Create user',
     description: 'Create a new user account',
@@ -41,35 +42,7 @@ exports.requestSchema = {
     },
     required: ['name', 'email'],
 };
-exports.responseSchema = _1.buildResponseSchema({
-    title: 'User info',
-    description: 'Registered user info',
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            title: 'Id',
-            description: 'User id',
-            minimum: 1,
-        },
-        name: {
-            type: 'string',
-            title: 'Name',
-            description: 'User name',
-            minLength: 3,
-            maxLength: 100,
-        },
-        email: {
-            type: 'string',
-            title: 'Email',
-            description: 'Email address',
-            minLength: 3,
-            maxLength: 256,
-            format: 'email',
-        },
-    },
-    required: ['id', 'name', 'email'],
-});
+exports.responseSchema = _1.buildResponseSchema(users_1.userSchema);
 exports.default = () => ({
     path: '',
     method: 'post',
@@ -90,7 +63,7 @@ exports.default = () => ({
             return;
         }
         const user = yield request.db.user.save(requestData);
-        response.success(user, exports.responseSchema, validators);
+        response.success(users_1.transformUser(user), exports.responseSchema, validators);
     }),
 });
 //# sourceMappingURL=create-user-route.js.map

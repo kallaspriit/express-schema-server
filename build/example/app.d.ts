@@ -7,5 +7,6 @@ export interface IDatabaseManager {
 }
 export interface IServerContext {
     db: IDatabaseManager;
+    loggedInUser?: User;
 }
 export default function setupApp(): Promise<express.Express>;

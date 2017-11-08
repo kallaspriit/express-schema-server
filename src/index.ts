@@ -501,8 +501,8 @@ export function getPaginationPageOptions(query: any, defaultItemsPerPage: number
 	const options = normalizeType<IPaginationOptionsPartial>(query);
 
 	return {
-		page: options.page || 1,
-		itemsPerPage: options.itemsPerPage || defaultItemsPerPage,
+		page: options.page !== undefined ? options.page : 1,
+		itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage,
 	};
 }
 
@@ -517,6 +517,7 @@ export function getPaginationFindOptions<Entity>(
 	};
 }
 
+/* istanbul ignore next */
 function formatJsonPath(jsonPath: string): string {
 	if (jsonPath.substring(0, 2) === '#/') {
 		return jsonPath.substring(2);
@@ -534,7 +535,7 @@ function lowerCaseFirst(message: string): string {
 	return `${message.substring(0, 1).toLowerCase()}${message.substring(1)}`;
 }
 
-function combineMessages(messages: string[]): string {
+export function combineMessages(messages: string[]): string {
 	const messageCount = messages.length;
 
 	/* istanbul ignore if */
@@ -643,6 +644,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
 
 			const schemaValidationResult = await validateJsonSchema(responseData, responseSchema, customValidators);
 
+			/* istanbul ignore if */
 			if (!schemaValidationResult.isValid) {
 				const error = new InvalidApiResponseError(responseData, responseSchema, schemaValidationResult.errors);
 				const errorResponseData: IRouteResponsePayload<null> = {
