@@ -10,6 +10,8 @@
 
 - Automatic validation of both inputs and outputs using [JSON schema](http://json-schema.org/).
 - Self-descriptive, includes automatic endpoints for all route descriptors.
+- Includes extensive example showing how to organize your code, perform authentication and use databases.
+- The route descriptors can be used to generate automatic documentation, testing user interface, TypeScript definitions etc.
 - Written in [TypeScript](https://www.typescriptlang.org/).
 - Minimum boilerplate.
 - Every endpoint handler is in a separate file.
