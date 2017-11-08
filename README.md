@@ -38,15 +38,14 @@ npm install express-schema-server
 
 See `src/example` directory for a full working example code and run `npm start` to try it out for yourself.
 
-Following is an example route for creating a new user.
+Following is an example route for [creating a new user](https://github.com/kallaspriit/express-schema-server/blob/master/src/example/routes/users/create-user-route.ts).
 
 ```typescript
-import {JSONSchema4} from 'json-schema';
 import {normalizeType} from 'normalize-type';
-import {IServerContext} from '../../';
-import {buildResponseSchema, ICustomValidator, IRouteDefinition, validateJsonSchema} from '../../../';
-import User from '../../models/User';
+import {buildResponseSchema, ICustomValidator, IRouteDefinition, JSONSchema4, validateJsonSchema} from '../../../';
+import {IServerContext} from '../../app';
 import validateUniqueEmail from '../../validators/validateUniqueEmail';
+import {IUser, transformUser, userSchema} from './users';
 
 export interface ICreateUserRequest {
   name: string;
@@ -84,35 +83,7 @@ export const requestSchema: JSONSchema4 = {
   required: ['name', 'email'],
 };
 
-export const responseSchema: JSONSchema4 = buildResponseSchema({
-  title: 'User info',
-  description: 'Registered user info',
-  type: 'object',
-  properties: {
-    id: {
-      type: 'number',
-      title: 'Id',
-      description: 'User id',
-      minimum: 1,
-    },
-    name: {
-      type: 'string',
-      title: 'Name',
-      description: 'User name',
-      minLength: 3,
-      maxLength: 100,
-    },
-    email: {
-      type: 'string',
-      title: 'Email',
-      description: 'Email address',
-      minLength: 3,
-      maxLength: 256,
-      format: 'email',
-    },
-  },
-  required: ['id', 'name', 'email'],
-});
+export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
 export default (): IRouteDefinition<IServerContext> => ({
   path: '',
@@ -125,7 +96,7 @@ export default (): IRouteDefinition<IServerContext> => ({
   },
   requestSchema,
   responseSchema,
-  handler: async (request, response, next) => {
+  handler: async (request, response, _next) => {
     const requestData = normalizeType<ICreateUserRequest>(request.body);
     const validators: ICustomValidator[] = [validateUniqueEmail(request.db.user)];
     const validationResult = await validateJsonSchema(requestData, requestSchema, validators);
@@ -136,14 +107,9 @@ export default (): IRouteDefinition<IServerContext> => ({
       return;
     }
 
-    try {
-      const user = await User.create(request.db.user, requestData);
+    const user = await request.db.user.save(requestData);
 
-      response.success<User>(user, responseSchema, validators);
-    } catch (error) {
-      return next(error);
-    }
+    response.success<IUser>(transformUser(user), responseSchema, validators);
   },
 });
-
 ```
