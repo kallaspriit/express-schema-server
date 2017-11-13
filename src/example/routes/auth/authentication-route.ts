@@ -23,7 +23,7 @@ export default (): IRouteDefinition<IServerContext> => ({
 	},
 	requestSchema: {},
 	responseSchema,
-	// handler can be an array instead
+	// handler can be an array of handlers
 	handler: [
 		// additional middlewares could perform authentication etc
 		(request, _response, next) => {

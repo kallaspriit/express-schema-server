@@ -7,6 +7,45 @@ import * as zSchema from 'z-schema';
 
 export {JSONSchema4} from 'json-schema';
 
+export type RouteMethodVerb = 'get' | 'post' | 'delete' | 'put';
+
+export interface IRouteMetadata {
+	title: string;
+	description: string;
+	sinceVersion: string;
+	isDeprecated: boolean;
+}
+
+export interface IRouteDefinition<Context> {
+	path: string;
+	method: RouteMethodVerb;
+	metadata: IRouteMetadata;
+	requestSchema: JSONSchema4;
+	responseSchema: JSONSchema4;
+	handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
+}
+
+export interface IRouteSource<Context> {
+	group: string;
+	name: string;
+	filename: string;
+	setup: RouteSetupFn<Context>;
+}
+
+export type IRouteDescriptor<Context> = IRouteSource<Context> & IRouteDefinition<Context>;
+
+export interface IRouteSchema {
+	method: RouteMethodVerb;
+	group: string;
+	name: string;
+	path: string;
+	endpointUrl: string;
+	schemaUrl: string;
+	metadata: IRouteMetadata;
+	requestSchema: JSONSchema4;
+	responseSchema: JSONSchema4;
+}
+
 export interface IRouteResponsePayload<T> {
 	payload: T | null;
 	success: boolean;
@@ -45,46 +84,6 @@ export type RouteRequestHandler<Context> = (
 	response: IRouteResponse,
 	next: NextFunction,
 ) => void;
-
-export type RouteMethodVerb = 'get' | 'post' | 'delete';
-
-export interface IRouteMetadata {
-	title: string;
-	description: string;
-	sinceVersion: string;
-	isDeprecated: boolean;
-}
-
-export interface IRouteDefinition<Context> {
-	path: string;
-	method: RouteMethodVerb;
-	metadata: IRouteMetadata;
-	requestSchema: JSONSchema4;
-	responseSchema: JSONSchema4;
-	handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
-}
-
-export interface IRouteSource<Context> {
-	group: string;
-	name: string;
-	filename: string;
-	setup: RouteSetupFn<Context>;
-}
-
-export interface IRoute<Context> extends IRouteSource<Context>, IRouteDefinition<Context> {
-	endpoint: string;
-}
-
-export interface IRouteSchema {
-	group: string;
-	path: string;
-	method: RouteMethodVerb;
-	endpointUrl: string;
-	schemaUrl: string;
-	metadata: IRouteMetadata;
-	requestSchema: JSONSchema4;
-	responseSchema: JSONSchema4;
-}
 
 export interface IJsonSchemaValidationResult {
 	isValid: boolean;
@@ -136,12 +135,6 @@ export interface IObjectLiteral {
 	[key: string]: any;
 }
 
-export interface IPaginationFindOptions<Entity> {
-	skip?: number;
-	take?: number;
-	where?: Partial<Entity> | IObjectLiteral;
-}
-
 export class DetailedError extends Error {
 	constructor(message: string, public details: IErrorDetails | null = null) {
 		super(message);
@@ -187,7 +180,7 @@ export const paginationOptionsSchema: JSONSchema4 = {
 
 export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router {
 	const router = Router();
-	const routes: Array<IRoute<Context>> = [];
+	const routes: Array<IRouteDescriptor<Context>> = [];
 
 	// register dynamic routes
 	options.routes.forEach(routeSource => {
@@ -196,10 +189,9 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
 		const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
 		// build route info
-		const route: IRoute<Context> = {
+		const route: IRouteDescriptor<Context> = {
 			...routeSource,
 			...routeDefinition,
-			endpoint,
 		};
 
 		// register the route info
@@ -236,7 +228,10 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
 	return router;
 }
 
-export function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Array<IRoute<Context>>): RequestHandler {
+export function schemaMiddleware<Context>(
+	metadata: IServerMetadata,
+	routes: Array<IRouteDescriptor<Context>>,
+): RequestHandler {
 	return (request: Request, response: Response, _next: NextFunction) => {
 		response.send({
 			metadata,
@@ -245,18 +240,23 @@ export function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Arr
 	};
 }
 
-export function getRouteSchema<Context>(route: IRoute<Context>, baseUrl: string): IRouteSchema {
-	const endpointUrl = buildRoutePath([route.group, route.path]);
+export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema {
+	const endpointPath = buildRoutePath([route.group, route.path]);
+	const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
+	const schemaUrl = buildRoutePath([baseUrl, 'schema', getRouteWithoutParameters(endpointPath), route.method]);
+
+	const {method, group, name, metadata, requestSchema, responseSchema} = route;
 
 	return {
-		group: route.group,
+		method,
+		group,
+		name,
 		path: route.path,
-		method: route.method,
-		endpointUrl: `${baseUrl}${endpointUrl}`,
-		schemaUrl: buildRoutePath([baseUrl, 'schema', getRouteWithoutParameters(endpointUrl), route.method]),
-		metadata: route.metadata,
-		requestSchema: route.requestSchema,
-		responseSchema: route.responseSchema,
+		endpointUrl,
+		schemaUrl,
+		metadata,
+		requestSchema,
+		responseSchema,
 	};
 }
 

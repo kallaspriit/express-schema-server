@@ -61,7 +61,7 @@ function jsonSchemaServerMiddleware(options) {
         const routeDefinition = routeSource.setup();
         const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
         // build route info
-        const route = Object.assign({}, routeSource, routeDefinition, { endpoint });
+        const route = Object.assign({}, routeSource, routeDefinition);
         // register the route info
         routes.push(route);
         // type safe method name
@@ -99,16 +99,20 @@ function schemaMiddleware(metadata, routes) {
 }
 exports.schemaMiddleware = schemaMiddleware;
 function getRouteSchema(route, baseUrl) {
-    const endpointUrl = buildRoutePath([route.group, route.path]);
+    const endpointPath = buildRoutePath([route.group, route.path]);
+    const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
+    const schemaUrl = buildRoutePath([baseUrl, 'schema', getRouteWithoutParameters(endpointPath), route.method]);
+    const { method, group, name, metadata, requestSchema, responseSchema } = route;
     return {
-        group: route.group,
+        method,
+        group,
+        name,
         path: route.path,
-        method: route.method,
-        endpointUrl: `${baseUrl}${endpointUrl}`,
-        schemaUrl: buildRoutePath([baseUrl, 'schema', getRouteWithoutParameters(endpointUrl), route.method]),
-        metadata: route.metadata,
-        requestSchema: route.requestSchema,
-        responseSchema: route.responseSchema,
+        endpointUrl,
+        schemaUrl,
+        metadata,
+        requestSchema,
+        responseSchema,
     };
 }
 exports.getRouteSchema = getRouteSchema;

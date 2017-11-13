@@ -4,22 +4,7 @@ import { NextFunction, Request, RequestHandler, Response, Router } from 'express
 import { JSONSchema4 } from 'json-schema';
 import * as zSchema from 'z-schema';
 export { JSONSchema4 } from 'json-schema';
-export interface IRouteResponsePayload<T> {
-    payload: T | null;
-    success: boolean;
-    error: string | null;
-    validationErrors: zSchema.SchemaErrorDetail[];
-    [x: string]: any;
-}
-export declare type IRouteRequest<Context> = Request & Context;
-export interface IRouteResponse extends Response {
-    success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<T>>;
-    paginatedSuccess<T>(items: T[], paginationOptions: IPaginationOptions, itemCount: number, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<IPaginatedResponse<T>>>;
-    fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: ICustomValidator[], customErrorMessage?: string): Promise<IRouteResponsePayload<null>>;
-}
-export declare type RouteSetupFn<Context> = () => IRouteDefinition<Context>;
-export declare type RouteRequestHandler<Context> = (request: IRouteRequest<Context>, response: IRouteResponse, next: NextFunction) => void;
-export declare type RouteMethodVerb = 'get' | 'post' | 'delete';
+export declare type RouteMethodVerb = 'get' | 'post' | 'delete' | 'put';
 export interface IRouteMetadata {
     title: string;
     description: string;
@@ -40,19 +25,33 @@ export interface IRouteSource<Context> {
     filename: string;
     setup: RouteSetupFn<Context>;
 }
-export interface IRoute<Context> extends IRouteSource<Context>, IRouteDefinition<Context> {
-    endpoint: string;
-}
+export declare type IRouteDescriptor<Context> = IRouteSource<Context> & IRouteDefinition<Context>;
 export interface IRouteSchema {
-    group: string;
-    path: string;
     method: RouteMethodVerb;
+    group: string;
+    name: string;
+    path: string;
     endpointUrl: string;
     schemaUrl: string;
     metadata: IRouteMetadata;
     requestSchema: JSONSchema4;
     responseSchema: JSONSchema4;
 }
+export interface IRouteResponsePayload<T> {
+    payload: T | null;
+    success: boolean;
+    error: string | null;
+    validationErrors: zSchema.SchemaErrorDetail[];
+    [x: string]: any;
+}
+export declare type IRouteRequest<Context> = Request & Context;
+export interface IRouteResponse extends Response {
+    success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<T>>;
+    paginatedSuccess<T>(items: T[], paginationOptions: IPaginationOptions, itemCount: number, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<IPaginatedResponse<T>>>;
+    fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: ICustomValidator[], customErrorMessage?: string): Promise<IRouteResponsePayload<null>>;
+}
+export declare type RouteSetupFn<Context> = () => IRouteDefinition<Context>;
+export declare type RouteRequestHandler<Context> = (request: IRouteRequest<Context>, response: IRouteResponse, next: NextFunction) => void;
 export interface IJsonSchemaValidationResult {
     isValid: boolean;
     errors: zSchema.SchemaErrorDetail[];
@@ -93,11 +92,6 @@ export interface IPaginationOptions {
 export interface IObjectLiteral {
     [key: string]: any;
 }
-export interface IPaginationFindOptions<Entity> {
-    skip?: number;
-    take?: number;
-    where?: Partial<Entity> | IObjectLiteral;
-}
 export declare class DetailedError extends Error {
     details: IErrorDetails | null;
     constructor(message: string, details?: IErrorDetails | null);
@@ -107,8 +101,8 @@ export declare class InvalidApiResponseError extends DetailedError {
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router;
-export declare function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Array<IRoute<Context>>): RequestHandler;
-export declare function getRouteSchema<Context>(route: IRoute<Context>, baseUrl: string): IRouteSchema;
+export declare function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
+export declare function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema;
 export declare function buildRoutePath(components: string[]): string;
 export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IJsonSchemaValidationResult>;
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;

@@ -70,6 +70,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
+      "name": "authentication-route",
       "path": "/login",
       "requestSchema": Object {},
       "responseSchema": Object {
@@ -185,6 +186,7 @@ Object {
         "title": "API index",
       },
       "method": "get",
+      "name": "index-route",
       "path": "/",
       "requestSchema": Object {},
       "responseSchema": Object {},
@@ -200,6 +202,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
+      "name": "invalid-success-route",
       "path": "/invalid-success",
       "requestSchema": Object {},
       "responseSchema": Object {
@@ -315,6 +318,7 @@ Object {
         "title": "Register user",
       },
       "method": "post",
+      "name": "create-user-route",
       "path": "",
       "requestSchema": Object {
         "description": "Create a new user account",
@@ -488,6 +492,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
+      "name": "get-user-route",
       "path": "/:id",
       "requestSchema": Object {
         "description": "Parameters for getting user info",
@@ -644,6 +649,7 @@ Object {
         "title": "Get users",
       },
       "method": "get",
+      "name": "get-users-route",
       "path": "",
       "requestSchema": Object {
         "description": "Paginated request options",
@@ -854,6 +860,7 @@ Object {
     "title": "Register user",
   },
   "method": "post",
+  "name": "create-user-route",
   "path": "",
   "requestSchema": Object {
     "description": "Create a new user account",
