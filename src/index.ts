@@ -195,12 +195,15 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
 		const routeDefinition = routeSource.setup();
 		const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
-		// register the route info
-		routes.push({
+		// build route info
+		const route: IRoute<Context> = {
 			...routeSource,
 			...routeDefinition,
 			endpoint,
-		});
+		};
+
+		// register the route info
+		routes.push(route);
 
 		// type safe method name
 		const appMethodName: keyof Application = routeDefinition.method;
@@ -221,11 +224,8 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
 		if (routeSource.group !== '') {
 			const schemaPath = buildRoutePath(['schema', getRouteWithoutParameters(endpoint), routeDefinition.method]);
 
-			router.get(schemaPath, (_request, response, _next) => {
-				response.send({
-					request: routeDefinition.requestSchema,
-					response: routeDefinition.responseSchema,
-				});
+			router.get(schemaPath, (request, response, _next) => {
+				response.send(getRouteSchema(route, request.baseUrl));
 			});
 		}
 	});

@@ -60,14 +60,14 @@ describe('express-schema-server', () => {
 		const getResponse = await app.get(`/schema`).send();
 
 		expect(getResponse.status).toEqual(200);
-		expect(getResponse.body.text).toMatchSnapshot();
+		expect(getResponse.body).toMatchSnapshot();
 	});
 
 	it('provides schema endpoint for specific endpoints', async () => {
 		const getResponse = await app.get(`/schema/users/post`).send();
 
 		expect(getResponse.status).toEqual(200);
-		expect(getResponse.body.text).toMatchSnapshot();
+		expect(getResponse.body).toMatchSnapshot();
 	});
 
 	it('performs valid json schema validation', async () => {

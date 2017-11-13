@@ -60,8 +60,10 @@ function jsonSchemaServerMiddleware(options) {
         // setup the route to get the route definition
         const routeDefinition = routeSource.setup();
         const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
+        // build route info
+        const route = Object.assign({}, routeSource, routeDefinition, { endpoint });
         // register the route info
-        routes.push(Object.assign({}, routeSource, routeDefinition, { endpoint }));
+        routes.push(route);
         // type safe method name
         const appMethodName = routeDefinition.method;
         // handler can be either a single handler function or array of handlers, treat it always as an array
@@ -77,11 +79,8 @@ function jsonSchemaServerMiddleware(options) {
         // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
         if (routeSource.group !== '') {
             const schemaPath = buildRoutePath(['schema', getRouteWithoutParameters(endpoint), routeDefinition.method]);
-            router.get(schemaPath, (_request, response, _next) => {
-                response.send({
-                    request: routeDefinition.requestSchema,
-                    response: routeDefinition.responseSchema,
-                });
+            router.get(schemaPath, (request, response, _next) => {
+                response.send(getRouteSchema(route, request.baseUrl));
             });
         }
     });

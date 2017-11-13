@@ -52,9 +52,972 @@ Object {
 }
 `;
 
-exports[`express-schema-server provides schema endpoint for all endpoints 1`] = `undefined`;
+exports[`express-schema-server provides schema endpoint for all endpoints 1`] = `
+Object {
+  "metadata": Object {
+    "description": "Provides example functionality",
+    "title": "Example API",
+    "version": "1.0.0",
+  },
+  "routes": Array [
+    Object {
+      "endpointUrl": "/auth/login",
+      "group": "auth",
+      "metadata": Object {
+        "description": "Returns registered user info by email",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Get user info",
+      },
+      "method": "get",
+      "path": "/login",
+      "requestSchema": Object {},
+      "responseSchema": Object {
+        "description": "Standard response schema envelope",
+        "properties": Object {
+          "error": Object {
+            "description": "Combined human-readable error message",
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Combined human-readable error message",
+                "title": "Error message",
+                "type": "string",
+              },
+            ],
+            "title": "Error message",
+          },
+          "payload": Object {
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "properties": Object {
+                  "message": Object {
+                    "type": "string",
+                  },
+                },
+                "type": "object",
+              },
+            ],
+          },
+          "success": Object {
+            "description": "This is true if processing the request was successful and false if there were any issues",
+            "title": "Success indicator",
+            "type": "boolean",
+          },
+          "validationErrors": Object {
+            "description": "List of validation errors (empty array if there were none)",
+            "items": Object {
+              "properties": Object {
+                "code": Object {
+                  "description": "Validation error code",
+                  "title": "Error code",
+                  "type": "string",
+                },
+                "description": Object {
+                  "description": "Failed input parameter description",
+                  "title": "Parameter description",
+                  "type": "string",
+                },
+                "message": Object {
+                  "description": "Validation error message",
+                  "title": "Message",
+                  "type": "string",
+                },
+                "params": Object {
+                  "description": "Validation error parameters",
+                  "items": Object {
+                    "oneOf": Array [
+                      Object {
+                        "type": "null",
+                      },
+                      Object {
+                        "type": "string",
+                      },
+                      Object {
+                        "type": "number",
+                      },
+                    ],
+                  },
+                  "title": "Error parameters",
+                  "type": "array",
+                },
+                "path": Object {
+                  "description": "JSON path to the input parameter that failed the validation",
+                  "title": "Error path",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "message",
+                "code",
+                "params",
+                "path",
+              ],
+              "type": "object",
+            },
+            "title": "Validation errors",
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "payload",
+          "success",
+          "error",
+          "validationErrors",
+        ],
+        "title": "Response schema",
+        "type": "object",
+      },
+      "schemaUrl": "/schema/auth/login/get",
+    },
+    Object {
+      "endpointUrl": "/",
+      "group": "",
+      "metadata": Object {
+        "description": "Displays useful information about using the API",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "API index",
+      },
+      "method": "get",
+      "path": "/",
+      "requestSchema": Object {},
+      "responseSchema": Object {},
+      "schemaUrl": "/schema/get",
+    },
+    Object {
+      "endpointUrl": "/tests/invalid-success",
+      "group": "tests",
+      "metadata": Object {
+        "description": "Returns registered user info by email",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Get user info",
+      },
+      "method": "get",
+      "path": "/invalid-success",
+      "requestSchema": Object {},
+      "responseSchema": Object {
+        "description": "Standard response schema envelope",
+        "properties": Object {
+          "error": Object {
+            "description": "Combined human-readable error message",
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Combined human-readable error message",
+                "title": "Error message",
+                "type": "string",
+              },
+            ],
+            "title": "Error message",
+          },
+          "payload": Object {
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "properties": Object {
+                  "id": Object {
+                    "type": "number",
+                  },
+                },
+                "type": "object",
+              },
+            ],
+          },
+          "success": Object {
+            "description": "This is true if processing the request was successful and false if there were any issues",
+            "title": "Success indicator",
+            "type": "boolean",
+          },
+          "validationErrors": Object {
+            "description": "List of validation errors (empty array if there were none)",
+            "items": Object {
+              "properties": Object {
+                "code": Object {
+                  "description": "Validation error code",
+                  "title": "Error code",
+                  "type": "string",
+                },
+                "description": Object {
+                  "description": "Failed input parameter description",
+                  "title": "Parameter description",
+                  "type": "string",
+                },
+                "message": Object {
+                  "description": "Validation error message",
+                  "title": "Message",
+                  "type": "string",
+                },
+                "params": Object {
+                  "description": "Validation error parameters",
+                  "items": Object {
+                    "oneOf": Array [
+                      Object {
+                        "type": "null",
+                      },
+                      Object {
+                        "type": "string",
+                      },
+                      Object {
+                        "type": "number",
+                      },
+                    ],
+                  },
+                  "title": "Error parameters",
+                  "type": "array",
+                },
+                "path": Object {
+                  "description": "JSON path to the input parameter that failed the validation",
+                  "title": "Error path",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "message",
+                "code",
+                "params",
+                "path",
+              ],
+              "type": "object",
+            },
+            "title": "Validation errors",
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "payload",
+          "success",
+          "error",
+          "validationErrors",
+        ],
+        "title": "Response schema",
+        "type": "object",
+      },
+      "schemaUrl": "/schema/tests/invalid-success/get",
+    },
+    Object {
+      "endpointUrl": "/users",
+      "group": "users",
+      "metadata": Object {
+        "description": "Register a new user account",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Register user",
+      },
+      "method": "post",
+      "path": "",
+      "requestSchema": Object {
+        "description": "Create a new user account",
+        "properties": Object {
+          "email": Object {
+            "allOf": Array [
+              Object {
+                "format": "email",
+              },
+              Object {
+                "format": "unique-email",
+              },
+            ],
+            "description": "Email address",
+            "maxLength": 256,
+            "minLength": 3,
+            "title": "Email",
+            "type": "string",
+          },
+          "name": Object {
+            "description": "User name",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "Name",
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "email",
+        ],
+        "title": "Create user",
+        "type": "object",
+      },
+      "responseSchema": Object {
+        "description": "Standard response schema envelope",
+        "properties": Object {
+          "error": Object {
+            "description": "Combined human-readable error message",
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Combined human-readable error message",
+                "title": "Error message",
+                "type": "string",
+              },
+            ],
+            "title": "Error message",
+          },
+          "payload": Object {
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Registered user info",
+                "properties": Object {
+                  "email": Object {
+                    "description": "Email address",
+                    "format": "email",
+                    "maxLength": 256,
+                    "minLength": 3,
+                    "title": "Email",
+                    "type": "string",
+                  },
+                  "id": Object {
+                    "description": "User id",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "title": "Id",
+                    "type": "number",
+                  },
+                  "name": Object {
+                    "description": "User name",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "title": "Name",
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "id",
+                  "name",
+                  "email",
+                ],
+                "title": "User info",
+                "type": "object",
+              },
+            ],
+          },
+          "success": Object {
+            "description": "This is true if processing the request was successful and false if there were any issues",
+            "title": "Success indicator",
+            "type": "boolean",
+          },
+          "validationErrors": Object {
+            "description": "List of validation errors (empty array if there were none)",
+            "items": Object {
+              "properties": Object {
+                "code": Object {
+                  "description": "Validation error code",
+                  "title": "Error code",
+                  "type": "string",
+                },
+                "description": Object {
+                  "description": "Failed input parameter description",
+                  "title": "Parameter description",
+                  "type": "string",
+                },
+                "message": Object {
+                  "description": "Validation error message",
+                  "title": "Message",
+                  "type": "string",
+                },
+                "params": Object {
+                  "description": "Validation error parameters",
+                  "items": Object {
+                    "oneOf": Array [
+                      Object {
+                        "type": "null",
+                      },
+                      Object {
+                        "type": "string",
+                      },
+                      Object {
+                        "type": "number",
+                      },
+                    ],
+                  },
+                  "title": "Error parameters",
+                  "type": "array",
+                },
+                "path": Object {
+                  "description": "JSON path to the input parameter that failed the validation",
+                  "title": "Error path",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "message",
+                "code",
+                "params",
+                "path",
+              ],
+              "type": "object",
+            },
+            "title": "Validation errors",
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "payload",
+          "success",
+          "error",
+          "validationErrors",
+        ],
+        "title": "Response schema",
+        "type": "object",
+      },
+      "schemaUrl": "/schema/users/post",
+    },
+    Object {
+      "endpointUrl": "/users/:id",
+      "group": "users",
+      "metadata": Object {
+        "description": "Returns registered user info by email",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Get user info",
+      },
+      "method": "get",
+      "path": "/:id",
+      "requestSchema": Object {
+        "description": "Parameters for getting user info",
+        "properties": Object {
+          "id": Object {
+            "description": "User id",
+            "minimum": 1,
+            "title": "Id",
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "title": "Get user parameters",
+        "type": "object",
+      },
+      "responseSchema": Object {
+        "description": "Standard response schema envelope",
+        "properties": Object {
+          "error": Object {
+            "description": "Combined human-readable error message",
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Combined human-readable error message",
+                "title": "Error message",
+                "type": "string",
+              },
+            ],
+            "title": "Error message",
+          },
+          "payload": Object {
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Registered user info",
+                "properties": Object {
+                  "email": Object {
+                    "description": "Email address",
+                    "format": "email",
+                    "maxLength": 256,
+                    "minLength": 3,
+                    "title": "Email",
+                    "type": "string",
+                  },
+                  "id": Object {
+                    "description": "User id",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "title": "Id",
+                    "type": "number",
+                  },
+                  "name": Object {
+                    "description": "User name",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "title": "Name",
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "id",
+                  "name",
+                  "email",
+                ],
+                "title": "User info",
+                "type": "object",
+              },
+            ],
+          },
+          "success": Object {
+            "description": "This is true if processing the request was successful and false if there were any issues",
+            "title": "Success indicator",
+            "type": "boolean",
+          },
+          "validationErrors": Object {
+            "description": "List of validation errors (empty array if there were none)",
+            "items": Object {
+              "properties": Object {
+                "code": Object {
+                  "description": "Validation error code",
+                  "title": "Error code",
+                  "type": "string",
+                },
+                "description": Object {
+                  "description": "Failed input parameter description",
+                  "title": "Parameter description",
+                  "type": "string",
+                },
+                "message": Object {
+                  "description": "Validation error message",
+                  "title": "Message",
+                  "type": "string",
+                },
+                "params": Object {
+                  "description": "Validation error parameters",
+                  "items": Object {
+                    "oneOf": Array [
+                      Object {
+                        "type": "null",
+                      },
+                      Object {
+                        "type": "string",
+                      },
+                      Object {
+                        "type": "number",
+                      },
+                    ],
+                  },
+                  "title": "Error parameters",
+                  "type": "array",
+                },
+                "path": Object {
+                  "description": "JSON path to the input parameter that failed the validation",
+                  "title": "Error path",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "message",
+                "code",
+                "params",
+                "path",
+              ],
+              "type": "object",
+            },
+            "title": "Validation errors",
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "payload",
+          "success",
+          "error",
+          "validationErrors",
+        ],
+        "title": "Response schema",
+        "type": "object",
+      },
+      "schemaUrl": "/schema/users/get",
+    },
+    Object {
+      "endpointUrl": "/users",
+      "group": "users",
+      "metadata": Object {
+        "description": "Returns list of paginated users",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Get users",
+      },
+      "method": "get",
+      "path": "",
+      "requestSchema": Object {
+        "description": "Paginated request options",
+        "properties": Object {
+          "itemsPerPage": Object {
+            "default": 10,
+            "description": "Number of items to show on a single page",
+            "minimum": 1,
+            "title": "Items per page",
+            "type": "number",
+          },
+          "page": Object {
+            "default": 1,
+            "description": "Page number",
+            "minimum": 1,
+            "title": "Page",
+            "type": "number",
+          },
+        },
+        "title": "Pagination options",
+        "type": "object",
+      },
+      "responseSchema": Object {
+        "description": "Standard response schema envelope",
+        "properties": Object {
+          "error": Object {
+            "description": "Combined human-readable error message",
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "Combined human-readable error message",
+                "title": "Error message",
+                "type": "string",
+              },
+            ],
+            "title": "Error message",
+          },
+          "payload": Object {
+            "oneOf": Array [
+              Object {
+                "type": "null",
+              },
+              Object {
+                "description": "List of paginated users",
+                "properties": Object {
+                  "itemCount": Object {
+                    "description": "Total number of items",
+                    "minimum": 0,
+                    "title": "Item count",
+                    "type": "number",
+                  },
+                  "items": Object {
+                    "description": "List of paginated users",
+                    "items": Object {
+                      "description": "Registered user info",
+                      "properties": Object {
+                        "email": Object {
+                          "description": "Email address",
+                          "format": "email",
+                          "maxLength": 256,
+                          "minLength": 3,
+                          "title": "Email",
+                          "type": "string",
+                        },
+                        "id": Object {
+                          "description": "User id",
+                          "maxLength": 100,
+                          "minLength": 3,
+                          "title": "Id",
+                          "type": "number",
+                        },
+                        "name": Object {
+                          "description": "User name",
+                          "maxLength": 100,
+                          "minLength": 3,
+                          "title": "Name",
+                          "type": "string",
+                        },
+                      },
+                      "required": Array [
+                        "id",
+                        "name",
+                        "email",
+                      ],
+                      "title": "User info",
+                      "type": "object",
+                    },
+                    "title": "Users",
+                    "type": "array",
+                  },
+                  "itemsPerPage": Object {
+                    "description": "Number of items on each page",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "title": "Items per page",
+                    "type": "number",
+                  },
+                  "page": Object {
+                    "description": "Current page number",
+                    "minimum": 1,
+                    "title": "Page",
+                    "type": "number",
+                  },
+                  "pageCount": Object {
+                    "description": "Total number of pages",
+                    "minimum": 0,
+                    "title": "Page count",
+                    "type": "number",
+                  },
+                },
+                "required": Array [
+                  "items",
+                  "itemCount",
+                  "page",
+                  "pageCount",
+                  "itemsPerPage",
+                ],
+                "title": "Users (paginated)",
+                "type": "object",
+              },
+            ],
+          },
+          "success": Object {
+            "description": "This is true if processing the request was successful and false if there were any issues",
+            "title": "Success indicator",
+            "type": "boolean",
+          },
+          "validationErrors": Object {
+            "description": "List of validation errors (empty array if there were none)",
+            "items": Object {
+              "properties": Object {
+                "code": Object {
+                  "description": "Validation error code",
+                  "title": "Error code",
+                  "type": "string",
+                },
+                "description": Object {
+                  "description": "Failed input parameter description",
+                  "title": "Parameter description",
+                  "type": "string",
+                },
+                "message": Object {
+                  "description": "Validation error message",
+                  "title": "Message",
+                  "type": "string",
+                },
+                "params": Object {
+                  "description": "Validation error parameters",
+                  "items": Object {
+                    "oneOf": Array [
+                      Object {
+                        "type": "null",
+                      },
+                      Object {
+                        "type": "string",
+                      },
+                      Object {
+                        "type": "number",
+                      },
+                    ],
+                  },
+                  "title": "Error parameters",
+                  "type": "array",
+                },
+                "path": Object {
+                  "description": "JSON path to the input parameter that failed the validation",
+                  "title": "Error path",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "message",
+                "code",
+                "params",
+                "path",
+              ],
+              "type": "object",
+            },
+            "title": "Validation errors",
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "payload",
+          "success",
+          "error",
+          "validationErrors",
+        ],
+        "title": "Response schema",
+        "type": "object",
+      },
+      "schemaUrl": "/schema/users/get",
+    },
+  ],
+}
+`;
 
-exports[`express-schema-server provides schema endpoint for specific endpoints 1`] = `undefined`;
+exports[`express-schema-server provides schema endpoint for specific endpoints 1`] = `
+Object {
+  "endpointUrl": "/users",
+  "group": "users",
+  "metadata": Object {
+    "description": "Register a new user account",
+    "isDeprecated": false,
+    "sinceVersion": "1.0.0",
+    "title": "Register user",
+  },
+  "method": "post",
+  "path": "",
+  "requestSchema": Object {
+    "description": "Create a new user account",
+    "properties": Object {
+      "email": Object {
+        "allOf": Array [
+          Object {
+            "format": "email",
+          },
+          Object {
+            "format": "unique-email",
+          },
+        ],
+        "description": "Email address",
+        "maxLength": 256,
+        "minLength": 3,
+        "title": "Email",
+        "type": "string",
+      },
+      "name": Object {
+        "description": "User name",
+        "maxLength": 100,
+        "minLength": 3,
+        "title": "Name",
+        "type": "string",
+      },
+    },
+    "required": Array [
+      "name",
+      "email",
+    ],
+    "title": "Create user",
+    "type": "object",
+  },
+  "responseSchema": Object {
+    "description": "Standard response schema envelope",
+    "properties": Object {
+      "error": Object {
+        "description": "Combined human-readable error message",
+        "oneOf": Array [
+          Object {
+            "type": "null",
+          },
+          Object {
+            "description": "Combined human-readable error message",
+            "title": "Error message",
+            "type": "string",
+          },
+        ],
+        "title": "Error message",
+      },
+      "payload": Object {
+        "oneOf": Array [
+          Object {
+            "type": "null",
+          },
+          Object {
+            "description": "Registered user info",
+            "properties": Object {
+              "email": Object {
+                "description": "Email address",
+                "format": "email",
+                "maxLength": 256,
+                "minLength": 3,
+                "title": "Email",
+                "type": "string",
+              },
+              "id": Object {
+                "description": "User id",
+                "maxLength": 100,
+                "minLength": 3,
+                "title": "Id",
+                "type": "number",
+              },
+              "name": Object {
+                "description": "User name",
+                "maxLength": 100,
+                "minLength": 3,
+                "title": "Name",
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "id",
+              "name",
+              "email",
+            ],
+            "title": "User info",
+            "type": "object",
+          },
+        ],
+      },
+      "success": Object {
+        "description": "This is true if processing the request was successful and false if there were any issues",
+        "title": "Success indicator",
+        "type": "boolean",
+      },
+      "validationErrors": Object {
+        "description": "List of validation errors (empty array if there were none)",
+        "items": Object {
+          "properties": Object {
+            "code": Object {
+              "description": "Validation error code",
+              "title": "Error code",
+              "type": "string",
+            },
+            "description": Object {
+              "description": "Failed input parameter description",
+              "title": "Parameter description",
+              "type": "string",
+            },
+            "message": Object {
+              "description": "Validation error message",
+              "title": "Message",
+              "type": "string",
+            },
+            "params": Object {
+              "description": "Validation error parameters",
+              "items": Object {
+                "oneOf": Array [
+                  Object {
+                    "type": "null",
+                  },
+                  Object {
+                    "type": "string",
+                  },
+                  Object {
+                    "type": "number",
+                  },
+                ],
+              },
+              "title": "Error parameters",
+              "type": "array",
+            },
+            "path": Object {
+              "description": "JSON path to the input parameter that failed the validation",
+              "title": "Error path",
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "message",
+            "code",
+            "params",
+            "path",
+          ],
+          "type": "object",
+        },
+        "title": "Validation errors",
+        "type": "array",
+      },
+    },
+    "required": Array [
+      "payload",
+      "success",
+      "error",
+      "validationErrors",
+    ],
+    "title": "Response schema",
+    "type": "object",
+  },
+  "schemaUrl": "/schema/users/post",
+}
+`;
 
 exports[`express-schema-server schema validation fails if missing validator 1`] = `
 Object {
