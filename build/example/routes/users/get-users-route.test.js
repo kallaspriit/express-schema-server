@@ -15,9 +15,9 @@ let userCount = 0;
 function createUser() {
     return __awaiter(this, void 0, void 0, function* () {
         userCount++;
-        const response = yield app.post('/users').send({
+        const response = yield app.post("/users").send({
             name: `Jack Daniels #${userCount}`,
-            email: `jack@daniels-${userCount}.com`,
+            email: `jack@daniels-${userCount}.com`
         });
         return response.body.payload;
     });
@@ -31,62 +31,62 @@ function createUsers(count) {
         return users;
     });
 }
-describe('get-users-route', () => {
+describe("get-users-route", () => {
     beforeEach(() => __awaiter(this, void 0, void 0, function* () {
         app = supertest(yield app_1.default());
     }));
-    it('should return empty list of users when none exist', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return empty list of users when none exist", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(0);
-        const response = yield app.get('/users').send();
+        const response = yield app.get("/users").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should return single created user', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return single created user", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(1);
-        const response = yield app.get('/users').send();
+        const response = yield app.get("/users").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should return first page of multiple pages', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return first page of multiple pages", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(4);
-        const response = yield app.get('/users').send();
+        const response = yield app.get("/users").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should return second page of multiple pages', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return second page of multiple pages", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(4);
-        const response = yield app.get('/users?page=2').send();
+        const response = yield app.get("/users?page=2").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should allow specifying number of items on a page', () => __awaiter(this, void 0, void 0, function* () {
+    it("should allow specifying number of items on a page", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(5);
-        const response = yield app.get('/users?page=2&itemsPerPage=2').send();
+        const response = yield app.get("/users?page=2&itemsPerPage=2").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should return empty set for page too large', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return empty set for page too large", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(4);
-        const response = yield app.get('/users?page=3').send();
+        const response = yield app.get("/users?page=3").send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
-    it('should return validation error for invalid page number', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return validation error for invalid page number", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(4);
-        const response = yield app.get('/users?page=0').send();
+        const response = yield app.get("/users?page=0").send();
         expect(response.status).toEqual(400);
         expect(response.body.success).toBe(false);
         expect(response.body.validationErrors).toMatchSnapshot();
     }));
-    it('should return validation error for invalid page number', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return validation error for invalid page number", () => __awaiter(this, void 0, void 0, function* () {
         yield createUsers(4);
-        const response = yield app.get('/users?page=-1').send();
+        const response = yield app.get("/users?page=-1").send();
         expect(response.status).toEqual(400);
         expect(response.body.success).toBe(false);
         expect(response.body.validationErrors).toMatchSnapshot();

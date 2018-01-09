@@ -21,25 +21,25 @@ function setupApp() {
         // add json and urlencoded body parser middlewares
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({
-            extended: true,
+            extended: true
         }));
         // setup server context that gets merged into the express request
         const context = {
             db: {
-                user: new Database_1.default(),
-            },
+                user: new Database_1.default()
+            }
         };
         // find all routes
-        const routes = yield _1.getRoutes(path.join(__dirname, 'routes'));
+        const routes = yield _1.getRoutes(path.join(__dirname, "routes"));
         // add the express schema server middleware
-        app.use('/', _1.default({
+        app.use("/", _1.default({
             routes,
             context,
             metadata: {
-                title: 'Example API',
-                description: 'Provides example functionality',
-                version: '1.0.0',
-            },
+                title: "Example API",
+                description: "Provides example functionality",
+                version: "1.0.0"
+            }
         }));
         return app;
     });

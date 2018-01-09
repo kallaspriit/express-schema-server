@@ -1,10 +1,10 @@
 /// <reference types="z-schema" />
 /// <reference types="express" />
-import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
-import { JSONSchema4 } from 'json-schema';
-import * as zSchema from 'z-schema';
-export { JSONSchema4 } from 'json-schema';
-export declare type RouteMethodVerb = 'get' | 'post' | 'delete' | 'put';
+import { NextFunction, Request, RequestHandler, Response, Router } from "express";
+import { JSONSchema4 } from "json-schema";
+import * as zSchema from "z-schema";
+export { JSONSchema4 } from "json-schema";
+export declare type RouteMethodVerb = "get" | "post" | "delete" | "put";
 export interface IRouteMetadata {
     title: string;
     description: string;
@@ -55,9 +55,9 @@ export interface IRouteResponsePayload<T> {
 }
 export declare type IRouteRequest<Context> = Request & Context;
 export interface IRouteResponse extends Response {
-    success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<T>>;
-    paginatedSuccess<T>(items: T[], paginationOptions: IPaginationOptions, itemCount: number, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IRouteResponsePayload<IPaginatedResponse<T>>>;
-    fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: ICustomValidator[], customErrorMessage?: string): Promise<IRouteResponsePayload<null>>;
+    success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
+    paginatedSuccess<T>(items: T[], paginationOptions: IPaginationOptions, itemCount: number, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
+    fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: ICustomValidator[], customErrorMessage?: string): void;
 }
 export declare type RouteSetupFn<Context> = () => IRouteDefinition<Context>;
 export declare type RouteRequestHandler<Context> = (request: IRouteRequest<Context>, response: IRouteResponse, next: NextFunction) => void;

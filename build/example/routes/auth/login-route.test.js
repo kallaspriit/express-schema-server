@@ -11,14 +11,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest = require("supertest");
 const app_1 = require("../../app");
 let app;
-describe('authentication-route', () => {
+describe("authentication-route", () => {
     beforeEach(() => __awaiter(this, void 0, void 0, function* () {
         app = supertest(yield app_1.default());
     }));
-    it('should return logged in user message', () => __awaiter(this, void 0, void 0, function* () {
+    it("should return logged in user message", () => __awaiter(this, void 0, void 0, function* () {
         const response = yield app
-            .get('/auth/login')
-            .auth('jack', 'daniels')
+            .get("/auth/login")
+            .auth("jack", "daniels")
             .send();
         expect(response.status).toEqual(200);
         expect(response.body.success).toBe(true);

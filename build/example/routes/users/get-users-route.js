@@ -11,19 +11,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("../../../");
 const users_1 = require("./users");
 exports.responseSchema = _1.buildPaginatedResponseSchema({
-    title: 'Users',
-    description: 'List of paginated users',
-    type: 'array',
-    items: users_1.userSchema,
+    title: "Users",
+    description: "List of paginated users",
+    type: "array",
+    items: users_1.userSchema
 });
 exports.default = () => ({
-    path: '',
-    method: 'get',
+    path: "",
+    method: "get",
     metadata: {
-        title: 'Get users',
-        description: 'Returns list of paginated users',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "Get users",
+        description: "Returns list of paginated users",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: _1.paginationOptionsSchema,
     responseSchema: exports.responseSchema,
@@ -36,6 +36,6 @@ exports.default = () => ({
         }
         const result = yield request.db.user.getPaginated(paginationOptions);
         response.paginatedSuccess(result.items, paginationOptions, result.count, exports.responseSchema);
-    }),
+    })
 });
 //# sourceMappingURL=get-users-route.js.map

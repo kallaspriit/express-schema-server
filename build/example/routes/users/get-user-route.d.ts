@@ -1,6 +1,6 @@
-import { JSONSchema4 } from 'json-schema';
-import { IRouteDefinition } from '../../../';
-import { IServerContext } from '../../app';
+import { JSONSchema4 } from "json-schema";
+import { IRouteDefinition } from "../../../";
+import { IServerContext } from "../../app";
 export interface IGetUserParameters {
     id: number;
 }

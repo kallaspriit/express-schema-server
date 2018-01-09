@@ -13,44 +13,44 @@ const _1 = require("../../../");
 const validateUniqueEmail_1 = require("../../validators/validateUniqueEmail");
 const users_1 = require("./users");
 exports.requestSchema = {
-    title: 'Create user',
-    description: 'Create a new user account',
-    type: 'object',
+    title: "Create user",
+    description: "Create a new user account",
+    type: "object",
     properties: {
         name: {
-            type: 'string',
-            title: 'Name',
-            description: 'User name',
+            type: "string",
+            title: "Name",
+            description: "User name",
             minLength: 3,
-            maxLength: 100,
+            maxLength: 100
         },
         email: {
-            type: 'string',
-            title: 'Email',
-            description: 'Email address',
+            type: "string",
+            title: "Email",
+            description: "Email address",
             minLength: 3,
             maxLength: 256,
             allOf: [
                 {
-                    format: 'email',
+                    format: "email"
                 },
                 {
-                    format: 'unique-email',
-                },
-            ],
-        },
+                    format: "unique-email"
+                }
+            ]
+        }
     },
-    required: ['name', 'email'],
+    required: ["name", "email"]
 };
 exports.responseSchema = _1.buildResponseSchema(users_1.userSchema);
 exports.default = () => ({
-    path: '',
-    method: 'post',
+    path: "",
+    method: "post",
     metadata: {
-        title: 'Register user',
-        description: 'Register a new user account',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "Register user",
+        description: "Register a new user account",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: exports.requestSchema,
     responseSchema: exports.responseSchema,
@@ -64,6 +64,6 @@ exports.default = () => ({
         }
         const user = yield request.db.user.save(requestData);
         response.success(users_1.transformUser(user), exports.responseSchema, validators);
-    }),
+    })
 });
 //# sourceMappingURL=create-user-route.js.map

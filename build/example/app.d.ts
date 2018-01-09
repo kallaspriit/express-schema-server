@@ -1,7 +1,7 @@
 /// <reference types="express" />
-import * as express from 'express';
-import Database from './lib/Database';
-import User from './models/User';
+import * as express from "express";
+import Database from "./lib/Database";
+import User from "./models/User";
 export interface IDatabaseManager {
     user: Database<User>;
 }

@@ -23,34 +23,34 @@ exports.DetailedError = DetailedError;
 // tslint:disable-next-line:max-classes-per-file
 class InvalidApiResponseError extends DetailedError {
     constructor(responseData, responseSchema, validationErrors) {
-        super('Validating generated response against schema failed', {
+        super("Validating generated response against schema failed", {
             validationErrors,
             responseData,
-            responseSchema,
+            responseSchema
         });
     }
 }
 exports.InvalidApiResponseError = InvalidApiResponseError;
 exports.paginationOptionsSchema = {
-    title: 'Pagination options',
-    description: 'Paginated request options',
-    type: 'object',
+    title: "Pagination options",
+    description: "Paginated request options",
+    type: "object",
     properties: {
         page: {
-            title: 'Page',
-            description: 'Page number',
-            type: 'number',
+            title: "Page",
+            description: "Page number",
+            type: "number",
             minimum: 1,
-            default: 1,
+            default: 1
         },
         itemsPerPage: {
-            title: 'Items per page',
-            description: 'Number of items to show on a single page',
-            type: 'number',
+            title: "Items per page",
+            description: "Number of items to show on a single page",
+            type: "number",
             minimum: 1,
-            default: 10,
-        },
-    },
+            default: 10
+        }
+    }
 };
 function jsonSchemaServerMiddleware(options) {
     const router = express_1.Router();
@@ -79,15 +79,15 @@ function jsonSchemaServerMiddleware(options) {
             });
         });
         // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
-        if (routeSource.group !== '') {
-            const schemaPath = buildRoutePath(['schema', getRouteWithoutParameters(endpoint), routeDefinition.method]);
+        if (routeSource.group !== "") {
+            const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), routeDefinition.method]);
             router.get(schemaPath, (request, response, _next) => {
                 response.send(getRouteSchema(route, request.baseUrl));
             });
         }
     });
     // create endpoint to get the information about all routes
-    router.get('/schema', schemaMiddleware(options.metadata, routes));
+    router.get("/schema", schemaMiddleware(options.metadata, routes));
     return router;
 }
 exports.default = jsonSchemaServerMiddleware;
@@ -95,7 +95,7 @@ function schemaMiddleware(metadata, routes) {
     return (request, response, _next) => {
         const schema = {
             metadata,
-            routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
+            routes: routes.map(route => getRouteSchema(route, request.baseUrl))
         };
         response.send(schema);
     };
@@ -104,7 +104,7 @@ exports.schemaMiddleware = schemaMiddleware;
 function getRouteSchema(route, baseUrl) {
     const endpointPath = buildRoutePath([route.group, route.path]);
     const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
-    const schemaUrl = buildRoutePath([baseUrl, 'schema', getRouteWithoutParameters(endpointPath), route.method]);
+    const schemaUrl = buildRoutePath([baseUrl, "schema", getRouteWithoutParameters(endpointPath), route.method]);
     const { method, group, name, metadata, requestSchema, responseSchema } = route;
     return {
         method,
@@ -115,26 +115,26 @@ function getRouteSchema(route, baseUrl) {
         schemaUrl,
         metadata,
         requestSchema,
-        responseSchema,
+        responseSchema
     };
 }
 exports.getRouteSchema = getRouteSchema;
 function buildRoutePath(components) {
     let routePath = components.reduce((combinedPath, component) => {
-        if (component === '' || component === '/') {
+        if (component === "" || component === "/") {
             return combinedPath;
         }
         return `${combinedPath}/${component}`;
-    }, '/');
+    }, "/");
     // remove multiple slashes
-    routePath = routePath.replace(/\/{1,}/g, '/');
+    routePath = routePath.replace(/\/{1,}/g, "/");
     // remove trailing slash
-    if (routePath[routePath.length - 1] === '/') {
+    if (routePath[routePath.length - 1] === "/") {
         routePath = routePath.substring(0, routePath.length - 1);
     }
     // use / for empty path
     if (routePath.length === 0) {
-        routePath = '/';
+        routePath = "/";
     }
     return routePath;
 }
@@ -146,7 +146,7 @@ function validateJsonSchema(data, schema, customValidators) {
             // noTypeless: true,
             noExtraKeywords: true,
             forceItems: true,
-            forceProperties: true,
+            forceProperties: true
         });
         // register custom validators if requested
         if (Array.isArray(customValidators)) {
@@ -170,7 +170,7 @@ function validateJsonSchema(data, schema, customValidators) {
             }
             resolve({
                 isValid,
-                errors: errors || [],
+                errors: errors || []
             });
         });
     });
@@ -178,88 +178,88 @@ function validateJsonSchema(data, schema, customValidators) {
 exports.validateJsonSchema = validateJsonSchema;
 function buildResponseSchema(payloadSchema) {
     return {
-        title: 'Response schema',
-        description: 'Standard response schema envelope',
-        type: 'object',
+        title: "Response schema",
+        description: "Standard response schema envelope",
+        type: "object",
         properties: {
             payload: {
                 oneOf: [
                     {
-                        type: 'null',
+                        type: "null"
                     },
-                    payloadSchema,
-                ],
+                    payloadSchema
+                ]
             },
             success: {
-                title: 'Success indicator',
-                description: 'This is true if processing the request was successful and false if there were any issues',
-                type: 'boolean',
+                title: "Success indicator",
+                description: "This is true if processing the request was successful and false if there were any issues",
+                type: "boolean"
             },
             error: {
-                title: 'Error message',
-                description: 'Combined human-readable error message',
+                title: "Error message",
+                description: "Combined human-readable error message",
                 oneOf: [
                     {
-                        type: 'null',
+                        type: "null"
                     },
                     {
-                        title: 'Error message',
-                        description: 'Combined human-readable error message',
-                        type: 'string',
-                    },
-                ],
+                        title: "Error message",
+                        description: "Combined human-readable error message",
+                        type: "string"
+                    }
+                ]
             },
             validationErrors: {
-                title: 'Validation errors',
-                description: 'List of validation errors (empty array if there were none)',
-                type: 'array',
+                title: "Validation errors",
+                description: "List of validation errors (empty array if there were none)",
+                type: "array",
                 items: {
-                    type: 'object',
+                    type: "object",
                     properties: {
                         message: {
-                            title: 'Message',
-                            description: 'Validation error message',
-                            type: 'string',
+                            title: "Message",
+                            description: "Validation error message",
+                            type: "string"
                         },
                         code: {
-                            title: 'Error code',
-                            description: 'Validation error code',
-                            type: 'string',
+                            title: "Error code",
+                            description: "Validation error code",
+                            type: "string"
                         },
                         params: {
-                            title: 'Error parameters',
-                            description: 'Validation error parameters',
-                            type: 'array',
+                            title: "Error parameters",
+                            description: "Validation error parameters",
+                            type: "array",
                             items: {
                                 oneOf: [
                                     {
-                                        type: 'null',
+                                        type: "null"
                                     },
                                     {
-                                        type: 'string',
+                                        type: "string"
                                     },
                                     {
-                                        type: 'number',
-                                    },
-                                ],
-                            },
+                                        type: "number"
+                                    }
+                                ]
+                            }
                         },
                         path: {
-                            title: 'Error path',
-                            description: 'JSON path to the input parameter that failed the validation',
-                            type: 'string',
+                            title: "Error path",
+                            description: "JSON path to the input parameter that failed the validation",
+                            type: "string"
                         },
                         description: {
-                            title: 'Parameter description',
-                            description: 'Failed input parameter description',
-                            type: 'string',
-                        },
+                            title: "Parameter description",
+                            description: "Failed input parameter description",
+                            type: "string"
+                        }
                     },
-                    required: ['message', 'code', 'params', 'path'],
-                },
-            },
+                    required: ["message", "code", "params", "path"]
+                }
+            }
         },
-        required: ['payload', 'success', 'error', 'validationErrors'],
+        required: ["payload", "success", "error", "validationErrors"]
     };
 }
 exports.buildResponseSchema = buildResponseSchema;
@@ -267,42 +267,42 @@ function buildPaginatedResponseSchema(payloadSchema, maximumItemsPerPage = 100) 
     return buildResponseSchema({
         title: `${payloadSchema.title} (paginated)`,
         description: payloadSchema.description,
-        type: 'object',
+        type: "object",
         properties: {
             items: payloadSchema,
             itemCount: {
-                title: 'Item count',
-                description: 'Total number of items',
-                type: 'number',
-                minimum: 0,
+                title: "Item count",
+                description: "Total number of items",
+                type: "number",
+                minimum: 0
             },
             page: {
-                title: 'Page',
-                description: 'Current page number',
-                type: 'number',
-                minimum: 1,
+                title: "Page",
+                description: "Current page number",
+                type: "number",
+                minimum: 1
             },
             pageCount: {
-                title: 'Page count',
-                description: 'Total number of pages',
-                type: 'number',
-                minimum: 0,
+                title: "Page count",
+                description: "Total number of pages",
+                type: "number",
+                minimum: 0
             },
             itemsPerPage: {
-                title: 'Items per page',
-                description: 'Number of items on each page',
-                type: 'number',
+                title: "Items per page",
+                description: "Number of items on each page",
+                type: "number",
                 minimum: 1,
-                maximum: maximumItemsPerPage,
-            },
+                maximum: maximumItemsPerPage
+            }
         },
-        required: ['items', 'itemCount', 'page', 'pageCount', 'itemsPerPage'],
+        required: ["items", "itemCount", "page", "pageCount", "itemsPerPage"]
     });
 }
 exports.buildPaginatedResponseSchema = buildPaginatedResponseSchema;
 function getRoutes(baseDirectory) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pattern = path.join(baseDirectory, '**', '*-route!(*.spec|*.test|*.d).+(js|ts)');
+        const pattern = path.join(baseDirectory, "**", "*-route!(*.spec|*.test|*.d).+(js|ts)");
         return new Promise((resolve, reject) => {
             glob(pattern, (error, matches) => {
                 /* istanbul ignore if */
@@ -317,12 +317,12 @@ function getRoutes(baseDirectory) {
                     setup: () => {
                         const routeSetupFn = require(match).default;
                         /* istanbul ignore if */
-                        if (typeof routeSetupFn !== 'function') {
+                        if (typeof routeSetupFn !== "function") {
                             throw new Error(`Export of route "${getRouteName(match)}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`);
                         }
                         const routeDefinition = routeSetupFn();
                         return routeDefinition;
-                    },
+                    }
                 }));
                 resolve(routes);
             });
@@ -334,13 +334,13 @@ function getPaginationPageOptions(query, defaultItemsPerPage = 10) {
     const options = normalize_type_1.default(query);
     return {
         page: options.page !== undefined ? options.page : 1,
-        itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage,
+        itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage
     };
 }
 exports.getPaginationPageOptions = getPaginationPageOptions;
 /* istanbul ignore next */
 function formatJsonPath(jsonPath) {
-    if (jsonPath.substring(0, 2) === '#/') {
+    if (jsonPath.substring(0, 2) === "#/") {
         return jsonPath.substring(2);
     }
     return jsonPath;
@@ -356,7 +356,7 @@ function combineMessages(messages) {
     const messageCount = messages.length;
     /* istanbul ignore if */
     if (messageCount === 0) {
-        return '';
+        return "";
     }
     else if (messageCount === 1) {
         return messages[0];
@@ -367,14 +367,14 @@ function combineMessages(messages) {
     else {
         const firstMessages = messages.slice(0, messageCount - 1);
         const lastMessage = messages[messageCount - 1];
-        return `${firstMessages.join(', ')} and ${lastMessage}`;
+        return `${firstMessages.join(", ")} and ${lastMessage}`;
     }
 }
 exports.combineMessages = combineMessages;
 function buildErrorMessage(validationErrors) {
     const messages = validationErrors.map(error => {
         const formattedPath = formatJsonPath(error.path);
-        return `${formattedPath.length > 0 ? `${formattedPath}: ` : ''}${lowerCaseFirst(error.message)}`;
+        return `${formattedPath.length > 0 ? `${formattedPath}: ` : ""}${lowerCaseFirst(error.message)}`;
     });
     const message = combineMessages(messages);
     return `Validation failed: ${message}`;
@@ -389,7 +389,7 @@ function augmentExpressResponse(response) {
             payload,
             success: true,
             error: null,
-            validationErrors: [],
+            validationErrors: []
         };
         const schemaValidationResult = yield validateJsonSchema(responseData, responseSchema, customValidators);
         if (!schemaValidationResult.isValid) {
@@ -401,13 +401,12 @@ function augmentExpressResponse(response) {
                 error: error.message,
                 responseData,
                 validationErrors: schemaValidationResult.errors,
-                responseSchema,
+                responseSchema
             };
             response.status(400).send(errorResponseData);
-            return errorResponseData;
+            return;
         }
         response.send(responseData);
-        return responseData;
     });
     // tslint:disable-next-line prefer-object-spread
     return Object.assign(response, {
@@ -418,16 +417,16 @@ function augmentExpressResponse(response) {
                 itemCount,
                 page: paginationOptions.page,
                 pageCount: Math.ceil(itemCount / paginationOptions.itemsPerPage),
-                itemsPerPage: paginationOptions.itemsPerPage,
+                itemsPerPage: paginationOptions.itemsPerPage
             };
-            return success(payload, responseSchema, customValidators);
+            yield success(payload, responseSchema, customValidators);
         }),
         fail: (validationErrors, responseSchema, customValidators, customErrorMessage) => __awaiter(this, void 0, void 0, function* () {
             const responseData = {
                 payload: null,
                 success: false,
                 error: customErrorMessage || buildErrorMessage(validationErrors),
-                validationErrors,
+                validationErrors
             };
             const schemaValidationResult = yield validateJsonSchema(responseData, responseSchema, customValidators);
             /* istanbul ignore if */
@@ -439,14 +438,13 @@ function augmentExpressResponse(response) {
                     error: error.message,
                     responseData,
                     validationErrors: schemaValidationResult.errors,
-                    responseSchema,
+                    responseSchema
                 };
                 response.status(400).send(errorResponseData);
-                return errorResponseData;
+                return;
             }
             response.status(400).send(responseData);
-            return responseData;
-        }),
+        })
     });
 }
 function getRouteGroup(filename, baseDirectory) {
@@ -459,6 +457,6 @@ function getRouteName(filename) {
 }
 function getRouteWithoutParameters(route) {
     const tokens = route.split(/\//);
-    return tokens.filter(token => token.substring(0, 1) !== ':').join('/');
+    return tokens.filter(token => token.substring(0, 1) !== ":").join("/");
 }
 //# sourceMappingURL=index.js.map

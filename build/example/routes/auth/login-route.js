@@ -11,21 +11,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("../../../");
 const User_1 = require("../../models/User");
 exports.responseSchema = _1.buildResponseSchema({
-    type: 'object',
+    type: "object",
     properties: {
         message: {
-            type: 'string',
-        },
-    },
+            type: "string"
+        }
+    }
 });
 exports.default = () => ({
-    path: '/login',
-    method: 'get',
+    path: "/login",
+    method: "get",
     metadata: {
-        title: 'Get user info',
-        description: 'Returns registered user info by email',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "Get user info",
+        description: "Returns registered user info by email",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: {},
     responseSchema: exports.responseSchema,
@@ -35,19 +35,19 @@ exports.default = () => ({
         (request, _response, next) => {
             // use basic auth etc to login the user
             // console.log('authorization', request.headers.authorization);
-            request.loggedInUser = new User_1.default('Jack Daniels', 'jack@daniels.com');
+            request.loggedInUser = new User_1.default("Jack Daniels", "jack@daniels.com");
             next();
         },
         (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
             /* istanbul ignore if */
             if (!request.loggedInUser) {
-                response.status(401).send('You need to be logged in to access this resource');
+                response.status(401).send("You need to be logged in to access this resource");
                 return;
             }
             response.success({
-                message: `Hello ${request.loggedInUser.name}`,
+                message: `Hello ${request.loggedInUser.name}`
             }, exports.responseSchema);
-        }),
-    ],
+        })
+    ]
 });
 //# sourceMappingURL=login-route.js.map

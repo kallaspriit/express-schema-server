@@ -1,5 +1,5 @@
-import { JSONSchema4 } from '../../../';
-import User from '../../models/User';
+import { JSONSchema4 } from "../../../";
+import User from "../../models/User";
 export interface IUser {
     id: number;
     name: string;

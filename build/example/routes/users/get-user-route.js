@@ -12,28 +12,28 @@ const normalize_type_1 = require("normalize-type");
 const _1 = require("../../../");
 const users_1 = require("./users");
 exports.requestSchema = {
-    title: 'Get user parameters',
-    description: 'Parameters for getting user info',
-    type: 'object',
+    title: "Get user parameters",
+    description: "Parameters for getting user info",
+    type: "object",
     properties: {
         id: {
-            title: 'Id',
-            description: 'User id',
-            type: 'number',
-            minimum: 1,
-        },
+            title: "Id",
+            description: "User id",
+            type: "number",
+            minimum: 1
+        }
     },
-    required: ['id'],
+    required: ["id"]
 };
 exports.responseSchema = _1.buildResponseSchema(users_1.userSchema);
 exports.default = () => ({
-    path: '/:id',
-    method: 'get',
+    path: "/:id",
+    method: "get",
     metadata: {
-        title: 'Get user info',
-        description: 'Returns registered user info by email',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "Get user info",
+        description: "Returns registered user info by email",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: exports.requestSchema,
     responseSchema: exports.responseSchema,
@@ -50,6 +50,6 @@ exports.default = () => ({
             return;
         }
         response.success(users_1.transformUser(user), exports.responseSchema);
-    }),
+    })
 });
 //# sourceMappingURL=get-user-route.js.map

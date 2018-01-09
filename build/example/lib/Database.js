@@ -24,7 +24,7 @@ class Database {
     // fetches item by id
     getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.getWhere('id', id);
+            return this.getWhere("id", id);
         });
     }
     // fetches items by any of the properties
@@ -42,7 +42,7 @@ class Database {
             const items = filteredItems.slice(startIndex, startIndex + paginationOptions.itemsPerPage);
             return {
                 count,
-                items,
+                items
             };
         });
     }

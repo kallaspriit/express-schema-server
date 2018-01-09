@@ -10,28 +10,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("../../../");
 exports.responseSchema = _1.buildResponseSchema({
-    type: 'object',
+    type: "object",
     properties: {
         id: {
-            type: 'number',
-        },
-    },
+            type: "number"
+        }
+    }
 });
 exports.default = () => ({
-    path: '/invalid-success',
-    method: 'get',
+    path: "/invalid-success",
+    method: "get",
     metadata: {
-        title: 'Get user info',
-        description: 'Returns registered user info by email',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "Get user info",
+        description: "Returns registered user info by email",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: {},
     responseSchema: exports.responseSchema,
     handler: (_request, response, _next) => __awaiter(this, void 0, void 0, function* () {
         response.success({
-            id: 'not a number',
+            id: "not a number"
         }, exports.responseSchema);
-    }),
+    })
 });
 //# sourceMappingURL=invalid-success-route.js.map

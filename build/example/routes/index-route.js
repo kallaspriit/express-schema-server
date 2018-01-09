@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = () => ({
-    path: '/',
-    method: 'get',
+    path: "/",
+    method: "get",
     metadata: {
-        title: 'API index',
-        description: 'Displays useful information about using the API',
-        sinceVersion: '1.0.0',
-        isDeprecated: false,
+        title: "API index",
+        description: "Displays useful information about using the API",
+        sinceVersion: "1.0.0",
+        isDeprecated: false
     },
     requestSchema: {},
     responseSchema: {},
     handler: (request, response, _next) => {
-        const iframeStyle = 'width: 600px; height: 400px';
+        const iframeStyle = "width: 600px; height: 400px";
         response.send(`
       <h1>Index</h1>
       <p>This page is served from <strong>src/example/routes/index-route.ts</strong></p>
@@ -48,6 +48,6 @@ exports.default = () => ({
       </ul>
       <iframe name="get-users-frame" style="${iframeStyle}"></iframe>
     `);
-    },
+    }
 });
 //# sourceMappingURL=index-route.js.map
