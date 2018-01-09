@@ -50,4 +50,4 @@ exports.default = () => ({
         }),
     ],
 });
-//# sourceMappingURL=authentication-route.js.map
+//# sourceMappingURL=login-route.js.map

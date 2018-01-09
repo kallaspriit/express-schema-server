@@ -1,21 +1,21 @@
-import {IRouteDefinition} from '../../index';
-import {IServerContext} from '../app';
+import { IRouteDefinition } from "../../index";
+import { IServerContext } from "../app";
 
 export default (): IRouteDefinition<IServerContext> => ({
-	path: '/',
-	method: 'get',
-	metadata: {
-		title: 'API index',
-		description: 'Displays useful information about using the API',
-		sinceVersion: '1.0.0',
-		isDeprecated: false,
-	},
-	requestSchema: {},
-	responseSchema: {},
-	handler: (request, response, _next) => {
-		const iframeStyle = 'width: 600px; height: 400px';
+  path: "/",
+  method: "get",
+  metadata: {
+    title: "API index",
+    description: "Displays useful information about using the API",
+    sinceVersion: "1.0.0",
+    isDeprecated: false
+  },
+  requestSchema: {},
+  responseSchema: {},
+  handler: (request, response, _next) => {
+    const iframeStyle = "width: 600px; height: 400px";
 
-		response.send(`
+    response.send(`
       <h1>Index</h1>
       <p>This page is served from <strong>src/example/routes/index-route.ts</strong></p>
 
@@ -23,8 +23,8 @@ export default (): IRouteDefinition<IServerContext> => ({
       <ul>
         <li><a href="${request.baseUrl}/schema" target="schema-frame">json schema index for all endpoints</a></li>
         <li><a href="${
-					request.baseUrl
-				}/schema/users/post" target="schema-frame">json schema example for a specific endpoint</a></li>
+          request.baseUrl
+        }/schema/users/post" target="schema-frame">json schema example for a specific endpoint</a></li>
       </ul>
       <iframe name="schema-frame" style="${iframeStyle}"></iframe>
 
@@ -52,5 +52,5 @@ export default (): IRouteDefinition<IServerContext> => ({
       </ul>
       <iframe name="get-users-frame" style="${iframeStyle}"></iframe>
     `);
-	},
+  }
 });

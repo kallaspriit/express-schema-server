@@ -37,6 +37,15 @@ export interface IRouteSchema {
     requestSchema: JSONSchema4;
     responseSchema: JSONSchema4;
 }
+export interface ISchemaMetadata {
+    title: string;
+    description: string;
+    version: string;
+}
+export interface ISchema {
+    metadata: ISchemaMetadata;
+    routes: IRouteSchema[];
+}
 export interface IRouteResponsePayload<T> {
     payload: T | null;
     success: boolean;
@@ -56,15 +65,10 @@ export interface IJsonSchemaValidationResult {
     isValid: boolean;
     errors: zSchema.SchemaErrorDetail[];
 }
-export interface IServerMetadata {
-    title: string;
-    description: string;
-    version: string;
-}
 export interface IJsonSchemaServerOptions<Context> {
     routes: Array<IRouteSource<Context>>;
     context: Context;
-    metadata: IServerMetadata;
+    metadata: ISchemaMetadata;
 }
 export interface IErrorDetails {
     [x: string]: any;
@@ -101,7 +105,7 @@ export declare class InvalidApiResponseError extends DetailedError {
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router;
-export declare function schemaMiddleware<Context>(metadata: IServerMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
+export declare function schemaMiddleware<Context>(metadata: ISchemaMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
 export declare function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema;
 export declare function buildRoutePath(components: string[]): string;
 export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IJsonSchemaValidationResult>;

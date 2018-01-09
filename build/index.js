@@ -63,7 +63,9 @@ function jsonSchemaServerMiddleware(options) {
         // build route info
         const route = Object.assign({}, routeSource, routeDefinition);
         // register the route info
-        routes.push(route);
+        if (route.group.length > 0) {
+            routes.push(route);
+        }
         // type safe method name
         const appMethodName = routeDefinition.method;
         // handler can be either a single handler function or array of handlers, treat it always as an array
@@ -91,10 +93,11 @@ function jsonSchemaServerMiddleware(options) {
 exports.default = jsonSchemaServerMiddleware;
 function schemaMiddleware(metadata, routes) {
     return (request, response, _next) => {
-        response.send({
+        const schema = {
             metadata,
             routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
-        });
+        };
+        response.send(schema);
     };
 }
 exports.schemaMiddleware = schemaMiddleware;

@@ -11,16 +11,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest = require("supertest");
 const app_1 = require("../../app");
 let app;
-describe('get-user-route', () => {
+describe('authentication-route', () => {
     beforeEach(() => __awaiter(this, void 0, void 0, function* () {
         app = supertest(yield app_1.default());
     }));
-    it('should return validation error for return value not matching response schema', () => __awaiter(this, void 0, void 0, function* () {
-        const response = yield app.get('/tests/invalid-success').send();
-        expect(response.status).toEqual(400);
-        expect(response.body.success).toBe(false);
-        expect(response.body.payload).toBe(null);
-        expect(response.body.validationErrors).toMatchSnapshot();
+    it('should return logged in user message', () => __awaiter(this, void 0, void 0, function* () {
+        const response = yield app
+            .get('/auth/login')
+            .auth('jack', 'daniels')
+            .send();
+        expect(response.status).toEqual(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.payload).toMatchSnapshot();
     }));
 });
-//# sourceMappingURL=invalid-success-route.test.js.map
+//# sourceMappingURL=login-route.test.js.map

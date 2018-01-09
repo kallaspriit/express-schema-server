@@ -70,7 +70,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
-      "name": "authentication-route",
+      "name": "login-route",
       "path": "/login",
       "requestSchema": Object {},
       "responseSchema": Object {
@@ -177,24 +177,8 @@ Object {
       "schemaUrl": "/schema/auth/login/get",
     },
     Object {
-      "endpointUrl": "/",
-      "group": "",
-      "metadata": Object {
-        "description": "Displays useful information about using the API",
-        "isDeprecated": false,
-        "sinceVersion": "1.0.0",
-        "title": "API index",
-      },
-      "method": "get",
-      "name": "index-route",
-      "path": "/",
-      "requestSchema": Object {},
-      "responseSchema": Object {},
-      "schemaUrl": "/schema/get",
-    },
-    Object {
-      "endpointUrl": "/tests/invalid-success",
-      "group": "tests",
+      "endpointUrl": "/test/invalid-success",
+      "group": "test",
       "metadata": Object {
         "description": "Returns registered user info by email",
         "isDeprecated": false,
@@ -306,7 +290,7 @@ Object {
         "title": "Response schema",
         "type": "object",
       },
-      "schemaUrl": "/schema/tests/invalid-success/get",
+      "schemaUrl": "/schema/test/invalid-success/get",
     },
     Object {
       "endpointUrl": "/users",
