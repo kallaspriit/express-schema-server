@@ -104,7 +104,7 @@ export declare class InvalidApiResponseError extends DetailedError {
     constructor(responseData: IRouteResponsePayload<any>, responseSchema: JSONSchema4, validationErrors: zSchema.SchemaErrorDetail[]);
 }
 export declare const paginationOptionsSchema: JSONSchema4;
-export default function jsonSchemaServerMiddleware<TContext>(options: IJsonSchemaServerOptions<TContext>): Router;
+export default function expressSchemaServer<TContext>(options: IJsonSchemaServerOptions<TContext>): Router;
 export declare function schemaMiddleware<Context>(metadata: ISchemaMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
 export declare function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema;
 export declare function buildRoutePath(components: string[]): string;

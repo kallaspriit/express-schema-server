@@ -53,7 +53,7 @@ exports.paginationOptionsSchema = {
         }
     }
 };
-function jsonSchemaServerMiddleware(options) {
+function expressSchemaServer(options) {
     const router = express_1.Router();
     const routes = [];
     // register dynamic routes
@@ -91,7 +91,7 @@ function jsonSchemaServerMiddleware(options) {
     router.get("/schema", schemaMiddleware(options.metadata, routes));
     return router;
 }
-exports.default = jsonSchemaServerMiddleware;
+exports.default = expressSchemaServer;
 function schemaMiddleware(metadata, routes) {
     return (request, response, _next) => {
         const schema = {
@@ -156,7 +156,7 @@ function validateJsonSchema(data, schema, customValidators) {
                     const formatValidator = (value, validationCallback) => {
                         customValidator
                             .validate(value)
-                            .then(isValid => validationCallback(isValid))
+                            .then(validationCallback)
                             .catch(_e => validationCallback(false));
                     };
                     // "as.." is needed because the type definitions is missing the callback signature
@@ -358,20 +358,19 @@ function lowerCaseFirst(message) {
 }
 function combineMessages(messages) {
     const messageCount = messages.length;
-    /* istanbul ignore if */
-    if (messageCount === 0) {
-        return "";
-    }
-    else if (messageCount === 1) {
-        return messages[0];
-    }
-    else if (messageCount === 2) {
-        return `${messages[0]} and ${messages[1]}`;
-    }
-    else {
-        const firstMessages = messages.slice(0, messageCount - 1);
-        const lastMessage = messages[messageCount - 1];
-        return `${firstMessages.join(", ")} and ${lastMessage}`;
+    switch (messageCount) {
+        /* istanbul ignore next */
+        case 0:
+            return "";
+        case 1:
+            return messages[0];
+        case 2:
+            return `${messages[0]} and ${messages[1]}`;
+        default: {
+            const firstMessages = messages.slice(0, messageCount - 1);
+            const lastMessage = messages[messageCount - 1];
+            return `${firstMessages.join(", ")} and ${lastMessage}`;
+        }
     }
 }
 exports.combineMessages = combineMessages;

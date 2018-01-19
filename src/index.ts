@@ -138,14 +138,14 @@ export interface IObjectLiteral {
 }
 
 export class DetailedError extends Error {
-  constructor(message: string, public details: IErrorDetails | null = null) {
+  public constructor(message: string, public details: IErrorDetails | null = null) {
     super(message);
   }
 }
 
 // tslint:disable-next-line:max-classes-per-file
 export class InvalidApiResponseError extends DetailedError {
-  constructor(
+  public constructor(
     responseData: IRouteResponsePayload<any>,
     responseSchema: JSONSchema4,
     validationErrors: zSchema.SchemaErrorDetail[]
@@ -180,7 +180,7 @@ export const paginationOptionsSchema: JSONSchema4 = {
   }
 };
 
-export default function jsonSchemaServerMiddleware<TContext>(options: IJsonSchemaServerOptions<TContext>): Router {
+export default function expressSchemaServer<TContext>(options: IJsonSchemaServerOptions<TContext>): Router {
   const router = Router();
   const routes: Array<IRouteDescriptor<TContext>> = [];
 
@@ -311,7 +311,7 @@ export async function validateJsonSchema(
         const formatValidator = (value: any, validationCallback: (isValid: boolean) => void) => {
           customValidator
             .validate(value)
-            .then(isValid => validationCallback(isValid))
+            .then(validationCallback)
             .catch(_e => validationCallback(false));
         };
 
@@ -534,18 +534,23 @@ function lowerCaseFirst(message: string): string {
 export function combineMessages(messages: string[]): string {
   const messageCount = messages.length;
 
-  /* istanbul ignore if */
-  if (messageCount === 0) {
-    return "";
-  } else if (messageCount === 1) {
-    return messages[0];
-  } else if (messageCount === 2) {
-    return `${messages[0]} and ${messages[1]}`;
-  } else {
-    const firstMessages = messages.slice(0, messageCount - 1);
-    const lastMessage = messages[messageCount - 1];
+  switch (messageCount) {
+    /* istanbul ignore next */
+    case 0:
+      return "";
 
-    return `${firstMessages.join(", ")} and ${lastMessage}`;
+    case 1:
+      return messages[0];
+
+    case 2:
+      return `${messages[0]} and ${messages[1]}`;
+
+    default: {
+      const firstMessages = messages.slice(0, messageCount - 1);
+      const lastMessage = messages[messageCount - 1];
+
+      return `${firstMessages.join(", ")} and ${lastMessage}`;
+    }
   }
 }
 
