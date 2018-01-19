@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import { buildResponseSchema, IRouteDefinition } from "../../../";
 import { IServerContext } from "../../app";
@@ -37,7 +38,7 @@ export default (): IRouteDefinition<IServerContext> => ({
     async (request, response, _next) => {
       /* istanbul ignore if */
       if (!request.loggedInUser) {
-        response.status(401).send("You need to be logged in to access this resource");
+        response.status(HttpStatus.UNAUTHORIZED).send("You need to be logged in to access this resource");
 
         return;
       }

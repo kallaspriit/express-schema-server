@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const HttpStatus = require("http-status-codes");
 const _1 = require("../../../");
 const User_1 = require("../../models/User");
 exports.responseSchema = _1.buildResponseSchema({
@@ -41,7 +42,7 @@ exports.default = () => ({
         (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
             /* istanbul ignore if */
             if (!request.loggedInUser) {
-                response.status(401).send("You need to be logged in to access this resource");
+                response.status(HttpStatus.UNAUTHORIZED).send("You need to be logged in to access this resource");
                 return;
             }
             response.success({

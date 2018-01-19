@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
 import setupApp from "../../app";
 import { transformUser } from "./users";
@@ -15,13 +16,13 @@ describe("get-user-route", () => {
       email: "jack@daniels.com"
     });
 
-    expect(createResponse.status).toEqual(200);
+    expect(createResponse.status).toEqual(HttpStatus.OK);
     expect(createResponse.body.success).toBe(true);
     expect(createResponse.body.payload).toMatchSnapshot();
 
     const getResponse = await app.get(`/users/${createResponse.body.payload.id}`).send();
 
-    expect(getResponse.status).toEqual(200);
+    expect(getResponse.status).toEqual(HttpStatus.OK);
     expect(getResponse.body.success).toBe(true);
     expect(getResponse.body.payload).toMatchSnapshot();
   });
@@ -29,7 +30,7 @@ describe("get-user-route", () => {
   it("should return validation error for invalid user id", async () => {
     const getResponse = await app.get("/users/abc").send();
 
-    expect(getResponse.status).toEqual(400);
+    expect(getResponse.status).toEqual(HttpStatus.BAD_REQUEST);
     expect(getResponse.body.success).toBe(false);
     expect(getResponse.body.validationErrors).toMatchSnapshot();
   });
@@ -37,7 +38,7 @@ describe("get-user-route", () => {
   it("should return 404 not found for non-existing user", async () => {
     const getResponse = await app.get(`/users/666`).send();
 
-    expect(getResponse.status).toEqual(404);
+    expect(getResponse.status).toEqual(HttpStatus.NOT_FOUND);
     expect(getResponse.text).toMatchSnapshot();
   });
 

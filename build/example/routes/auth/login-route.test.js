@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const HttpStatus = require("http-status-codes");
 const supertest = require("supertest");
 const app_1 = require("../../app");
 let app;
@@ -20,7 +21,7 @@ describe("authentication-route", () => {
             .get("/auth/login")
             .auth("jack", "daniels")
             .send();
-        expect(response.status).toEqual(200);
+        expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));

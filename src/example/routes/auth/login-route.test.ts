@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
 import setupApp from "../../app";
 
@@ -14,7 +15,7 @@ describe("authentication-route", () => {
       .auth("jack", "daniels")
       .send();
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(HttpStatus.OK);
     expect(response.body.success).toBe(true);
     expect(response.body.payload).toMatchSnapshot();
   });

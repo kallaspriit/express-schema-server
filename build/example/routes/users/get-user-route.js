@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const HttpStatus = require("http-status-codes");
 const normalize_type_1 = require("normalize-type");
 const _1 = require("../../../");
 const users_1 = require("./users");
@@ -46,7 +47,7 @@ exports.default = () => ({
         }
         const user = yield request.db.user.getById(requestData.id);
         if (!user) {
-            response.status(404).send(`User with id "${requestData.id}" could not be found`);
+            response.status(HttpStatus.NOT_FOUND).send(`User with id "${requestData.id}" could not be found`);
             return;
         }
         response.success(users_1.transformUser(user), exports.responseSchema);

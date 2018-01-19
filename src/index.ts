@@ -1,5 +1,6 @@
 import { Application, NextFunction, Request, RequestHandler, Response, Router } from "express";
 import * as glob from "glob";
+import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import normalizeType from "normalize-type";
 import * as path from "path";
@@ -179,9 +180,9 @@ export const paginationOptionsSchema: JSONSchema4 = {
   }
 };
 
-export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router {
+export default function jsonSchemaServerMiddleware<TContext>(options: IJsonSchemaServerOptions<TContext>): Router {
   const router = Router();
-  const routes: Array<IRouteDescriptor<Context>> = [];
+  const routes: Array<IRouteDescriptor<TContext>> = [];
 
   // register dynamic routes
   options.routes.forEach(routeSource => {
@@ -190,7 +191,7 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
     const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
     // build route info
-    const route: IRouteDescriptor<Context> = {
+    const route: IRouteDescriptor<TContext> = {
       ...routeSource,
       ...routeDefinition
     };
@@ -204,7 +205,7 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
     const appMethodName: keyof Application = routeDefinition.method;
 
     // handler can be either a single handler function or array of handlers, treat it always as an array
-    const handlers: Array<RouteRequestHandler<Context>> = Array.isArray(routeDefinition.handler)
+    const handlers: Array<RouteRequestHandler<TContext>> = Array.isArray(routeDefinition.handler)
       ? routeDefinition.handler
       : [routeDefinition.handler];
 
@@ -226,7 +227,7 @@ export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchema
   });
 
   // create endpoint to get the information about all routes
-  router.get("/schema", schemaMiddleware<Context>(options.metadata, routes));
+  router.get("/schema", schemaMiddleware<TContext>(options.metadata, routes));
 
   return router;
 }
@@ -290,7 +291,7 @@ export function buildRoutePath(components: string[]): string {
   return routePath;
 }
 
-export function validateJsonSchema(
+export async function validateJsonSchema(
   data: any,
   schema: JSONSchema4,
   customValidators?: ICustomValidator[]
@@ -329,7 +330,7 @@ export function validateJsonSchema(
 
       resolve({
         isValid,
-        errors: errors || []
+        errors: Array.isArray(errors) ? errors : []
       });
     });
   });
@@ -422,10 +423,7 @@ export function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4 {
   };
 }
 
-export function buildPaginatedResponseSchema(
-  payloadSchema: JSONSchema4,
-  maximumItemsPerPage: number = 100
-): JSONSchema4 {
+export function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage = 100): JSONSchema4 {
   return buildResponseSchema({
     title: `${payloadSchema.title} (paginated)`,
     description: payloadSchema.description,
@@ -463,13 +461,16 @@ export function buildPaginatedResponseSchema(
   });
 }
 
-export async function getRoutes<Context>(baseDirectory: string): Promise<Array<IRouteSource<Context>>> {
-  const pattern = path.join(baseDirectory, "**", "*-route!(*.spec|*.test|*.d).+(js|ts)");
+export async function getRoutes<Context>(
+  baseDirectory: string,
+  filePattern = "**/*-route!(*.spec|*.test|*.d).+(js|ts)"
+): Promise<Array<IRouteSource<Context>>> {
+  const globPattern = path.join(baseDirectory, filePattern);
 
   return new Promise<Array<IRouteSource<Context>>>((resolve, reject) => {
-    glob(pattern, (error, matches) => {
+    glob(globPattern, (error, matches) => {
       /* istanbul ignore if */
-      if (error) {
+      if (error !== null) {
         reject(error);
 
         return;
@@ -483,6 +484,7 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
           const routeSetupFn: RouteSetupFn<Context> = require(match).default;
 
           /* istanbul ignore if */
+          // tslint:disable-next-line:strict-type-predicates
           if (typeof routeSetupFn !== "function") {
             throw new Error(
               `Export of route "${getRouteName(match)}" in "${
@@ -502,7 +504,7 @@ export async function getRoutes<Context>(baseDirectory: string): Promise<Array<I
   });
 }
 
-export function getPaginationPageOptions(query: any, defaultItemsPerPage: number = 10): IPaginationOptions {
+export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): IPaginationOptions {
   const options = normalizeType<IPaginationOptionsPartial>(query);
 
   return {
@@ -587,7 +589,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
         responseSchema
       };
 
-      response.status(400).send(errorResponseData);
+      response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
 
       return;
     }
@@ -626,7 +628,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       const responseData: IRouteResponsePayload<null> = {
         payload: null,
         success: false,
-        error: customErrorMessage || buildErrorMessage(validationErrors),
+        error: customErrorMessage !== undefined ? customErrorMessage : buildErrorMessage(validationErrors),
         validationErrors
       };
 
@@ -644,12 +646,12 @@ function augmentExpressResponse(response: Response): IRouteResponse {
           responseSchema
         };
 
-        response.status(400).send(errorResponseData);
+        response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
 
         return;
       }
 
-      response.status(400).send(responseData);
+      response.status(HttpStatus.BAD_REQUEST).send(responseData);
     }
   });
 }

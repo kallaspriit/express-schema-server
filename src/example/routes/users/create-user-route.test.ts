@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
 import setupApp from "../../app";
 
@@ -14,7 +15,7 @@ describe("create-user-route", () => {
       email: "jack@daniels.com"
     });
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(HttpStatus.OK);
     expect(response.body.success).toBe(true);
     expect(response.body.payload).toMatchSnapshot();
   });
@@ -25,7 +26,7 @@ describe("create-user-route", () => {
       email: "jack@daniels"
     });
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     expect(response.body.success).toBe(false);
     expect(response.body.payload).toMatchSnapshot();
   });
@@ -36,7 +37,7 @@ describe("create-user-route", () => {
       email: "jack@daniels.com"
     });
 
-    expect(response1.status).toEqual(200);
+    expect(response1.status).toEqual(HttpStatus.OK);
     expect(response1.body.success).toBe(true);
     expect(response1.body.payload).toMatchSnapshot();
 
@@ -45,7 +46,7 @@ describe("create-user-route", () => {
       email: "jack@daniels.com"
     });
 
-    expect(response2.status).toEqual(400);
+    expect(response2.status).toEqual(HttpStatus.BAD_REQUEST);
     expect(response2.body.success).toBe(false);
     expect(response2.body.payload).toMatchSnapshot();
   });

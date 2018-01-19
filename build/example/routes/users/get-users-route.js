@@ -28,7 +28,8 @@ exports.default = () => ({
     requestSchema: _1.paginationOptionsSchema,
     responseSchema: exports.responseSchema,
     handler: (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
-        const paginationOptions = _1.getPaginationPageOptions(request.query, 3);
+        const defaultItemsPerPage = 3;
+        const paginationOptions = _1.getPaginationPageOptions(request.query, defaultItemsPerPage);
         const validationResult = yield _1.validateJsonSchema(paginationOptions, _1.paginationOptionsSchema);
         if (!validationResult.isValid) {
             response.fail(validationResult.errors, exports.responseSchema);

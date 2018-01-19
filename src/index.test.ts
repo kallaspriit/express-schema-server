@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
 import setupApp from "./example/app";
 import {
@@ -59,14 +60,14 @@ describe("express-schema-server", () => {
   it("provides schema endpoint for all endpoints", async () => {
     const getResponse = await app.get(`/schema`).send();
 
-    expect(getResponse.status).toEqual(200);
+    expect(getResponse.status).toEqual(HttpStatus.OK);
     expect(getResponse.body).toMatchSnapshot();
   });
 
   it("provides schema endpoint for specific endpoints", async () => {
     const getResponse = await app.get(`/schema/users/post`).send();
 
-    expect(getResponse.status).toEqual(200);
+    expect(getResponse.status).toEqual(HttpStatus.OK);
     expect(getResponse.body).toMatchSnapshot();
   });
 
@@ -122,12 +123,13 @@ describe("express-schema-server", () => {
   });
 
   it("provides helper for pagination page options, one can specify default items per page", async () => {
+    const defaultItemsPerPage = 5;
     const options = getPaginationPageOptions(
       {
         page: "2",
         itemsPerPage: "5"
       },
-      5
+      defaultItemsPerPage
     );
 
     expect(options).toMatchSnapshot();

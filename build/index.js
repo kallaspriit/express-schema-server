@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const glob = require("glob");
+const HttpStatus = require("http-status-codes");
 const normalize_type_1 = require("normalize-type");
 const path = require("path");
 const zSchema = require("z-schema");
@@ -140,37 +141,39 @@ function buildRoutePath(components) {
 }
 exports.buildRoutePath = buildRoutePath;
 function validateJsonSchema(data, schema, customValidators) {
-    return new Promise((resolve, _reject) => {
-        // https://github.com/zaggino/z-schema#options
-        const validator = new zSchema({
-            // noTypeless: true,
-            noExtraKeywords: true,
-            forceItems: true,
-            forceProperties: true
-        });
-        // register custom validators if requested
-        if (Array.isArray(customValidators)) {
-            customValidators.forEach(customValidator => {
-                const formatValidator = (value, validationCallback) => {
-                    customValidator
-                        .validate(value)
-                        .then(isValid => validationCallback(isValid))
-                        .catch(_e => validationCallback(false));
-                };
-                // "as.." is needed because the type definitions is missing the callback signature
-                zSchema.registerFormat(customValidator.name, formatValidator);
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, _reject) => {
+            // https://github.com/zaggino/z-schema#options
+            const validator = new zSchema({
+                // noTypeless: true,
+                noExtraKeywords: true,
+                forceItems: true,
+                forceProperties: true
             });
-        }
-        validator.validate(data, schema, (errors, isValid) => {
-            // unregister added validators
+            // register custom validators if requested
             if (Array.isArray(customValidators)) {
                 customValidators.forEach(customValidator => {
-                    zSchema.unregisterFormat(customValidator.name);
+                    const formatValidator = (value, validationCallback) => {
+                        customValidator
+                            .validate(value)
+                            .then(isValid => validationCallback(isValid))
+                            .catch(_e => validationCallback(false));
+                    };
+                    // "as.." is needed because the type definitions is missing the callback signature
+                    zSchema.registerFormat(customValidator.name, formatValidator);
                 });
             }
-            resolve({
-                isValid,
-                errors: errors || []
+            validator.validate(data, schema, (errors, isValid) => {
+                // unregister added validators
+                if (Array.isArray(customValidators)) {
+                    customValidators.forEach(customValidator => {
+                        zSchema.unregisterFormat(customValidator.name);
+                    });
+                }
+                resolve({
+                    isValid,
+                    errors: Array.isArray(errors) ? errors : []
+                });
             });
         });
     });
@@ -300,13 +303,13 @@ function buildPaginatedResponseSchema(payloadSchema, maximumItemsPerPage = 100) 
     });
 }
 exports.buildPaginatedResponseSchema = buildPaginatedResponseSchema;
-function getRoutes(baseDirectory) {
+function getRoutes(baseDirectory, filePattern = "**/*-route!(*.spec|*.test|*.d).+(js|ts)") {
     return __awaiter(this, void 0, void 0, function* () {
-        const pattern = path.join(baseDirectory, "**", "*-route!(*.spec|*.test|*.d).+(js|ts)");
+        const globPattern = path.join(baseDirectory, filePattern);
         return new Promise((resolve, reject) => {
-            glob(pattern, (error, matches) => {
+            glob(globPattern, (error, matches) => {
                 /* istanbul ignore if */
-                if (error) {
+                if (error !== null) {
                     reject(error);
                     return;
                 }
@@ -317,6 +320,7 @@ function getRoutes(baseDirectory) {
                     setup: () => {
                         const routeSetupFn = require(match).default;
                         /* istanbul ignore if */
+                        // tslint:disable-next-line:strict-type-predicates
                         if (typeof routeSetupFn !== "function") {
                             throw new Error(`Export of route "${getRouteName(match)}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`);
                         }
@@ -403,7 +407,7 @@ function augmentExpressResponse(response) {
                 validationErrors: schemaValidationResult.errors,
                 responseSchema
             };
-            response.status(400).send(errorResponseData);
+            response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
             return;
         }
         response.send(responseData);
@@ -425,7 +429,7 @@ function augmentExpressResponse(response) {
             const responseData = {
                 payload: null,
                 success: false,
-                error: customErrorMessage || buildErrorMessage(validationErrors),
+                error: customErrorMessage !== undefined ? customErrorMessage : buildErrorMessage(validationErrors),
                 validationErrors
             };
             const schemaValidationResult = yield validateJsonSchema(responseData, responseSchema, customValidators);
@@ -440,10 +444,10 @@ function augmentExpressResponse(response) {
                     validationErrors: schemaValidationResult.errors,
                     responseSchema
                 };
-                response.status(400).send(errorResponseData);
+                response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
                 return;
             }
-            response.status(400).send(responseData);
+            response.status(HttpStatus.BAD_REQUEST).send(responseData);
         })
     });
 }

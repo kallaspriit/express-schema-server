@@ -104,13 +104,13 @@ export declare class InvalidApiResponseError extends DetailedError {
     constructor(responseData: IRouteResponsePayload<any>, responseSchema: JSONSchema4, validationErrors: zSchema.SchemaErrorDetail[]);
 }
 export declare const paginationOptionsSchema: JSONSchema4;
-export default function jsonSchemaServerMiddleware<Context>(options: IJsonSchemaServerOptions<Context>): Router;
+export default function jsonSchemaServerMiddleware<TContext>(options: IJsonSchemaServerOptions<TContext>): Router;
 export declare function schemaMiddleware<Context>(metadata: ISchemaMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
 export declare function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema;
 export declare function buildRoutePath(components: string[]): string;
 export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: ICustomValidator[]): Promise<IJsonSchemaValidationResult>;
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;
 export declare function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage?: number): JSONSchema4;
-export declare function getRoutes<Context>(baseDirectory: string): Promise<Array<IRouteSource<Context>>>;
+export declare function getRoutes<Context>(baseDirectory: string, filePattern?: string): Promise<Array<IRouteSource<Context>>>;
 export declare function getPaginationPageOptions(query: any, defaultItemsPerPage?: number): IPaginationOptions;
 export declare function combineMessages(messages: string[]): string;

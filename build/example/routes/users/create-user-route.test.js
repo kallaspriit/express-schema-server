@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const HttpStatus = require("http-status-codes");
 const supertest = require("supertest");
 const app_1 = require("../../app");
 let app;
@@ -20,7 +21,7 @@ describe("create-user-route", () => {
             name: "Jack Daniels",
             email: "jack@daniels.com"
         });
-        expect(response.status).toEqual(200);
+        expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
     }));
@@ -29,7 +30,7 @@ describe("create-user-route", () => {
             name: "Jack Daniels",
             email: "jack@daniels"
         });
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
         expect(response.body.success).toBe(false);
         expect(response.body.payload).toMatchSnapshot();
     }));
@@ -38,14 +39,14 @@ describe("create-user-route", () => {
             name: "Jack Daniels",
             email: "jack@daniels.com"
         });
-        expect(response1.status).toEqual(200);
+        expect(response1.status).toEqual(HttpStatus.OK);
         expect(response1.body.success).toBe(true);
         expect(response1.body.payload).toMatchSnapshot();
         const response2 = yield app.post("/users").send({
             name: "Jack Daniels",
             email: "jack@daniels.com"
         });
-        expect(response2.status).toEqual(400);
+        expect(response2.status).toEqual(HttpStatus.BAD_REQUEST);
         expect(response2.body.success).toBe(false);
         expect(response2.body.payload).toMatchSnapshot();
     }));

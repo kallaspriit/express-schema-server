@@ -34,7 +34,7 @@ exports.userSchema = {
 // transform the whole user model containing information like password hash to match a public IUser interface
 function transformUser(model) {
     return {
-        id: model.id || 0,
+        id: model.id !== undefined ? model.id : 0,
         name: model.name,
         email: model.email
     };

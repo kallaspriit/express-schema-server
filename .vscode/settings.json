@@ -10,20 +10,9 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "tslint.enable": true,
   "tslint.autoFixOnSave": true,
-  "json.schemas": [
-    {
-      "fileMatch": [
-        "config/*.json"
-      ],
-      "url": "./schemas/config.json"
-    }
-  ],
   "tslint.ignoreDefinitionFiles": true,
   "tslint.exclude": "*/node_modules/**/*",
-  "cSpell.words": [
-    "moxios",
-    "validators"
-  ],
+  "cSpell.words": ["moxios", "validators"],
   "editor.insertSpaces": true,
   "prettier.printWidth": 120
 }

@@ -1,3 +1,4 @@
+import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import { normalizeType } from "normalize-type";
 import { buildResponseSchema, IRouteDefinition, validateJsonSchema } from "../../../";
@@ -49,7 +50,7 @@ export default (): IRouteDefinition<IServerContext> => ({
     const user = await request.db.user.getById(requestData.id);
 
     if (!user) {
-      response.status(404).send(`User with id "${requestData.id}" could not be found`);
+      response.status(HttpStatus.NOT_FOUND).send(`User with id "${requestData.id}" could not be found`);
 
       return;
     }

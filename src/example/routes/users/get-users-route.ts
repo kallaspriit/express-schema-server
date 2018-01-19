@@ -29,7 +29,8 @@ export default (): IRouteDefinition<IServerContext> => ({
   requestSchema: paginationOptionsSchema,
   responseSchema,
   handler: async (request, response, _next) => {
-    const paginationOptions = getPaginationPageOptions(request.query, 3);
+    const defaultItemsPerPage = 3;
+    const paginationOptions = getPaginationPageOptions(request.query, defaultItemsPerPage);
     const validationResult = await validateJsonSchema(paginationOptions, paginationOptionsSchema);
 
     if (!validationResult.isValid) {

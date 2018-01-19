@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const HttpStatus = require("http-status-codes");
 const supertest = require("supertest");
 const app_1 = require("./example/app");
 const index_1 = require("./index");
@@ -55,12 +56,12 @@ describe("express-schema-server", () => {
     }));
     it("provides schema endpoint for all endpoints", () => __awaiter(this, void 0, void 0, function* () {
         const getResponse = yield app.get(`/schema`).send();
-        expect(getResponse.status).toEqual(200);
+        expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));
     it("provides schema endpoint for specific endpoints", () => __awaiter(this, void 0, void 0, function* () {
         const getResponse = yield app.get(`/schema/users/post`).send();
-        expect(getResponse.status).toEqual(200);
+        expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));
     it("performs valid json schema validation", () => __awaiter(this, void 0, void 0, function* () {
@@ -100,10 +101,11 @@ describe("express-schema-server", () => {
         expect(options).toMatchSnapshot();
     }));
     it("provides helper for pagination page options, one can specify default items per page", () => __awaiter(this, void 0, void 0, function* () {
+        const defaultItemsPerPage = 5;
         const options = index_1.getPaginationPageOptions({
             page: "2",
             itemsPerPage: "5"
-        }, 5);
+        }, defaultItemsPerPage);
         expect(options).toMatchSnapshot();
     }));
     it("provides helper for combining messages", () => __awaiter(this, void 0, void 0, function* () {
