@@ -148,7 +148,8 @@ function validateJsonSchema(data, schema, customValidators) {
                 // noTypeless: true,
                 noExtraKeywords: true,
                 forceItems: true,
-                forceProperties: true
+                forceProperties: true,
+                breakOnFirstError: false
             });
             // register custom validators if requested
             if (Array.isArray(customValidators)) {
