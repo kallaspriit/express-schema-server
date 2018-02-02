@@ -5,7 +5,7 @@ const validPassword = "foobar";
 const validEmail = "foo@bar.com";
 const validatePassword: ICustomValidator = {
   name: "valid-password",
-  validate: async (password: string) => password === validPassword
+  validate: async (password: string) => password === validPassword,
 };
 const schema: JSONSchema4 = {
   title: "Login",
@@ -18,7 +18,7 @@ const schema: JSONSchema4 = {
       description: "Email address",
       minLength: 3,
       maxLength: 256,
-      format: "email"
+      format: "email",
     },
     password: {
       type: "string",
@@ -26,10 +26,10 @@ const schema: JSONSchema4 = {
       description: "Account password",
       minLength: 6,
       maxLength: 256,
-      format: "valid-password"
-    }
+      format: "valid-password",
+    },
   },
-  required: ["email", "password"]
+  required: ["email", "password"],
 };
 const validators = [validatePassword];
 
@@ -38,7 +38,7 @@ describe("express-schema-server", () => {
   it("validates json schema using both built-in and custom validators", async () => {
     const data = {
       email: validEmail,
-      password: validPassword
+      password: validPassword,
     };
     const result = await validateJsonSchema(data, schema, validators);
 
@@ -47,7 +47,7 @@ describe("express-schema-server", () => {
 
   it("reports missing fields", async () => {
     const data = {
-      email: validEmail
+      email: validEmail,
     };
     const result = await validateJsonSchema(data, schema, validators);
 
@@ -59,7 +59,7 @@ describe("express-schema-server", () => {
   it("reports all issues", async () => {
     const data = {
       email: "",
-      password: ""
+      password: "",
     };
     const result = await validateJsonSchema(data, schema, validators);
 
@@ -71,7 +71,7 @@ describe("express-schema-server", () => {
   it("reports invalid custom validator", async () => {
     const data = {
       email: validEmail,
-      password: "xxxxxx"
+      password: "xxxxxx",
     };
     const result = await validateJsonSchema(data, schema, validators);
 
@@ -83,7 +83,7 @@ describe("express-schema-server", () => {
   it("reports built in validator along with custom custom validator", async () => {
     const data = {
       email: "yyy",
-      password: "xxx"
+      password: "xxx",
     };
     const result = await validateJsonSchema(data, schema, validators);
 

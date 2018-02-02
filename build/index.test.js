@@ -22,10 +22,10 @@ const normalSchema = {
             title: "Name",
             description: "User name",
             type: "string",
-            minLength: 3
-        }
+            minLength: 3,
+        },
     },
-    required: ["name"]
+    required: ["name"],
 };
 const errorSchema = {
     title: "Test schema",
@@ -37,17 +37,17 @@ const errorSchema = {
             description: "User name",
             type: "string",
             minLength: 3,
-            format: "throws-error"
-        }
+            format: "throws-error",
+        },
     },
-    required: ["name"]
+    required: ["name"],
 };
 function validateThrowsError() {
     return {
         name: "throws-error",
         validate: (_value) => __awaiter(this, void 0, void 0, function* () {
             throw new Error("Validator error message");
-        })
+        }),
     };
 }
 describe("express-schema-server", () => {
@@ -66,21 +66,21 @@ describe("express-schema-server", () => {
     }));
     it("performs valid json schema validation", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
-            name: "Jack Daniels"
+            name: "Jack Daniels",
         };
         const validationResult = yield index_1.validateJsonSchema(data, normalSchema);
         expect(validationResult).toMatchSnapshot();
     }));
     it("performs invalid json schema validation", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
-            name: "J" // too short
+            name: "J",
         };
         const validationResult = yield index_1.validateJsonSchema(data, normalSchema);
         expect(validationResult).toMatchSnapshot();
     }));
     it("schema validation fails if missing validator", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
-            name: "Jack Daniels"
+            name: "Jack Daniels",
         };
         const validationResult = yield index_1.validateJsonSchema(data, errorSchema, [validateThrowsError()]);
         expect(validationResult).toMatchSnapshot();
@@ -96,7 +96,7 @@ describe("express-schema-server", () => {
     it("provides helper for pagination page options", () => __awaiter(this, void 0, void 0, function* () {
         const options = index_1.getPaginationPageOptions({
             page: "2",
-            itemsPerPage: "5"
+            itemsPerPage: "5",
         });
         expect(options).toMatchSnapshot();
     }));
@@ -104,7 +104,7 @@ describe("express-schema-server", () => {
         const defaultItemsPerPage = 5;
         const options = index_1.getPaginationPageOptions({
             page: "2",
-            itemsPerPage: "5"
+            itemsPerPage: "5",
         }, defaultItemsPerPage);
         expect(options).toMatchSnapshot();
     }));

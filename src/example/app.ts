@@ -25,15 +25,15 @@ export default async function setupApp(): Promise<express.Express> {
   app.use(bodyParser.json());
   app.use(
     bodyParser.urlencoded({
-      extended: true
-    })
+      extended: true,
+    }),
   );
 
   // setup server context that gets merged into the express request
   const context: IServerContext = {
     db: {
-      user: new Database<User>()
-    }
+      user: new Database<User>(),
+    },
   };
 
   // find all routes
@@ -48,9 +48,9 @@ export default async function setupApp(): Promise<express.Express> {
       metadata: {
         title: "Example API",
         description: "Provides example functionality",
-        version: "1.0.0"
-      }
-    })
+        version: "1.0.0",
+      },
+    }),
   );
 
   return app;

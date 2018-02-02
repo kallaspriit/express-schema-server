@@ -9,5 +9,5 @@ export default (db: Database<User>): ICustomValidator => ({
     const user = await db.getWhere("email", email);
 
     return user === undefined;
-  }
+  },
 });

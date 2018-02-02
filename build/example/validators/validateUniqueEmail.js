@@ -14,6 +14,6 @@ exports.default = (db) => ({
     validate: (email) => __awaiter(this, void 0, void 0, function* () {
         const user = yield db.getWhere("email", email);
         return user === undefined;
-    })
+    }),
 });
 //# sourceMappingURL=validateUniqueEmail.js.map

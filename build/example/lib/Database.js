@@ -42,7 +42,7 @@ class Database {
             const items = filteredItems.slice(startIndex, startIndex + paginationOptions.itemsPerPage);
             return {
                 count,
-                items
+                items,
             };
         });
     }

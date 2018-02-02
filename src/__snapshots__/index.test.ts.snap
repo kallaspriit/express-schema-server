@@ -70,7 +70,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
-      "name": "login-route",
+      "name": "login",
       "path": "/login",
       "requestSchema": Object {},
       "responseSchema": Object {
@@ -186,7 +186,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
-      "name": "invalid-success-route",
+      "name": "invalid-success",
       "path": "/invalid-success",
       "requestSchema": Object {},
       "responseSchema": Object {
@@ -302,7 +302,7 @@ Object {
         "title": "Register user",
       },
       "method": "post",
-      "name": "create-user-route",
+      "name": "create-user",
       "path": "",
       "requestSchema": Object {
         "description": "Create a new user account",
@@ -476,7 +476,7 @@ Object {
         "title": "Get user info",
       },
       "method": "get",
-      "name": "get-user-route",
+      "name": "get-user",
       "path": "/:id",
       "requestSchema": Object {
         "description": "Parameters for getting user info",
@@ -633,7 +633,7 @@ Object {
         "title": "Get users",
       },
       "method": "get",
-      "name": "get-users-route",
+      "name": "get-users",
       "path": "",
       "requestSchema": Object {
         "description": "Paginated request options",
@@ -844,7 +844,7 @@ Object {
     "title": "Register user",
   },
   "method": "post",
-  "name": "create-user-route",
+  "name": "create-user",
   "path": "",
   "requestSchema": Object {
     "description": "Create a new user account",

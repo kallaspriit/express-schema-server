@@ -14,7 +14,7 @@ const validPassword = "foobar";
 const validEmail = "foo@bar.com";
 const validatePassword = {
     name: "valid-password",
-    validate: (password) => __awaiter(this, void 0, void 0, function* () { return password === validPassword; })
+    validate: (password) => __awaiter(this, void 0, void 0, function* () { return password === validPassword; }),
 };
 const schema = {
     title: "Login",
@@ -27,7 +27,7 @@ const schema = {
             description: "Email address",
             minLength: 3,
             maxLength: 256,
-            format: "email"
+            format: "email",
         },
         password: {
             type: "string",
@@ -35,10 +35,10 @@ const schema = {
             description: "Account password",
             minLength: 6,
             maxLength: 256,
-            format: "valid-password"
-        }
+            format: "valid-password",
+        },
     },
-    required: ["email", "password"]
+    required: ["email", "password"],
 };
 const validators = [validatePassword];
 // tslint:disable:no-magic-numbers
@@ -46,14 +46,14 @@ describe("express-schema-server", () => {
     it("validates json schema using both built-in and custom validators", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
             email: validEmail,
-            password: validPassword
+            password: validPassword,
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(true);
     }));
     it("reports missing fields", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
-            email: validEmail
+            email: validEmail,
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);
@@ -63,7 +63,7 @@ describe("express-schema-server", () => {
     it("reports all issues", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
             email: "",
-            password: ""
+            password: "",
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);
@@ -73,7 +73,7 @@ describe("express-schema-server", () => {
     it("reports invalid custom validator", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
             email: validEmail,
-            password: "xxxxxx"
+            password: "xxxxxx",
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);
@@ -83,7 +83,7 @@ describe("express-schema-server", () => {
     it("reports built in validator along with custom custom validator", () => __awaiter(this, void 0, void 0, function* () {
         const data = {
             email: "yyy",
-            password: "xxx"
+            password: "xxx",
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);

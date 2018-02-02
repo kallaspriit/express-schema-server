@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-user should return 404 not found for non-existing user 1`] = `"User with id \\"666\\" could not be found"`;
+
+exports[`get-user should return registered user info 1`] = `
+Object {
+  "email": "jack@daniels.com",
+  "id": 1,
+  "name": "Jack Daniels",
+}
+`;
+
+exports[`get-user should return registered user info 2`] = `
+Object {
+  "email": "jack@daniels.com",
+  "id": 1,
+  "name": "Jack Daniels",
+}
+`;
+
+exports[`get-user should return validation error for invalid user id 1`] = `
+Array [
+  Object {
+    "code": "INVALID_TYPE",
+    "description": "User id",
+    "message": "Expected type number but found type string",
+    "params": Array [
+      "number",
+      "string",
+    ],
+    "path": "#/id",
+  },
+]
+`;

@@ -39,7 +39,7 @@ npm install express-schema-server
 
 See `src/example` directory for a full working example code and run `npm start` to try it out for yourself.
 
-Following is an example route for [creating a new user](https://github.com/kallaspriit/express-schema-server/blob/master/src/example/routes/users/create-user-route.ts).
+Following is an example route for [creating a new user](https://github.com/kallaspriit/express-schema-server/blob/master/src/example/routes/users/create-user.ts).
 
 ```typescript
 import {normalizeType} from 'normalize-type';

@@ -75,13 +75,13 @@ export interface IRouteResponse extends Response {
     paginationOptions: IPaginationOptions,
     itemCount: number,
     responseSchema: JSONSchema4,
-    customValidators?: ICustomValidator[]
+    customValidators?: ICustomValidator[],
   ): void;
   fail(
     validationErrors: zSchema.SchemaErrorDetail[],
     responseSchema: JSONSchema4,
     customValidators?: ICustomValidator[],
-    customErrorMessage?: string
+    customErrorMessage?: string,
   ): void;
 }
 
@@ -90,7 +90,7 @@ export type RouteSetupFn<Context> = () => IRouteDefinition<Context>;
 export type RouteRequestHandler<Context> = (
   request: IRouteRequest<Context>,
   response: IRouteResponse,
-  next: NextFunction
+  next: NextFunction,
 ) => void;
 
 export interface IJsonSchemaValidationResult {
@@ -148,12 +148,12 @@ export class InvalidApiResponseError extends DetailedError {
   public constructor(
     responseData: IRouteResponsePayload<any>,
     responseSchema: JSONSchema4,
-    validationErrors: zSchema.SchemaErrorDetail[]
+    validationErrors: zSchema.SchemaErrorDetail[],
   ) {
     super("Validating generated response against schema failed", {
       validationErrors,
       responseData,
-      responseSchema
+      responseSchema,
     });
   }
 }
@@ -168,16 +168,16 @@ export const paginationOptionsSchema: JSONSchema4 = {
       description: "Page number",
       type: "number",
       minimum: 1,
-      default: 1
+      default: 1,
     },
     itemsPerPage: {
       title: "Items per page",
       description: "Number of items to show on a single page",
       type: "number",
       minimum: 1,
-      default: 10
-    }
-  }
+      default: 10,
+    },
+  },
 };
 
 export default function expressSchemaServer<TContext>(options: IJsonSchemaServerOptions<TContext>): Router {
@@ -193,7 +193,7 @@ export default function expressSchemaServer<TContext>(options: IJsonSchemaServer
     // build route info
     const route: IRouteDescriptor<TContext> = {
       ...routeSource,
-      ...routeDefinition
+      ...routeDefinition,
     };
 
     // register the route info
@@ -234,12 +234,12 @@ export default function expressSchemaServer<TContext>(options: IJsonSchemaServer
 
 export function schemaMiddleware<Context>(
   metadata: ISchemaMetadata,
-  routes: Array<IRouteDescriptor<Context>>
+  routes: Array<IRouteDescriptor<Context>>,
 ): RequestHandler {
   return (request: Request, response: Response, _next: NextFunction) => {
     const schema: ISchema = {
       metadata,
-      routes: routes.map(route => getRouteSchema(route, request.baseUrl))
+      routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
     };
 
     response.send(schema);
@@ -262,7 +262,7 @@ export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUr
     schemaUrl,
     metadata,
     requestSchema,
-    responseSchema
+    responseSchema,
   };
 }
 
@@ -294,7 +294,7 @@ export function buildRoutePath(components: string[]): string {
 export async function validateJsonSchema(
   data: any,
   schema: JSONSchema4,
-  customValidators?: ICustomValidator[]
+  customValidators?: ICustomValidator[],
 ): Promise<IJsonSchemaValidationResult> {
   return new Promise<IJsonSchemaValidationResult>((resolve, _reject) => {
     // https://github.com/zaggino/z-schema#options
@@ -303,7 +303,7 @@ export async function validateJsonSchema(
       noExtraKeywords: true,
       forceItems: true,
       forceProperties: true,
-      breakOnFirstError: false
+      breakOnFirstError: false,
     });
 
     // register custom validators if requested
@@ -331,7 +331,7 @@ export async function validateJsonSchema(
 
       resolve({
         isValid,
-        errors: Array.isArray(errors) ? errors : []
+        errors: Array.isArray(errors) ? errors : [],
       });
     });
   });
@@ -346,29 +346,29 @@ export function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4 {
       payload: {
         oneOf: [
           {
-            type: "null"
+            type: "null",
           },
-          payloadSchema
-        ]
+          payloadSchema,
+        ],
       },
       success: {
         title: "Success indicator",
         description: "This is true if processing the request was successful and false if there were any issues",
-        type: "boolean"
+        type: "boolean",
       },
       error: {
         title: "Error message",
         description: "Combined human-readable error message",
         oneOf: [
           {
-            type: "null"
+            type: "null",
           },
           {
             title: "Error message",
             description: "Combined human-readable error message",
-            type: "string"
-          }
-        ]
+            type: "string",
+          },
+        ],
       },
       validationErrors: {
         title: "Validation errors",
@@ -380,12 +380,12 @@ export function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4 {
             message: {
               title: "Message",
               description: "Validation error message",
-              type: "string"
+              type: "string",
             },
             code: {
               title: "Error code",
               description: "Validation error code",
-              type: "string"
+              type: "string",
             },
             params: {
               title: "Error parameters",
@@ -394,33 +394,33 @@ export function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4 {
               items: {
                 oneOf: [
                   {
-                    type: "null"
+                    type: "null",
                   },
                   {
-                    type: "string"
+                    type: "string",
                   },
                   {
-                    type: "number"
-                  }
-                ]
-              }
+                    type: "number",
+                  },
+                ],
+              },
             },
             path: {
               title: "Error path",
               description: "JSON path to the input parameter that failed the validation",
-              type: "string"
+              type: "string",
             },
             description: {
               title: "Parameter description",
               description: "Failed input parameter description",
-              type: "string"
-            }
+              type: "string",
+            },
           },
-          required: ["message", "code", "params", "path"]
-        }
-      }
+          required: ["message", "code", "params", "path"],
+        },
+      },
     },
-    required: ["payload", "success", "error", "validationErrors"]
+    required: ["payload", "success", "error", "validationErrors"],
   };
 }
 
@@ -436,35 +436,35 @@ export function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximum
         title: "Item count",
         description: "Total number of items",
         type: "number",
-        minimum: 0
+        minimum: 0,
       },
       page: {
         title: "Page",
         description: "Current page number",
         type: "number",
-        minimum: 1
+        minimum: 1,
       },
       pageCount: {
         title: "Page count",
         description: "Total number of pages",
         type: "number",
-        minimum: 0
+        minimum: 0,
       },
       itemsPerPage: {
         title: "Items per page",
         description: "Number of items on each page",
         type: "number",
         minimum: 1,
-        maximum: maximumItemsPerPage
-      }
+        maximum: maximumItemsPerPage,
+      },
     },
-    required: ["items", "itemCount", "page", "pageCount", "itemsPerPage"]
+    required: ["items", "itemCount", "page", "pageCount", "itemsPerPage"],
   });
 }
 
 export async function getRoutes<Context>(
   baseDirectory: string,
-  filePattern = "**/*-route!(*.spec|*.test|*.d).+(js|ts)"
+  filePattern = "**/!(*.spec|*.test|*.d).+(js|ts)",
 ): Promise<Array<IRouteSource<Context>>> {
   const globPattern = path.join(baseDirectory, filePattern);
 
@@ -490,14 +490,14 @@ export async function getRoutes<Context>(
             throw new Error(
               `Export of route "${getRouteName(match)}" in "${
                 match
-              }" is expected to be a function but got ${typeof routeSetupFn}`
+              }" is expected to be a function but got ${typeof routeSetupFn}`,
             );
           }
 
           const routeDefinition = routeSetupFn();
 
           return routeDefinition;
-        }
+        },
       }));
 
       resolve(routes);
@@ -510,7 +510,7 @@ export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): 
 
   return {
     page: options.page !== undefined ? options.page : 1,
-    itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage
+    itemsPerPage: options.itemsPerPage !== undefined ? options.itemsPerPage : defaultItemsPerPage,
   };
 }
 
@@ -577,7 +577,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       payload,
       success: true,
       error: null,
-      validationErrors: []
+      validationErrors: [],
     };
 
     const schemaValidationResult = await validateJsonSchema(responseData, responseSchema, customValidators);
@@ -592,7 +592,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
         error: error.message,
         responseData,
         validationErrors: schemaValidationResult.errors,
-        responseSchema
+        responseSchema,
       };
 
       response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
@@ -612,14 +612,14 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       paginationOptions: IPaginationOptions,
       itemCount: number,
       responseSchema: JSONSchema4,
-      customValidators?: ICustomValidator[]
+      customValidators?: ICustomValidator[],
     ) => {
       const payload: IPaginatedResponse<T> = {
         items,
         itemCount,
         page: paginationOptions.page,
         pageCount: Math.ceil(itemCount / paginationOptions.itemsPerPage),
-        itemsPerPage: paginationOptions.itemsPerPage
+        itemsPerPage: paginationOptions.itemsPerPage,
       };
 
       await success<IPaginatedResponse<T>>(payload, responseSchema, customValidators);
@@ -629,13 +629,13 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       validationErrors: zSchema.SchemaErrorDetail[],
       responseSchema: JSONSchema4,
       customValidators?: ICustomValidator[],
-      customErrorMessage?: string
+      customErrorMessage?: string,
     ) => {
       const responseData: IRouteResponsePayload<null> = {
         payload: null,
         success: false,
         error: customErrorMessage !== undefined ? customErrorMessage : buildErrorMessage(validationErrors),
-        validationErrors
+        validationErrors,
       };
 
       const schemaValidationResult = await validateJsonSchema(responseData, responseSchema, customValidators);
@@ -649,7 +649,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
           error: error.message,
           responseData,
           validationErrors: schemaValidationResult.errors,
-          responseSchema
+          responseSchema,
         };
 
         response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
@@ -658,7 +658,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       }
 
       response.status(HttpStatus.BAD_REQUEST).send(responseData);
-    }
+    },
   });
 }
 

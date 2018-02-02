@@ -40,7 +40,7 @@ export default class Database<T extends IDatabaseItem> {
   public async getPaginated(
     paginationOptions: IPaginationOptions,
     field?: keyof T,
-    value?: any
+    value?: any,
   ): Promise<IPaginationResult<T>> {
     const filteredItems = field ? this.items.filter(item => item[field] === value) : this.items;
     const count = filteredItems.length;
@@ -49,7 +49,7 @@ export default class Database<T extends IDatabaseItem> {
 
     return {
       count,
-      items
+      items,
     };
   }
 

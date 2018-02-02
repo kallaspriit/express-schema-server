@@ -7,7 +7,7 @@ import {
   getPaginationPageOptions,
   ICustomValidator,
   JSONSchema4,
-  validateJsonSchema
+  validateJsonSchema,
 } from "./index";
 
 let app: supertest.SuperTest<supertest.Test>;
@@ -21,10 +21,10 @@ const normalSchema: JSONSchema4 = {
       title: "Name",
       description: "User name",
       type: "string",
-      minLength: 3
-    }
+      minLength: 3,
+    },
   },
-  required: ["name"]
+  required: ["name"],
 };
 
 const errorSchema: JSONSchema4 = {
@@ -37,10 +37,10 @@ const errorSchema: JSONSchema4 = {
       description: "User name",
       type: "string",
       minLength: 3,
-      format: "throws-error"
-    }
+      format: "throws-error",
+    },
   },
-  required: ["name"]
+  required: ["name"],
 };
 
 function validateThrowsError(): ICustomValidator {
@@ -48,7 +48,7 @@ function validateThrowsError(): ICustomValidator {
     name: "throws-error",
     validate: async (_value: string) => {
       throw new Error("Validator error message");
-    }
+    },
   };
 }
 
@@ -73,7 +73,7 @@ describe("express-schema-server", () => {
 
   it("performs valid json schema validation", async () => {
     const data = {
-      name: "Jack Daniels"
+      name: "Jack Daniels",
     };
 
     const validationResult = await validateJsonSchema(data, normalSchema);
@@ -83,7 +83,7 @@ describe("express-schema-server", () => {
 
   it("performs invalid json schema validation", async () => {
     const data = {
-      name: "J" // too short
+      name: "J", // too short
     };
 
     const validationResult = await validateJsonSchema(data, normalSchema);
@@ -93,7 +93,7 @@ describe("express-schema-server", () => {
 
   it("schema validation fails if missing validator", async () => {
     const data = {
-      name: "Jack Daniels"
+      name: "Jack Daniels",
     };
 
     const validationResult = await validateJsonSchema(data, errorSchema, [validateThrowsError()]);
@@ -116,7 +116,7 @@ describe("express-schema-server", () => {
   it("provides helper for pagination page options", async () => {
     const options = getPaginationPageOptions({
       page: "2",
-      itemsPerPage: "5"
+      itemsPerPage: "5",
     });
 
     expect(options).toMatchSnapshot();
@@ -127,9 +127,9 @@ describe("express-schema-server", () => {
     const options = getPaginationPageOptions(
       {
         page: "2",
-        itemsPerPage: "5"
+        itemsPerPage: "5",
       },
-      defaultItemsPerPage
+      defaultItemsPerPage,
     );
 
     expect(options).toMatchSnapshot();

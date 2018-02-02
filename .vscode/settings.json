@@ -5,7 +5,8 @@
     "build/**/*": true,
     ".vscode/**/*": true,
     "coverage/**/*": true,
-    "logs/**/*": true
+    "logs/**/*": true,
+    "**/*.snap": true
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "tslint.enable": true,
