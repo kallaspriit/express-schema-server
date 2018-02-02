@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`express-schema-server reports all issues 1`] = `
+Array [
+  Object {
+    "code": "MIN_LENGTH",
+    "description": "Account password",
+    "message": "String is too short (0 chars), minimum 6",
+    "params": Array [
+      0,
+      6,
+    ],
+    "path": "#/password",
+    "schemaId": undefined,
+  },
+  Object {
+    "code": "MIN_LENGTH",
+    "description": "Email address",
+    "message": "String is too short (0 chars), minimum 3",
+    "params": Array [
+      0,
+      3,
+    ],
+    "path": "#/email",
+    "schemaId": undefined,
+  },
+  Object {
+    "code": "INVALID_FORMAT",
+    "description": "Email address",
+    "message": "Object didn't pass validation for format email: ",
+    "params": Array [
+      "email",
+      "",
+    ],
+    "path": "#/email",
+    "schemaId": undefined,
+  },
+]
+`;
+
+exports[`express-schema-server reports built in validator along with custom custom validator 1`] = `
+Array [
+  Object {
+    "code": "MIN_LENGTH",
+    "description": "Account password",
+    "message": "String is too short (3 chars), minimum 6",
+    "params": Array [
+      3,
+      6,
+    ],
+    "path": "#/password",
+    "schemaId": undefined,
+  },
+  Object {
+    "code": "INVALID_FORMAT",
+    "description": "Email address",
+    "message": "Object didn't pass validation for format email: yyy",
+    "params": Array [
+      "email",
+      "yyy",
+    ],
+    "path": "#/email",
+    "schemaId": undefined,
+  },
+]
+`;
+
+exports[`express-schema-server reports invalid custom validator 1`] = `
+Array [
+  Object {
+    "code": "INVALID_FORMAT",
+    "description": "Account password",
+    "message": "Object didn't pass validation for format valid-password: xxxxxx",
+    "params": Array [
+      "valid-password",
+      "xxxxxx",
+    ],
+    "path": "#/",
+    "schemaId": null,
+  },
+]
+`;
+
+exports[`express-schema-server reports missing fields 1`] = `
+Array [
+  Object {
+    "code": "OBJECT_MISSING_REQUIRED_PROPERTY",
+    "description": "Authenticate with username and password",
+    "message": "Missing required property: password",
+    "params": Array [
+      "password",
+    ],
+    "path": "#/",
+    "schemaId": undefined,
+  },
+]
+`;

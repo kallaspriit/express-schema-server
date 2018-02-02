@@ -302,7 +302,8 @@ export async function validateJsonSchema(
       // noTypeless: true,
       noExtraKeywords: true,
       forceItems: true,
-      forceProperties: true
+      forceProperties: true,
+      breakOnFirstError: false
     });
 
     // register custom validators if requested
