@@ -15,7 +15,7 @@ export interface IPaginationResult<T> {
 
 // in-memory database of given database items
 export default class Database<T extends IDatabaseItem> {
-  private items: T[] = [];
+  private readonly items: T[] = [];
 
   // gives the new item an id, saves it and returns it
   public async save(item: T): Promise<T> {

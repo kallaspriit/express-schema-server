@@ -488,9 +488,9 @@ export async function getRoutes<Context>(
           // tslint:disable-next-line:strict-type-predicates
           if (typeof routeSetupFn !== "function") {
             throw new Error(
-              `Export of route "${getRouteName(match)}" in "${
-                match
-              }" is expected to be a function but got ${typeof routeSetupFn}`,
+              `Export of route "${getRouteName(
+                match,
+              )}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`,
             );
           }
 

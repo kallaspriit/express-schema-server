@@ -64,7 +64,7 @@ describe("express-schema-server", () => {
     const result = await validateJsonSchema(data, schema, validators);
 
     expect(result.isValid).toEqual(false);
-    expect(result.errors.length).toEqual(3);
+    expect(result.errors.length).toEqual(4);
     expect(result.errors).toMatchSnapshot();
   });
 
@@ -88,7 +88,7 @@ describe("express-schema-server", () => {
     const result = await validateJsonSchema(data, schema, validators);
 
     expect(result.isValid).toEqual(false);
-    expect(result.errors.length).toEqual(2);
+    expect(result.errors.length).toEqual(3);
     expect(result.errors).toMatchSnapshot();
   });
 });

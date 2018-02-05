@@ -35,6 +35,17 @@ Array [
     "path": "#/email",
     "schemaId": undefined,
   },
+  Object {
+    "code": "INVALID_FORMAT",
+    "description": "Account password",
+    "message": "Object didn't pass validation for format valid-password: ",
+    "params": Array [
+      "valid-password",
+      "",
+    ],
+    "path": "#/",
+    "schemaId": null,
+  },
 ]
 `;
 
@@ -61,6 +72,17 @@ Array [
     ],
     "path": "#/email",
     "schemaId": undefined,
+  },
+  Object {
+    "code": "INVALID_FORMAT",
+    "description": "Account password",
+    "message": "Object didn't pass validation for format valid-password: xxx",
+    "params": Array [
+      "valid-password",
+      "xxx",
+    ],
+    "path": "#/",
+    "schemaId": null,
   },
 ]
 `;
