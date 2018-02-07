@@ -7,17 +7,17 @@
   "scripts": {
     "start": "tsc-watch --onSuccess \"node build/example\"",
     "debug": "tsc-watch --onSuccess \"node --inspect build/example\"",
-    "tidy": "yarn tidy:build && yarn tidy:coverage",
-    "tidy:build": "rimraf build",
-    "tidy:coverage": "rimraf coverage",
     "build": "yarn tidy && tsc",
     "lint": "tslint --project tsconfig.json --format codeFrame",
     "lint-fix": "tslint --project tsconfig.json src/**/*.ts --fix",
     "test": "jest --verbose",
     "test-watch": "jest --watch --collectCoverage",
+    "tidy": "yarn tidy:build && yarn tidy:coverage",
+    "tidy:build": "rimraf build",
+    "tidy:coverage": "rimraf coverage",
     "coverage": "yarn tidy:coverage && jest --collectCoverage",
-    "coveralls": "yarn coverage && cat ./coverage/lcov.info | coveralls",
     "prettier": "prettier --print-width 120 --write src/**/*.ts",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "precommit": "yarn lint && yarn test && yarn prettier && git add -A"
   },
   "repository": {
