@@ -67,7 +67,7 @@ describe("express-schema-server", () => {
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);
-        expect(result.errors.length).toEqual(3);
+        expect(result.errors.length).toEqual(4);
         expect(result.errors).toMatchSnapshot();
     }));
     it("reports invalid custom validator", () => __awaiter(this, void 0, void 0, function* () {
@@ -87,7 +87,7 @@ describe("express-schema-server", () => {
         };
         const result = yield index_1.validateJsonSchema(data, schema, validators);
         expect(result.isValid).toEqual(false);
-        expect(result.errors.length).toEqual(2);
+        expect(result.errors.length).toEqual(3);
         expect(result.errors).toMatchSnapshot();
     }));
 });

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-user should return custom error 1`] = `"Custom error message"`;

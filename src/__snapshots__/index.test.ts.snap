@@ -177,6 +177,22 @@ Object {
       "schemaUrl": "/schema/auth/login/get",
     },
     Object {
+      "endpointUrl": "/test/custom-error",
+      "group": "test",
+      "metadata": Object {
+        "description": "Returns failure with custom error",
+        "isDeprecated": false,
+        "sinceVersion": "1.0.0",
+        "title": "Custom error",
+      },
+      "method": "get",
+      "name": "custom-error",
+      "path": "/custom-error",
+      "requestSchema": Object {},
+      "responseSchema": Object {},
+      "schemaUrl": "/schema/test/custom-error/get",
+    },
+    Object {
       "endpointUrl": "/test/invalid-success",
       "group": "test",
       "metadata": Object {

@@ -10,7 +10,7 @@ export interface IPaginationResult<T> {
     items: T[];
 }
 export default class Database<T extends IDatabaseItem> {
-    private items;
+    private readonly items;
     save(item: T): Promise<T>;
     getById(id: number): Promise<T | undefined>;
     getWhere(field: keyof T, value: any): Promise<T | undefined>;
