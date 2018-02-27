@@ -67,6 +67,6 @@ export default (): IRouteDefinition<IServerContext> => ({
 
     const user = await request.db.user.save(requestData);
 
-    response.success<User>(user, responseSchema, validators);
+    response.created<User>(user, responseSchema, validators);
   },
 });

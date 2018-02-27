@@ -63,7 +63,7 @@ exports.default = () => ({
             return;
         }
         const user = yield request.db.user.save(requestData);
-        response.success(user, exports.responseSchema, validators);
+        response.created(user, exports.responseSchema, validators);
     }),
 });
 //# sourceMappingURL=create-user.js.map

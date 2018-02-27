@@ -388,7 +388,7 @@ function augmentExpressRequest(request, context) {
     return Object.assign(request, context);
 }
 function augmentExpressResponse(response) {
-    const success = (payload, responseSchema, customValidators) => __awaiter(this, void 0, void 0, function* () {
+    const success = (payload, responseSchema, customValidators, status = HttpStatus.OK) => __awaiter(this, void 0, void 0, function* () {
         const responseData = {
             payload,
             success: true,
@@ -410,11 +410,12 @@ function augmentExpressResponse(response) {
             response.status(HttpStatus.BAD_REQUEST).send(errorResponseData);
             return;
         }
-        response.send(responseData);
+        response.status(status).send(responseData);
     });
     // tslint:disable-next-line prefer-object-spread
     return Object.assign(response, {
-        success,
+        success: (payload, responseSchema, customValidators) => __awaiter(this, void 0, void 0, function* () { return success(payload, responseSchema, customValidators, HttpStatus.OK); }),
+        created: (payload, responseSchema, customValidators) => __awaiter(this, void 0, void 0, function* () { return success(payload, responseSchema, customValidators, HttpStatus.CREATED); }),
         paginatedSuccess: (items, paginationOptions, itemCount, responseSchema, customValidators) => __awaiter(this, void 0, void 0, function* () {
             const payload = {
                 items,
@@ -423,7 +424,7 @@ function augmentExpressResponse(response) {
                 pageCount: Math.ceil(itemCount / paginationOptions.itemsPerPage),
                 itemsPerPage: paginationOptions.itemsPerPage,
             };
-            yield success(payload, responseSchema, customValidators);
+            yield success(payload, responseSchema, customValidators, HttpStatus.OK);
         }),
         fail: (validationErrors, responseSchema, customValidators, customErrorMessage) => __awaiter(this, void 0, void 0, function* () {
             const responseData = {

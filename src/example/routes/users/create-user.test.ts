@@ -15,7 +15,7 @@ describe("create-user", () => {
       email: "jack@daniels.com",
     });
 
-    expect(response.status).toEqual(HttpStatus.OK);
+    expect(response.status).toEqual(HttpStatus.CREATED);
     expect(response.body.success).toBe(true);
     expect(response.body.payload).toMatchSnapshot();
   });
@@ -37,7 +37,7 @@ describe("create-user", () => {
       email: "jack@daniels.com",
     });
 
-    expect(response1.status).toEqual(HttpStatus.OK);
+    expect(response1.status).toEqual(HttpStatus.CREATED);
     expect(response1.body.success).toBe(true);
     expect(response1.body.payload).toMatchSnapshot();
 

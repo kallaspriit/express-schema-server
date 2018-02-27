@@ -70,6 +70,7 @@ export type IRouteRequest<Context> = Request & Context;
 
 export interface IRouteResponse extends Response {
   success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
+  created<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
   paginatedSuccess<T>(
     items: T[],
     paginationOptions: IPaginationOptions,
@@ -572,7 +573,12 @@ function augmentExpressRequest<Context>(request: Request, context: Context): IRo
 }
 
 function augmentExpressResponse(response: Response): IRouteResponse {
-  const success = async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]) => {
+  const success = async <T>(
+    payload: T,
+    responseSchema: JSONSchema4,
+    customValidators?: ICustomValidator[],
+    status = HttpStatus.OK,
+  ) => {
     const responseData: IRouteResponsePayload<T> = {
       payload,
       success: true,
@@ -600,12 +606,16 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       return;
     }
 
-    response.send(responseData);
+    response.status(status).send(responseData);
   };
 
   // tslint:disable-next-line prefer-object-spread
   return Object.assign(response, {
-    success,
+    success: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]) =>
+      success(payload, responseSchema, customValidators, HttpStatus.OK),
+
+    created: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]) =>
+      success(payload, responseSchema, customValidators, HttpStatus.CREATED),
 
     paginatedSuccess: async <T>(
       items: T[],
@@ -622,7 +632,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
         itemsPerPage: paginationOptions.itemsPerPage,
       };
 
-      await success<IPaginatedResponse<T>>(payload, responseSchema, customValidators);
+      await success<IPaginatedResponse<T>>(payload, responseSchema, customValidators, HttpStatus.OK);
     },
 
     fail: async (

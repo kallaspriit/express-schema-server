@@ -21,7 +21,7 @@ describe("get-user", () => {
             name: "Jack Daniels",
             email: "jack@daniels.com",
         });
-        expect(createResponse.status).toEqual(HttpStatus.OK);
+        expect(createResponse.status).toEqual(HttpStatus.CREATED);
         expect(createResponse.body.success).toBe(true);
         expect(createResponse.body.payload).toMatchSnapshot();
         const getResponse = yield app.get(`/users/${createResponse.body.payload.id}`).send();

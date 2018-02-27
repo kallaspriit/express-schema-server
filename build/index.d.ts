@@ -56,6 +56,7 @@ export interface IRouteResponsePayload<T> {
 export declare type IRouteRequest<Context> = Request & Context;
 export interface IRouteResponse extends Response {
     success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
+    created<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
     paginatedSuccess<T>(items: T[], paginationOptions: IPaginationOptions, itemCount: number, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
     fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: ICustomValidator[], customErrorMessage?: string): void;
 }
