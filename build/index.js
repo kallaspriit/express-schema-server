@@ -68,20 +68,20 @@ function expressSchemaServer(options) {
             routes.push(route);
         }
         // type safe method name
-        const appMethodName = routeDefinition.method;
+        const method = routeDefinition.method !== undefined ? routeDefinition.method : "get";
         // handler can be either a single handler function or array of handlers, treat it always as an array
         const handlers = Array.isArray(routeDefinition.handler)
             ? routeDefinition.handler
             : [routeDefinition.handler];
         // register the handlers
         handlers.forEach(handler => {
-            router[appMethodName](endpoint, (request, response, next) => {
+            router[method](endpoint, (request, response, next) => {
                 handler(augmentExpressRequest(request, options.context), augmentExpressResponse(response), next);
             });
         });
         // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
         if (routeSource.group !== "") {
-            const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), routeDefinition.method]);
+            const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), method]);
             router.get(schemaPath, (request, response, _next) => {
                 response.send(getRouteSchema(route, request.baseUrl));
             });
@@ -105,8 +105,9 @@ exports.schemaMiddleware = schemaMiddleware;
 function getRouteSchema(route, baseUrl) {
     const endpointPath = buildRoutePath([route.group, route.path]);
     const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
-    const schemaUrl = buildRoutePath([baseUrl, "schema", getRouteWithoutParameters(endpointPath), route.method]);
-    const { method, group, name, metadata, requestSchema, responseSchema } = route;
+    const method = route.method !== undefined ? route.method : "get";
+    const schemaUrl = buildRoutePath([baseUrl, "schema", getRouteWithoutParameters(endpointPath), method]);
+    const { group, name, metadata, requestSchema, responseSchema } = route;
     return {
         method,
         group,
@@ -115,8 +116,8 @@ function getRouteSchema(route, baseUrl) {
         endpointUrl,
         schemaUrl,
         metadata,
-        requestSchema,
-        responseSchema,
+        requestSchema: requestSchema !== undefined ? requestSchema : {},
+        responseSchema: responseSchema !== undefined ? responseSchema : {},
     };
 }
 exports.getRouteSchema = getRouteSchema;

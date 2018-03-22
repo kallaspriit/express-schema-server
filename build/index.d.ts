@@ -13,11 +13,11 @@ export interface IRouteMetadata {
 }
 export interface IRouteDefinition<Context> {
     path: string;
-    method: RouteMethodVerb;
-    metadata: IRouteMetadata;
-    requestSchema: JSONSchema4;
-    responseSchema: JSONSchema4;
     handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
+    method?: RouteMethodVerb;
+    metadata?: IRouteMetadata;
+    requestSchema?: JSONSchema4;
+    responseSchema?: JSONSchema4;
 }
 export interface IRouteSource<Context> {
     group: string;
@@ -33,9 +33,9 @@ export interface IRouteSchema {
     path: string;
     endpointUrl: string;
     schemaUrl: string;
-    metadata: IRouteMetadata;
     requestSchema: JSONSchema4;
     responseSchema: JSONSchema4;
+    metadata?: IRouteMetadata;
 }
 export interface ISchemaMetadata {
     title: string;

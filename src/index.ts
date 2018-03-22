@@ -19,11 +19,11 @@ export interface IRouteMetadata {
 
 export interface IRouteDefinition<Context> {
   path: string;
-  method: RouteMethodVerb;
-  metadata: IRouteMetadata;
-  requestSchema: JSONSchema4;
-  responseSchema: JSONSchema4;
   handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
+  method?: RouteMethodVerb;
+  metadata?: IRouteMetadata;
+  requestSchema?: JSONSchema4;
+  responseSchema?: JSONSchema4;
 }
 
 export interface IRouteSource<Context> {
@@ -42,9 +42,9 @@ export interface IRouteSchema {
   path: string;
   endpointUrl: string;
   schemaUrl: string;
-  metadata: IRouteMetadata;
   requestSchema: JSONSchema4;
   responseSchema: JSONSchema4;
+  metadata?: IRouteMetadata;
 }
 
 export interface ISchemaMetadata {
@@ -203,7 +203,7 @@ export default function expressSchemaServer<TContext>(options: IJsonSchemaServer
     }
 
     // type safe method name
-    const appMethodName: keyof Application = routeDefinition.method;
+    const method: keyof Application = routeDefinition.method !== undefined ? routeDefinition.method : "get";
 
     // handler can be either a single handler function or array of handlers, treat it always as an array
     const handlers: Array<RouteRequestHandler<TContext>> = Array.isArray(routeDefinition.handler)
@@ -212,14 +212,14 @@ export default function expressSchemaServer<TContext>(options: IJsonSchemaServer
 
     // register the handlers
     handlers.forEach(handler => {
-      router[appMethodName](endpoint, (request, response, next) => {
+      router[method](endpoint, (request, response, next) => {
         handler(augmentExpressRequest(request, options.context), augmentExpressResponse(response), next);
       });
     });
 
     // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
     if (routeSource.group !== "") {
-      const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), routeDefinition.method]);
+      const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), method]);
 
       router.get(schemaPath, (request, response, _next) => {
         response.send(getRouteSchema(route, request.baseUrl));
@@ -250,9 +250,10 @@ export function schemaMiddleware<Context>(
 export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema {
   const endpointPath = buildRoutePath([route.group, route.path]);
   const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
-  const schemaUrl = buildRoutePath([baseUrl, "schema", getRouteWithoutParameters(endpointPath), route.method]);
+  const method = route.method !== undefined ? route.method : "get";
+  const schemaUrl = buildRoutePath([baseUrl, "schema", getRouteWithoutParameters(endpointPath), method]);
 
-  const { method, group, name, metadata, requestSchema, responseSchema } = route;
+  const { group, name, metadata, requestSchema, responseSchema } = route;
 
   return {
     method,
@@ -262,8 +263,8 @@ export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUr
     endpointUrl,
     schemaUrl,
     metadata,
-    requestSchema,
-    responseSchema,
+    requestSchema: requestSchema !== undefined ? requestSchema : {},
+    responseSchema: responseSchema !== undefined ? responseSchema : {},
   };
 }
 
