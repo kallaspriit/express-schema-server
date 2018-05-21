@@ -1,6 +1,6 @@
 {
   "name": "express-schema-server",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "description": "Middleware for describing and validating your REST API routes using JSON schemas.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -28,7 +28,15 @@
     "type": "git",
     "url": "https://github.com/kallaspriit/express-schema-server.git"
   },
-  "keywords": ["normalize", "javascript", "type", "types", "real", "number", "boolean"],
+  "keywords": [
+    "normalize",
+    "javascript",
+    "type",
+    "types",
+    "real",
+    "number",
+    "boolean"
+  ],
   "author": "Priit Kallas <kallaspriit@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -70,11 +78,22 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "roots": ["src"],
+    "roots": [
+      "src"
+    ],
     "mapCoverage": true,
     "collectCoverage": false,
-    "collectCoverageFrom": ["**/src/index.ts", "**/routes/**/*.ts", "!**/routes/root.ts"],
+    "collectCoverageFrom": [
+      "**/src/index.ts",
+      "**/routes/**/*.ts",
+      "!**/routes/root.ts"
+    ],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
   }
 }
