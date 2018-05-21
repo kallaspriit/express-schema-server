@@ -1,20 +1,20 @@
 // database items have an optional numeric id
-export interface IDatabaseItem {
+export interface DatabaseItem {
   id?: number;
 }
 
-export interface IPaginationOptions {
+export interface PaginationOptions {
   page: number;
   itemsPerPage: number;
 }
 
-export interface IPaginationResult<T> {
+export interface PaginationResult<T> {
   count: number;
   items: T[];
 }
 
 // in-memory database of given database items
-export default class Database<T extends IDatabaseItem> {
+export default class Database<T extends DatabaseItem> {
   private readonly items: T[] = [];
 
   // gives the new item an id, saves it and returns it
@@ -38,10 +38,10 @@ export default class Database<T extends IDatabaseItem> {
 
   // fetches items by any of the properties
   public async getPaginated(
-    paginationOptions: IPaginationOptions,
+    paginationOptions: PaginationOptions,
     field?: keyof T,
     value?: any,
-  ): Promise<IPaginationResult<T>> {
+  ): Promise<PaginationResult<T>> {
     const filteredItems = field ? this.items.filter(item => item[field] === value) : this.items;
     const count = filteredItems.length;
     const startIndex = (paginationOptions.page - 1) * paginationOptions.itemsPerPage;

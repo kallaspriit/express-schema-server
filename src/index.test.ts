@@ -3,9 +3,9 @@ import * as supertest from "supertest";
 import setupApp from "./example/app";
 import {
   combineMessages,
+  CustomValidator,
   DetailedError,
   getPaginationPageOptions,
-  ICustomValidator,
   JSONSchema4,
   validateJsonSchema,
 } from "./index";
@@ -43,7 +43,7 @@ const errorSchema: JSONSchema4 = {
   required: ["name"],
 };
 
-function validateThrowsError(): ICustomValidator {
+function validateThrowsError(): CustomValidator {
   return {
     name: "throws-error",
     validate: async (_value: string) => {

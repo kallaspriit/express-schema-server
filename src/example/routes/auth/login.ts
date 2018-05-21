@@ -1,7 +1,7 @@
 import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
-import { buildResponseSchema, IRouteDefinition } from "../../../";
-import { IServerContext } from "../../app";
+import { buildResponseSchema, RouteDefinition } from "../../../";
+import { ServerContext } from "../../app";
 import User from "../../models/User";
 
 export const responseSchema: JSONSchema4 = buildResponseSchema({
@@ -13,7 +13,7 @@ export const responseSchema: JSONSchema4 = buildResponseSchema({
   },
 });
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "/login",
   method: "get",
   metadata: {

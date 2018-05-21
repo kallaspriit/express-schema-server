@@ -21,21 +21,14 @@
     "test-watch": "jest --watch --collectCoverage",
     "coverage": "yarn tidy:coverage && jest --collectCoverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "precommit": "yarn build && yarn lint && prettier --list-different src/**/*.ts"
+    "precommit": "yarn build && yarn lint && prettier --list-different src/**/*.ts",
+    "audit": "yarn prettier && yarn build && yarn lint && yarn coverage"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/kallaspriit/express-schema-server.git"
   },
-  "keywords": [
-    "normalize",
-    "javascript",
-    "type",
-    "types",
-    "real",
-    "number",
-    "boolean"
-  ],
+  "keywords": ["normalize", "javascript", "type", "types", "real", "number", "boolean"],
   "author": "Priit Kallas <kallaspriit@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -77,22 +70,11 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "roots": [
-      "src"
-    ],
+    "roots": ["src"],
     "mapCoverage": true,
     "collectCoverage": false,
-    "collectCoverageFrom": [
-      "**/src/index.ts",
-      "**/routes/**/*.ts",
-      "!**/routes/root.ts"
-    ],
+    "collectCoverageFrom": ["**/src/index.ts", "**/routes/**/*.ts", "!**/routes/root.ts"],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"]
   }
 }

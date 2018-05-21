@@ -2,11 +2,11 @@ import { JSONSchema4 } from "json-schema";
 import {
   buildPaginatedResponseSchema,
   getPaginationPageOptions,
-  IRouteDefinition,
   paginationOptionsSchema,
+  RouteDefinition,
   validateJsonSchema,
 } from "../../../";
-import { IServerContext } from "../../app";
+import { ServerContext } from "../../app";
 import User from "../../models/User";
 import userSchema from "../../schemas/user-schema";
 
@@ -17,7 +17,7 @@ export const responseSchema: JSONSchema4 = buildPaginatedResponseSchema({
   items: userSchema,
 });
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "",
   method: "get",
   metadata: {

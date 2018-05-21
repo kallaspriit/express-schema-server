@@ -1,7 +1,7 @@
-import { IRouteDefinition } from "../../index";
-import { IServerContext } from "../app";
+import { RouteDefinition } from "../../index";
+import { ServerContext } from "../app";
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "/",
   method: "get",
   metadata: {

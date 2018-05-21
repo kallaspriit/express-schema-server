@@ -1,12 +1,12 @@
 import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import { normalizeType } from "normalize-type";
-import { buildResponseSchema, IRouteDefinition, validateJsonSchema } from "../../../";
-import { IServerContext } from "../../app";
+import { buildResponseSchema, RouteDefinition, validateJsonSchema } from "../../../";
+import { ServerContext } from "../../app";
 import User from "../../models/User";
 import userSchema from "../../schemas/user-schema";
 
-export interface IGetUserParameters {
+export interface GetUserParameters {
   id: number;
 }
 
@@ -27,7 +27,7 @@ export const requestSchema: JSONSchema4 = {
 
 export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "/:id",
   method: "get",
   metadata: {
@@ -39,7 +39,7 @@ export default (): IRouteDefinition<IServerContext> => ({
   requestSchema,
   responseSchema,
   handler: async (request, response, _next) => {
-    const requestData = normalizeType<IGetUserParameters>(request.params);
+    const requestData = normalizeType<GetUserParameters>(request.params);
     const validationResult = await validateJsonSchema(requestData, requestSchema);
 
     if (!validationResult.isValid) {

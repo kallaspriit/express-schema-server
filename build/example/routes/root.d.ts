@@ -1,4 +1,4 @@
-import { IRouteDefinition } from "../../index";
-import { IServerContext } from "../app";
-declare const _default: () => IRouteDefinition<IServerContext>;
+import { RouteDefinition } from "../../index";
+import { ServerContext } from "../app";
+declare const _default: () => RouteDefinition<ServerContext>;
 export default _default;

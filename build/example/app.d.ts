@@ -2,11 +2,11 @@
 import * as express from "express";
 import Database from "./lib/Database";
 import User from "./models/User";
-export interface IDatabaseManager {
+export interface DatabaseManager {
     user: Database<User>;
 }
-export interface IServerContext {
-    db: IDatabaseManager;
+export interface ServerContext {
+    db: DatabaseManager;
     loggedInUser?: User;
 }
 export default function setupApp(): Promise<express.Express>;

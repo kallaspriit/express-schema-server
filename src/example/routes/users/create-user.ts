@@ -1,11 +1,11 @@
 import { normalizeType } from "normalize-type";
-import { buildResponseSchema, ICustomValidator, IRouteDefinition, JSONSchema4, validateJsonSchema } from "../../../";
-import { IServerContext } from "../../app";
+import { buildResponseSchema, CustomValidator, JSONSchema4, RouteDefinition, validateJsonSchema } from "../../../";
+import { ServerContext } from "../../app";
 import User from "../../models/User";
 import userSchema from "../../schemas/user-schema";
 import validateUniqueEmail from "../../validators/validateUniqueEmail";
 
-export interface ICreateUserRequest {
+export interface CreateUserRequest {
   name: string;
   email: string;
 }
@@ -43,7 +43,7 @@ export const requestSchema: JSONSchema4 = {
 
 export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "",
   method: "post",
   metadata: {
@@ -55,8 +55,8 @@ export default (): IRouteDefinition<IServerContext> => ({
   requestSchema,
   responseSchema,
   handler: async (request, response, _next) => {
-    const requestData = normalizeType<ICreateUserRequest>(request.body);
-    const validators: ICustomValidator[] = [validateUniqueEmail(request.db.user)];
+    const requestData = normalizeType<CreateUserRequest>(request.body);
+    const validators: CustomValidator[] = [validateUniqueEmail(request.db.user)];
     const validationResult = await validateJsonSchema(requestData, requestSchema, validators);
 
     if (!validationResult.isValid) {

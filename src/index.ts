@@ -10,32 +10,32 @@ export { JSONSchema4 } from "json-schema";
 
 export type RouteMethodVerb = "get" | "post" | "delete" | "put";
 
-export interface IRouteMetadata {
+export interface RouteMetadata {
   title: string;
   description: string;
   sinceVersion: string;
   isDeprecated: boolean;
 }
 
-export interface IRouteDefinition<Context> {
+export interface RouteDefinition<Context> {
   path: string;
   handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
   method?: RouteMethodVerb;
-  metadata?: IRouteMetadata;
+  metadata?: RouteMetadata;
   requestSchema?: JSONSchema4;
   responseSchema?: JSONSchema4;
 }
 
-export interface IRouteSource<Context> {
+export interface RouteSource<Context> {
   group: string;
   name: string;
   filename: string;
   setup: RouteSetupFn<Context>;
 }
 
-export type IRouteDescriptor<Context> = IRouteSource<Context> & IRouteDefinition<Context>;
+export type IRouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
 
-export interface IRouteSchema {
+export interface RouteSchema {
   method: RouteMethodVerb;
   group: string;
   name: string;
@@ -44,21 +44,21 @@ export interface IRouteSchema {
   schemaUrl: string;
   requestSchema: JSONSchema4;
   responseSchema: JSONSchema4;
-  metadata?: IRouteMetadata;
+  metadata?: RouteMetadata;
 }
 
-export interface ISchemaMetadata {
+export interface SchemaMetadata {
   title: string;
   description: string;
   version: string;
 }
 
-export interface ISchema {
-  metadata: ISchemaMetadata;
-  routes: IRouteSchema[];
+export interface Schema {
+  metadata: SchemaMetadata;
+  routes: RouteSchema[];
 }
 
-export interface IRouteResponsePayload<T> {
+export interface RouteResponsePayload<T> {
   payload: T | null;
   success: boolean;
   error: string | null;
@@ -68,55 +68,55 @@ export interface IRouteResponsePayload<T> {
 
 export type IRouteRequest<Context> = Request & Context;
 
-export interface IRouteResponse extends Response {
-  success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
-  created<T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]): void;
+export interface RouteResponse extends Response {
+  success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]): void;
+  created<T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]): void;
   paginatedSuccess<T>(
     items: T[],
-    paginationOptions: IPaginationOptions,
+    paginationOptions: PaginationOptions,
     itemCount: number,
     responseSchema: JSONSchema4,
-    customValidators?: ICustomValidator[],
+    customValidators?: CustomValidator[],
   ): void;
   fail(
     validationErrors: zSchema.SchemaErrorDetail[],
     responseSchema: JSONSchema4,
-    customValidators?: ICustomValidator[],
+    customValidators?: CustomValidator[],
     customErrorMessage?: string,
   ): void;
 }
 
-export type RouteSetupFn<Context> = () => IRouteDefinition<Context>;
+export type RouteSetupFn<Context> = () => RouteDefinition<Context>;
 
 export type RouteRequestHandler<Context> = (
   request: IRouteRequest<Context>,
-  response: IRouteResponse,
+  response: RouteResponse,
   next: NextFunction,
 ) => void;
 
-export interface IJsonSchemaValidationResult {
+export interface JsonSchemaValidationResult {
   isValid: boolean;
   errors: zSchema.SchemaErrorDetail[];
 }
 
-export interface IJsonSchemaServerOptions<Context> {
-  routes: Array<IRouteSource<Context>>;
+export interface JsonSchemaServerOptions<Context> {
+  routes: Array<RouteSource<Context>>;
   context: Context;
-  metadata: ISchemaMetadata;
+  metadata: SchemaMetadata;
 }
 
-export interface IErrorDetails {
+export interface ErrorDetails {
   [x: string]: any;
 }
 
 export type CustomValidatorFn = (value: any) => Promise<boolean>;
 
-export interface ICustomValidator {
+export interface CustomValidator {
   name: string;
   validate: CustomValidatorFn;
 }
 
-export interface IPaginatedResponse<Payload> {
+export interface PaginatedResponse<Payload> {
   items: Payload[];
   itemCount: number;
   page: number;
@@ -124,22 +124,22 @@ export interface IPaginatedResponse<Payload> {
   itemsPerPage: number;
 }
 
-export interface IPaginationOptionsPartial {
+export interface PaginationOptionsPartial {
   page?: number;
   itemsPerPage?: number;
 }
 
-export interface IPaginationOptions {
+export interface PaginationOptions {
   page: number;
   itemsPerPage: number;
 }
 
-export interface IObjectLiteral {
+export interface ObjectLiteral {
   [key: string]: any;
 }
 
 export class DetailedError extends Error {
-  public constructor(message: string, public details: IErrorDetails | null = null) {
+  public constructor(message: string, public details: ErrorDetails | null = null) {
     super(message);
   }
 }
@@ -147,7 +147,7 @@ export class DetailedError extends Error {
 // tslint:disable-next-line:max-classes-per-file
 export class InvalidApiResponseError extends DetailedError {
   public constructor(
-    responseData: IRouteResponsePayload<any>,
+    responseData: RouteResponsePayload<any>,
     responseSchema: JSONSchema4,
     validationErrors: zSchema.SchemaErrorDetail[],
   ) {
@@ -181,7 +181,7 @@ export const paginationOptionsSchema: JSONSchema4 = {
   },
 };
 
-export default function expressSchemaServer<TContext>(options: IJsonSchemaServerOptions<TContext>): Router {
+export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
   const router = Router();
   const routes: Array<IRouteDescriptor<TContext>> = [];
 
@@ -234,11 +234,11 @@ export default function expressSchemaServer<TContext>(options: IJsonSchemaServer
 }
 
 export function schemaMiddleware<Context>(
-  metadata: ISchemaMetadata,
+  metadata: SchemaMetadata,
   routes: Array<IRouteDescriptor<Context>>,
 ): RequestHandler {
   return (request: Request, response: Response, _next: NextFunction) => {
-    const schema: ISchema = {
+    const schema: Schema = {
       metadata,
       routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
     };
@@ -247,7 +247,7 @@ export function schemaMiddleware<Context>(
   };
 }
 
-export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): IRouteSchema {
+export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): RouteSchema {
   const endpointPath = buildRoutePath([route.group, route.path]);
   const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
   const method = route.method !== undefined ? route.method : "get";
@@ -296,9 +296,9 @@ export function buildRoutePath(components: string[]): string {
 export async function validateJsonSchema(
   data: any,
   schema: JSONSchema4,
-  customValidators?: ICustomValidator[],
-): Promise<IJsonSchemaValidationResult> {
-  return new Promise<IJsonSchemaValidationResult>((resolve, _reject) => {
+  customValidators?: CustomValidator[],
+): Promise<JsonSchemaValidationResult> {
+  return new Promise<JsonSchemaValidationResult>((resolve, _reject) => {
     // https://github.com/zaggino/z-schema#options
     const validator = new zSchema({
       // noTypeless: true,
@@ -467,10 +467,10 @@ export function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximum
 export async function getRoutes<Context>(
   baseDirectory: string,
   filePattern = "**/!(*.spec|*.test|*.d).+(js|ts)",
-): Promise<Array<IRouteSource<Context>>> {
+): Promise<Array<RouteSource<Context>>> {
   const globPattern = path.join(baseDirectory, filePattern);
 
-  return new Promise<Array<IRouteSource<Context>>>((resolve, reject) => {
+  return new Promise<Array<RouteSource<Context>>>((resolve, reject) => {
     glob(globPattern, (error, matches) => {
       /* istanbul ignore if */
       if (error !== null) {
@@ -479,11 +479,11 @@ export async function getRoutes<Context>(
         return;
       }
 
-      const routes: Array<IRouteSource<Context>> = matches.map(match => ({
+      const routes: Array<RouteSource<Context>> = matches.map(match => ({
         group: getRouteGroup(match, baseDirectory),
         name: getRouteName(match),
         filename: match,
-        setup: (): IRouteDefinition<Context> => {
+        setup: (): RouteDefinition<Context> => {
           const routeSetupFn: RouteSetupFn<Context> = require(match).default;
 
           /* istanbul ignore if */
@@ -507,8 +507,8 @@ export async function getRoutes<Context>(
   });
 }
 
-export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): IPaginationOptions {
-  const options = normalizeType<IPaginationOptionsPartial>(query);
+export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): PaginationOptions {
+  const options = normalizeType<PaginationOptionsPartial>(query);
 
   return {
     page: options.page !== undefined ? options.page : 1,
@@ -573,14 +573,14 @@ function augmentExpressRequest<Context>(request: Request, context: Context): IRo
   return Object.assign(request, context);
 }
 
-function augmentExpressResponse(response: Response): IRouteResponse {
+function augmentExpressResponse(response: Response): RouteResponse {
   const success = async <T>(
     payload: T,
     responseSchema: JSONSchema4,
-    customValidators?: ICustomValidator[],
+    customValidators?: CustomValidator[],
     status = HttpStatus.OK,
   ) => {
-    const responseData: IRouteResponsePayload<T> = {
+    const responseData: RouteResponsePayload<T> = {
       payload,
       success: true,
       error: null,
@@ -593,7 +593,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       // throw new InvalidApiResponseError(responseData, responseSchema, schemaValidationResult.errors);
 
       const error = new InvalidApiResponseError(responseData, responseSchema, schemaValidationResult.errors);
-      const errorResponseData: IRouteResponsePayload<T> = {
+      const errorResponseData: RouteResponsePayload<T> = {
         payload: null,
         success: false,
         error: error.message,
@@ -612,20 +612,20 @@ function augmentExpressResponse(response: Response): IRouteResponse {
 
   // tslint:disable-next-line prefer-object-spread
   return Object.assign(response, {
-    success: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]) =>
+    success: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]) =>
       success(payload, responseSchema, customValidators, HttpStatus.OK),
 
-    created: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: ICustomValidator[]) =>
+    created: async <T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]) =>
       success(payload, responseSchema, customValidators, HttpStatus.CREATED),
 
     paginatedSuccess: async <T>(
       items: T[],
-      paginationOptions: IPaginationOptions,
+      paginationOptions: PaginationOptions,
       itemCount: number,
       responseSchema: JSONSchema4,
-      customValidators?: ICustomValidator[],
+      customValidators?: CustomValidator[],
     ) => {
-      const payload: IPaginatedResponse<T> = {
+      const payload: PaginatedResponse<T> = {
         items,
         itemCount,
         page: paginationOptions.page,
@@ -633,16 +633,16 @@ function augmentExpressResponse(response: Response): IRouteResponse {
         itemsPerPage: paginationOptions.itemsPerPage,
       };
 
-      await success<IPaginatedResponse<T>>(payload, responseSchema, customValidators, HttpStatus.OK);
+      await success<PaginatedResponse<T>>(payload, responseSchema, customValidators, HttpStatus.OK);
     },
 
     fail: async (
       validationErrors: zSchema.SchemaErrorDetail[],
       responseSchema: JSONSchema4,
-      customValidators?: ICustomValidator[],
+      customValidators?: CustomValidator[],
       customErrorMessage?: string,
     ) => {
-      const responseData: IRouteResponsePayload<null> = {
+      const responseData: RouteResponsePayload<null> = {
         payload: null,
         success: false,
         error: customErrorMessage !== undefined ? customErrorMessage : buildErrorMessage(validationErrors),
@@ -654,7 +654,7 @@ function augmentExpressResponse(response: Response): IRouteResponse {
       /* istanbul ignore if */
       if (!schemaValidationResult.isValid) {
         const error = new InvalidApiResponseError(responseData, responseSchema, schemaValidationResult.errors);
-        const errorResponseData: IRouteResponsePayload<null> = {
+        const errorResponseData: RouteResponsePayload<null> = {
           payload: null,
           success: false,
           error: error.message,

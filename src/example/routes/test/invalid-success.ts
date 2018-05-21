@@ -1,6 +1,6 @@
 import { JSONSchema4 } from "json-schema";
-import { buildResponseSchema, IRouteDefinition } from "../../../";
-import { IServerContext } from "../../app";
+import { buildResponseSchema, RouteDefinition } from "../../../";
+import { ServerContext } from "../../app";
 
 export const responseSchema: JSONSchema4 = buildResponseSchema({
   type: "object",
@@ -11,7 +11,7 @@ export const responseSchema: JSONSchema4 = buildResponseSchema({
   },
 });
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "/invalid-success",
   method: "get",
   metadata: {

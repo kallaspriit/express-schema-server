@@ -1,7 +1,7 @@
-import { IRouteDefinition } from "../../../";
-import { IServerContext } from "../../app";
+import { RouteDefinition } from "../../../";
+import { ServerContext } from "../../app";
 
-export default (): IRouteDefinition<IServerContext> => ({
+export default (): RouteDefinition<ServerContext> => ({
   path: "/custom-error",
   method: "get",
   metadata: {

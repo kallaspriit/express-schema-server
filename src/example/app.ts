@@ -6,13 +6,13 @@ import Database from "./lib/Database";
 import User from "./models/User";
 
 // fake database manager of various models
-export interface IDatabaseManager {
+export interface DatabaseManager {
   user: Database<User>;
 }
 
 // context provided to all routes
-export interface IServerContext {
-  db: IDatabaseManager;
+export interface ServerContext {
+  db: DatabaseManager;
   loggedInUser?: User;
 }
 
@@ -30,19 +30,19 @@ export default async function setupApp(): Promise<express.Express> {
   );
 
   // setup server context that gets merged into the express request
-  const context: IServerContext = {
+  const context: ServerContext = {
     db: {
       user: new Database<User>(),
     },
   };
 
   // find all routes
-  const routes = await getRoutes<IServerContext>(path.join(__dirname, "routes"));
+  const routes = await getRoutes<ServerContext>(path.join(__dirname, "routes"));
 
   // add the express schema server middleware
   app.use(
     "/",
-    expressSchemaServer<IServerContext>({
+    expressSchemaServer<ServerContext>({
       routes,
       context,
       metadata: {

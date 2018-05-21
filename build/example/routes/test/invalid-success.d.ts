@@ -1,6 +1,6 @@
 import { JSONSchema4 } from "json-schema";
-import { IRouteDefinition } from "../../../";
-import { IServerContext } from "../../app";
+import { RouteDefinition } from "../../../";
+import { ServerContext } from "../../app";
 export declare const responseSchema: JSONSchema4;
-declare const _default: () => IRouteDefinition<IServerContext>;
+declare const _default: () => RouteDefinition<ServerContext>;
 export default _default;

@@ -1,9 +1,9 @@
-import { ICustomValidator, JSONSchema4, validateJsonSchema } from "./index";
+import { CustomValidator, JSONSchema4, validateJsonSchema } from "./index";
 
 // returns valid password for foobar, false otherwise
 const validPassword = "foobar";
 const validEmail = "foo@bar.com";
-const validatePassword: ICustomValidator = {
+const validatePassword: CustomValidator = {
   name: "valid-password",
   validate: async (password: string) => password === validPassword,
 };
