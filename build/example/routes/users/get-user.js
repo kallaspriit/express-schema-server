@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const HttpStatus = require("http-status-codes");
 const normalize_type_1 = require("normalize-type");
-const _1 = require("../../../");
+const __1 = require("../../../");
 const user_schema_1 = require("../../schemas/user-schema");
 exports.requestSchema = {
     title: "Get user parameters",
@@ -26,7 +26,7 @@ exports.requestSchema = {
     },
     required: ["id"],
 };
-exports.responseSchema = _1.buildResponseSchema(user_schema_1.default);
+exports.responseSchema = __1.buildResponseSchema(user_schema_1.default);
 exports.default = () => ({
     path: "/:id",
     method: "get",
@@ -40,7 +40,7 @@ exports.default = () => ({
     responseSchema: exports.responseSchema,
     handler: (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
         const requestData = normalize_type_1.normalizeType(request.params);
-        const validationResult = yield _1.validateJsonSchema(requestData, exports.requestSchema);
+        const validationResult = yield __1.validateJsonSchema(requestData, exports.requestSchema);
         if (!validationResult.isValid) {
             response.fail(validationResult.errors, exports.responseSchema);
             return;

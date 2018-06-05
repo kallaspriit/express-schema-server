@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../../../");
-exports.responseSchema = _1.buildResponseSchema({
+const __1 = require("../../../");
+exports.responseSchema = __1.buildResponseSchema({
     type: "object",
     properties: {
         id: {

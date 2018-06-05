@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../../../");
+const __1 = require("../../../");
 const user_schema_1 = require("../../schemas/user-schema");
-exports.responseSchema = _1.buildPaginatedResponseSchema({
+exports.responseSchema = __1.buildPaginatedResponseSchema({
     title: "Users",
     description: "List of paginated users",
     type: "array",
@@ -25,12 +25,12 @@ exports.default = () => ({
         sinceVersion: "1.0.0",
         isDeprecated: false,
     },
-    requestSchema: _1.paginationOptionsSchema,
+    requestSchema: __1.paginationOptionsSchema,
     responseSchema: exports.responseSchema,
     handler: (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
         const defaultItemsPerPage = 3;
-        const paginationOptions = _1.getPaginationPageOptions(request.query, defaultItemsPerPage);
-        const validationResult = yield _1.validateJsonSchema(paginationOptions, _1.paginationOptionsSchema);
+        const paginationOptions = __1.getPaginationPageOptions(request.query, defaultItemsPerPage);
+        const validationResult = yield __1.validateJsonSchema(paginationOptions, __1.paginationOptionsSchema);
         if (!validationResult.isValid) {
             response.fail(validationResult.errors, exports.responseSchema);
             return;

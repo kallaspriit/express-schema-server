@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
-const _1 = require("../");
+const __1 = require("../");
 const Database_1 = require("./lib/Database");
 // use a async function to be able to use async/await
 function setupApp() {
@@ -30,9 +30,9 @@ function setupApp() {
             },
         };
         // find all routes
-        const routes = yield _1.getRoutes(path.join(__dirname, "routes"));
+        const routes = yield __1.getRoutes(path.join(__dirname, "routes"));
         // add the express schema server middleware
-        app.use("/", _1.default({
+        app.use("/", __1.default({
             routes,
             context,
             metadata: {

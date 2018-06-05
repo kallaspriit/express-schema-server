@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const normalize_type_1 = require("normalize-type");
-const _1 = require("../../../");
+const __1 = require("../../../");
 const user_schema_1 = require("../../schemas/user-schema");
 const validateUniqueEmail_1 = require("../../validators/validateUniqueEmail");
 exports.requestSchema = {
@@ -42,7 +42,7 @@ exports.requestSchema = {
     },
     required: ["name", "email"],
 };
-exports.responseSchema = _1.buildResponseSchema(user_schema_1.default);
+exports.responseSchema = __1.buildResponseSchema(user_schema_1.default);
 exports.default = () => ({
     path: "",
     method: "post",
@@ -57,7 +57,7 @@ exports.default = () => ({
     handler: (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
         const requestData = normalize_type_1.normalizeType(request.body);
         const validators = [validateUniqueEmail_1.default(request.db.user)];
-        const validationResult = yield _1.validateJsonSchema(requestData, exports.requestSchema, validators);
+        const validationResult = yield __1.validateJsonSchema(requestData, exports.requestSchema, validators);
         if (!validationResult.isValid) {
             response.fail(validationResult.errors, exports.responseSchema, validators);
             return;

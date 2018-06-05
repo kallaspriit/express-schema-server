@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const HttpStatus = require("http-status-codes");
-const _1 = require("../../../");
+const __1 = require("../../../");
 const User_1 = require("../../models/User");
-exports.responseSchema = _1.buildResponseSchema({
+exports.responseSchema = __1.buildResponseSchema({
     type: "object",
     properties: {
         message: {

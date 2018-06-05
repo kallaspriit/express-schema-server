@@ -1,5 +1,3 @@
-/// <reference types="z-schema" />
-/// <reference types="express" />
 import { NextFunction, Request, RequestHandler, Response, Router } from "express";
 import { JSONSchema4 } from "json-schema";
 import * as zSchema from "z-schema";
