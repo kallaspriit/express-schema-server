@@ -23,7 +23,7 @@ export interface RouteSource<Context> {
     filename: string;
     setup: RouteSetupFn<Context>;
 }
-export declare type IRouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
+export declare type RouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
 export interface RouteSchema {
     method: RouteMethodVerb;
     group: string;
@@ -51,7 +51,7 @@ export interface RouteResponsePayload<T> {
     validationErrors: zSchema.SchemaErrorDetail[];
     [x: string]: any;
 }
-export declare type IRouteRequest<Context> = Request & Context;
+export declare type RouteRequest<Context> = Request & Context;
 export interface RouteResponse extends Response {
     success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]): void;
     created<T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]): void;
@@ -59,7 +59,7 @@ export interface RouteResponse extends Response {
     fail(validationErrors: zSchema.SchemaErrorDetail[], responseSchema: JSONSchema4, customValidators?: CustomValidator[], customErrorMessage?: string): void;
 }
 export declare type RouteSetupFn<Context> = () => RouteDefinition<Context>;
-export declare type RouteRequestHandler<Context> = (request: IRouteRequest<Context>, response: RouteResponse, next: NextFunction) => void;
+export declare type RouteRequestHandler<Context> = (request: RouteRequest<Context>, response: RouteResponse, next: NextFunction) => void;
 export interface JsonSchemaValidationResult {
     isValid: boolean;
     errors: zSchema.SchemaErrorDetail[];
@@ -104,8 +104,8 @@ export declare class InvalidApiResponseError extends DetailedError {
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router;
-export declare function schemaMiddleware<Context>(metadata: SchemaMetadata, routes: Array<IRouteDescriptor<Context>>): RequestHandler;
-export declare function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): RouteSchema;
+export declare function schemaMiddleware<Context>(metadata: SchemaMetadata, routes: Array<RouteDescriptor<Context>>): RequestHandler;
+export declare function getRouteSchema<Context>(route: RouteDescriptor<Context>, baseUrl: string): RouteSchema;
 export declare function buildRoutePath(components: string[]): string;
 export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: CustomValidator[]): Promise<JsonSchemaValidationResult>;
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;

@@ -33,7 +33,7 @@ export interface RouteSource<Context> {
   setup: RouteSetupFn<Context>;
 }
 
-export type IRouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
+export type RouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
 
 export interface RouteSchema {
   method: RouteMethodVerb;
@@ -66,7 +66,7 @@ export interface RouteResponsePayload<T> {
   [x: string]: any; // can include additional info for errors
 }
 
-export type IRouteRequest<Context> = Request & Context;
+export type RouteRequest<Context> = Request & Context;
 
 export interface RouteResponse extends Response {
   success<T>(payload: T, responseSchema: JSONSchema4, customValidators?: CustomValidator[]): void;
@@ -89,7 +89,7 @@ export interface RouteResponse extends Response {
 export type RouteSetupFn<Context> = () => RouteDefinition<Context>;
 
 export type RouteRequestHandler<Context> = (
-  request: IRouteRequest<Context>,
+  request: RouteRequest<Context>,
   response: RouteResponse,
   next: NextFunction,
 ) => void;
@@ -183,7 +183,7 @@ export const paginationOptionsSchema: JSONSchema4 = {
 
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
   const router = Router();
-  const routes: Array<IRouteDescriptor<TContext>> = [];
+  const routes: Array<RouteDescriptor<TContext>> = [];
 
   // register dynamic routes
   options.routes.forEach(routeSource => {
@@ -192,7 +192,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
     // build route info
-    const route: IRouteDescriptor<TContext> = {
+    const route: RouteDescriptor<TContext> = {
       ...routeSource,
       ...routeDefinition,
     };
@@ -235,7 +235,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
 
 export function schemaMiddleware<Context>(
   metadata: SchemaMetadata,
-  routes: Array<IRouteDescriptor<Context>>,
+  routes: Array<RouteDescriptor<Context>>,
 ): RequestHandler {
   return (request: Request, response: Response, _next: NextFunction) => {
     const schema: Schema = {
@@ -247,7 +247,7 @@ export function schemaMiddleware<Context>(
   };
 }
 
-export function getRouteSchema<Context>(route: IRouteDescriptor<Context>, baseUrl: string): RouteSchema {
+export function getRouteSchema<Context>(route: RouteDescriptor<Context>, baseUrl: string): RouteSchema {
   const endpointPath = buildRoutePath([route.group, route.path]);
   const endpointUrl = buildRoutePath([baseUrl, endpointPath]);
   const method = route.method !== undefined ? route.method : "get";
@@ -568,7 +568,7 @@ function buildErrorMessage(validationErrors: zSchema.SchemaErrorDetail[]) {
   return `Validation failed: ${message}`;
 }
 
-function augmentExpressRequest<Context>(request: Request, context: Context): IRouteRequest<Context> {
+function augmentExpressRequest<Context>(request: Request, context: Context): RouteRequest<Context> {
   // tslint:disable-next-line prefer-object-spread
   return Object.assign(request, context);
 }

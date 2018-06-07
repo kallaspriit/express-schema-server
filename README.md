@@ -48,7 +48,7 @@ import {IServerContext} from '../../app';
 import validateUniqueEmail from '../../validators/validateUniqueEmail';
 import {IUser, transformUser, userSchema} from './users';
 
-export interface ICreateUserRequest {
+export interface CreateUserRequest {
   name: string;
   email: string;
 }
@@ -98,7 +98,7 @@ export default (): IRouteDefinition<IServerContext> => ({
   requestSchema,
   responseSchema,
   handler: async (request, response, _next) => {
-    const requestData = normalizeType<ICreateUserRequest>(request.body);
+    const requestData = normalizeType<CreateUserRequest>(request.body);
     const validators: ICustomValidator[] = [validateUniqueEmail(request.db.user)];
     const validationResult = await validateJsonSchema(requestData, requestSchema, validators);
 

@@ -4424,8 +4424,8 @@ tslint-config-strict@^1.3.1:
   resolved "https://registry.yarnpkg.com/tslint-config-strict/-/tslint-config-strict-1.3.1.tgz#a67d410b2fefc40458c31916000708495b0cf3b9"
 
 tslint-config-strict@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/tslint-config-strict/-/tslint-config-strict-1.8.0.tgz#1c6a77003d7a906c0a87866f00eecc82b72eedfb"
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslint-config-strict/-/tslint-config-strict-1.10.0.tgz#8c9d2a6766536250bc3bc7d0e1897b9a2bcdb16e"
 
 tslint@^5.10.0:
   version "5.10.0"
