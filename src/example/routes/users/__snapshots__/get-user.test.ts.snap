@@ -29,6 +29,7 @@ Array [
       "string",
     ],
     "path": "#/id",
+    "title": "Id",
   },
 ]
 `;

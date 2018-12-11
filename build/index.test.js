@@ -118,5 +118,26 @@ describe("express-schema-server", () => {
         expect(message3).toMatchSnapshot();
         expect(message4).toMatchSnapshot();
     }));
+    it("sorts routes correctly", () => __awaiter(this, void 0, void 0, function* () {
+        const routes = [
+            { group: "users", path: "/" },
+            { group: "users", path: "/:id" },
+            { group: "users", path: "/deleted" },
+            { group: "admins", path: "/" },
+            { group: "admins", path: "/:id" },
+            { group: "admins", path: "/b" },
+            { group: "admins", path: "/a" },
+        ];
+        index_1.sortRoutes(routes);
+        expect(routes).toEqual([
+            { group: "admins", path: "/:id" },
+            { group: "admins", path: "/" },
+            { group: "admins", path: "/a" },
+            { group: "admins", path: "/b" },
+            { group: "users", path: "/:id" },
+            { group: "users", path: "/" },
+            { group: "users", path: "/deleted" },
+        ]);
+    }));
 });
 //# sourceMappingURL=index.test.js.map

@@ -24,6 +24,10 @@ export interface RouteSource<Context> {
     setup: RouteSetupFn<Context>;
 }
 export declare type RouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
+export interface SortableRoute {
+    group: string;
+    path: string;
+}
 export interface RouteSchema {
     method: RouteMethodVerb;
     group: string;
@@ -111,5 +115,6 @@ export declare function validateJsonSchema(data: any, schema: JSONSchema4, custo
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;
 export declare function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage?: number): JSONSchema4;
 export declare function getRoutes<Context>(baseDirectory: string, filePattern?: string): Promise<Array<RouteSource<Context>>>;
+export declare function sortRoutes(routes: SortableRoute[]): void;
 export declare function getPaginationPageOptions(query: any, defaultItemsPerPage?: number): PaginationOptions;
 export declare function combineMessages(messages: string[]): string;

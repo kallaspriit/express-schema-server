@@ -110,6 +110,7 @@ Array [
       1,
     ],
     "path": "#/page",
+    "title": "Page",
   },
 ]
 `;
@@ -125,6 +126,7 @@ Array [
       1,
     ],
     "path": "#/page",
+    "title": "Page",
   },
 ]
 `;

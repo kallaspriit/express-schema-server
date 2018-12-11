@@ -35,6 +35,11 @@ export interface RouteSource<Context> {
 
 export type RouteDescriptor<Context> = RouteSource<Context> & RouteDefinition<Context>;
 
+export interface SortableRoute {
+  group: string;
+  path: string;
+}
+
 export interface RouteSchema {
   method: RouteMethodVerb;
   group: string;
@@ -182,14 +187,13 @@ export const paginationOptionsSchema: JSONSchema4 = {
 };
 
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
+  // create router
   const router = Router();
-  const routes: Array<RouteDescriptor<TContext>> = [];
 
-  // register dynamic routes
-  options.routes.forEach(routeSource => {
+  // map route sources to route descriptors
+  const routes: Array<RouteDescriptor<TContext>> = options.routes.map(routeSource => {
     // setup the route to get the route definition
     const routeDefinition = routeSource.setup();
-    const endpoint = buildRoutePath([routeSource.group, routeDefinition.path]);
 
     // build route info
     const route: RouteDescriptor<TContext> = {
@@ -197,18 +201,23 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
       ...routeDefinition,
     };
 
-    // register the route info
-    if (route.group.length > 0) {
-      routes.push(route);
-    }
+    return route;
+  });
 
+  // sort the routes in a way that routes with parameters come later
+  sortRoutes(routes);
+
+  // register dynamic routes
+  routes.forEach(route => {
     // type safe method name
-    const method: keyof Application = routeDefinition.method !== undefined ? routeDefinition.method : "get";
+    const method: keyof Application = route.method !== undefined ? route.method : "get";
 
     // handler can be either a single handler function or array of handlers, treat it always as an array
-    const handlers: Array<RouteRequestHandler<TContext>> = Array.isArray(routeDefinition.handler)
-      ? routeDefinition.handler
-      : [routeDefinition.handler];
+    const handlers: Array<RouteRequestHandler<TContext>> = Array.isArray(route.handler)
+      ? route.handler
+      : [route.handler];
+
+    const endpoint = buildRoutePath([route.group, route.path]);
 
     // register the handlers
     handlers.forEach(handler => {
@@ -218,7 +227,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     });
 
     // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
-    if (routeSource.group !== "") {
+    if (route.group !== "") {
       const schemaPath = buildRoutePath(["schema", getRouteWithoutParameters(endpoint), method]);
 
       router.get(schemaPath, (request, response, _next) => {
@@ -471,7 +480,7 @@ export async function getRoutes<Context>(
   const globPattern = path.join(baseDirectory, filePattern);
 
   return new Promise<Array<RouteSource<Context>>>((resolve, reject) => {
-    glob(globPattern, (error, matches) => {
+    glob(globPattern, (error, filenames) => {
       /* istanbul ignore if */
       if (error !== null) {
         reject(error);
@@ -479,20 +488,20 @@ export async function getRoutes<Context>(
         return;
       }
 
-      const routes: Array<RouteSource<Context>> = matches.map(match => ({
-        group: getRouteGroup(match, baseDirectory),
-        name: getRouteName(match),
-        filename: match,
+      const routes: Array<RouteSource<Context>> = filenames.map(filename => ({
+        group: getRouteGroup(filename, baseDirectory),
+        name: getRouteName(filename),
+        filename,
         setup: (): RouteDefinition<Context> => {
-          const routeSetupFn: RouteSetupFn<Context> = require(match).default;
+          const routeSetupFn: RouteSetupFn<Context> = require(filename).default;
 
           /* istanbul ignore if */
           // tslint:disable-next-line:strict-type-predicates
           if (typeof routeSetupFn !== "function") {
             throw new Error(
               `Export of route "${getRouteName(
-                match,
-              )}" in "${match}" is expected to be a function but got ${typeof routeSetupFn}`,
+                filename,
+              )}" in "${filename}" is expected to be a function but got ${typeof routeSetupFn}`,
             );
           }
 
@@ -505,6 +514,28 @@ export async function getRoutes<Context>(
       resolve(routes);
     });
   });
+}
+
+export function sortRoutes(routes: SortableRoute[]) {
+  // sortBy(routes, ["group", "path"]);
+
+  routes
+    // sort by number of parameters and path
+    .sort((routeA, routeB) => {
+      const parameterCountA = routeA.path.split(":").length - 1;
+      const parameterCountB = routeB.path.split(":").length - 1;
+      const parameterResult = parameterCountA > parameterCountB ? -1 : parameterCountA < parameterCountB ? 1 : 0;
+
+      // sort by parameter count if not the same
+      if (parameterResult !== 0) {
+        return parameterResult;
+      }
+
+      // sort by path name if the parameter count is the same
+      return routeA.path.localeCompare(routeB.path);
+    })
+    // then sort by group name
+    .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));
 }
 
 export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): PaginationOptions {
