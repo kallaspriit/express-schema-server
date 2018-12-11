@@ -162,13 +162,13 @@ describe("express-schema-server", () => {
     sortRoutes(routes);
 
     expect(routes).toEqual([
-      { group: "admins", path: "/:id" },
       { group: "admins", path: "/" },
       { group: "admins", path: "/a" },
       { group: "admins", path: "/b" },
-      { group: "users", path: "/:id" },
+      { group: "admins", path: "/:id" },
       { group: "users", path: "/" },
       { group: "users", path: "/deleted" },
+      { group: "users", path: "/:id" },
     ]);
   });
 });
