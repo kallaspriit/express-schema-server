@@ -345,7 +345,7 @@ function sortRoutes(routes) {
         .sort((routeA, routeB) => {
         const parameterCountA = routeA.path.split(":").length - 1;
         const parameterCountB = routeB.path.split(":").length - 1;
-        const parameterResult = parameterCountA > parameterCountB ? -1 : parameterCountA < parameterCountB ? 1 : 0;
+        const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
         // sort by parameter count if not the same
         if (parameterResult !== 0) {
             return parameterResult;
