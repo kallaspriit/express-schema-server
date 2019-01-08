@@ -339,14 +339,20 @@ function getRoutes(baseDirectory, filePattern = "**/!(*.spec|*.test|*.d).+(js|ts
 }
 exports.getRoutes = getRoutes;
 function sortRoutes(routes) {
-    // sortBy(routes, ["group", "path"]);
     routes
         // sort by number of parameters and path
         .sort((routeA, routeB) => {
+        const slashCountA = routeA.path.split("/").length - 1;
+        const slashCountB = routeB.path.split("/").length - 1;
+        const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
+        // sort by slash count if not the same (routes with more slashes to the front)
+        if (slashResult !== 0) {
+            return slashResult;
+        }
         const parameterCountA = routeA.path.split(":").length - 1;
         const parameterCountB = routeB.path.split(":").length - 1;
         const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
-        // sort by parameter count if not the same
+        // sort by parameter count if not the same (routes with more parameters to the end)
         if (parameterResult !== 0) {
             return parameterResult;
         }
