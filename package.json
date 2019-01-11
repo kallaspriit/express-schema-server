@@ -1,6 +1,6 @@
 {
   "name": "express-schema-server",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "Middleware for describing and validating your REST API routes using JSON schemas.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
