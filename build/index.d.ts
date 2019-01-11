@@ -11,7 +11,7 @@ export interface RouteMetadata {
 }
 export interface RouteDefinition<Context> {
     path: string;
-    handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
+    handler: RouteRequestHandler<Context> | RouteRequestHandler<Context>[];
     method?: RouteMethodVerb;
     metadata?: RouteMetadata;
     requestSchema?: JSONSchema4;
@@ -69,7 +69,7 @@ export interface JsonSchemaValidationResult {
     errors: zSchema.SchemaErrorDetail[];
 }
 export interface JsonSchemaServerOptions<Context> {
-    routes: Array<RouteSource<Context>>;
+    routes: RouteSource<Context>[];
     context: Context;
     metadata: SchemaMetadata;
 }
@@ -108,13 +108,13 @@ export declare class InvalidApiResponseError extends DetailedError {
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router;
-export declare function schemaMiddleware<Context>(metadata: SchemaMetadata, routes: Array<RouteDescriptor<Context>>): RequestHandler;
+export declare function schemaMiddleware<Context>(metadata: SchemaMetadata, routes: RouteDescriptor<Context>[]): RequestHandler;
 export declare function getRouteSchema<Context>(route: RouteDescriptor<Context>, baseUrl: string): RouteSchema;
 export declare function buildRoutePath(components: string[]): string;
 export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: CustomValidator[]): Promise<JsonSchemaValidationResult>;
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;
 export declare function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage?: number): JSONSchema4;
-export declare function getRoutes<Context>(baseDirectory: string, filePattern?: string): Promise<Array<RouteSource<Context>>>;
+export declare function getRoutes<Context>(baseDirectory: string, filePattern?: string): Promise<RouteSource<Context>[]>;
 export declare function sortRoutes(routes: SortableRoute[]): void;
 export declare function getPaginationPageOptions(query: any, defaultItemsPerPage?: number): PaginationOptions;
 export declare function combineMessages(messages: string[]): string;

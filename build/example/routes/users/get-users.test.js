@@ -15,7 +15,7 @@ let app;
 let userCount = 0;
 function createUser() {
     return __awaiter(this, void 0, void 0, function* () {
-        userCount++;
+        userCount += 1;
         const response = yield app.post("/users").send({
             name: `Jack Daniels #${userCount}`,
             email: `jack@daniels-${userCount}.com`,
@@ -26,7 +26,7 @@ function createUser() {
 function createUsers(count) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = [];
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < count; i += 1) {
             users.push(yield createUser());
         }
         return users;

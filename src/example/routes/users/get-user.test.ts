@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
+
 import setupApp from "../../app";
 
 let app: supertest.SuperTest<supertest.Test>;
@@ -35,7 +36,7 @@ describe("get-user", () => {
   });
 
   it("should return 404 not found for non-existing user", async () => {
-    const getResponse = await app.get(`/users/666`).send();
+    const getResponse = await app.get("/users/666").send();
 
     expect(getResponse.status).toEqual(HttpStatus.NOT_FOUND);
     expect(getResponse.text).toMatchSnapshot();

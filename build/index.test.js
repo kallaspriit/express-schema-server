@@ -55,12 +55,12 @@ describe("express-schema-server", () => {
         app = supertest(yield app_1.default());
     }));
     it("provides schema endpoint for all endpoints", () => __awaiter(this, void 0, void 0, function* () {
-        const getResponse = yield app.get(`/schema`).send();
+        const getResponse = yield app.get("/schema").send();
         expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));
     it("provides schema endpoint for specific endpoints", () => __awaiter(this, void 0, void 0, function* () {
-        const getResponse = yield app.get(`/schema/users/post`).send();
+        const getResponse = yield app.get("/schema/users/post").send();
         expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));

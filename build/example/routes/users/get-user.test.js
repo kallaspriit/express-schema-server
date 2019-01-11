@@ -36,7 +36,7 @@ describe("get-user", () => {
         expect(getResponse.body.validationErrors).toMatchSnapshot();
     }));
     it("should return 404 not found for non-existing user", () => __awaiter(this, void 0, void 0, function* () {
-        const getResponse = yield app.get(`/users/666`).send();
+        const getResponse = yield app.get("/users/666").send();
         expect(getResponse.status).toEqual(HttpStatus.NOT_FOUND);
         expect(getResponse.text).toMatchSnapshot();
     }));

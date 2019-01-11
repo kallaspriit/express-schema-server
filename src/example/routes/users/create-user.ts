@@ -1,4 +1,5 @@
 import { normalizeType } from "normalize-type";
+
 import { buildResponseSchema, CustomValidator, JSONSchema4, RouteDefinition, validateJsonSchema } from "../../../";
 import { ServerContext } from "../../app";
 import User from "../../models/User";

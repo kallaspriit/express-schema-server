@@ -71,9 +71,7 @@ function expressSchemaServer(options) {
         // type safe method name
         const method = route.method !== undefined ? route.method : "get";
         // handler can be either a single handler function or array of handlers, treat it always as an array
-        const handlers = Array.isArray(route.handler)
-            ? route.handler
-            : [route.handler];
+        const handlers = Array.isArray(route.handler) ? route.handler : [route.handler];
         const endpoint = buildRoutePath([route.group, route.path]);
         // register the handlers
         handlers.forEach(handler => {

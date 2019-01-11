@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
+
 import setupApp from "../../app";
 import User from "../../models/User";
 
@@ -7,7 +8,7 @@ let app: supertest.SuperTest<supertest.Test>;
 let userCount = 0;
 
 async function createUser(): Promise<User> {
-  userCount++;
+  userCount += 1;
 
   const response = await app.post("/users").send({
     name: `Jack Daniels #${userCount}`,
@@ -20,7 +21,7 @@ async function createUser(): Promise<User> {
 async function createUsers(count: number): Promise<User[]> {
   const users: User[] = [];
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     users.push(await createUser());
   }
 

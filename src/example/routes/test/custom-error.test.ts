@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
+
 import setupApp from "../../app";
 
 let app: supertest.SuperTest<supertest.Test>;

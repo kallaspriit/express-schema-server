@@ -1,7 +1,9 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as path from "path";
+
 import expressSchemaServer, { getRoutes } from "../";
+
 import Database from "./lib/Database";
 import User from "./models/User";
 

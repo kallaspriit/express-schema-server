@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
+
 import { buildResponseSchema, RouteDefinition } from "../../../";
 import { ServerContext } from "../../app";
 import User from "../../models/User";

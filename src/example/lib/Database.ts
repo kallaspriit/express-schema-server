@@ -18,7 +18,7 @@ export default class Database<T extends DatabaseItem> {
   private readonly items: T[] = [];
 
   // gives the new item an id, saves it and returns it
-  public async save(item: T): Promise<T> {
+  async save(item: T): Promise<T> {
     item.id = await this.getNextId();
 
     this.items.push(item);
@@ -27,21 +27,17 @@ export default class Database<T extends DatabaseItem> {
   }
 
   // fetches item by id
-  public async getById(id: number): Promise<T | undefined> {
+  async getById(id: number): Promise<T | undefined> {
     return this.getWhere("id", id);
   }
 
   // fetches items by any of the properties
-  public async getWhere(field: keyof T, value: any): Promise<T | undefined> {
+  async getWhere(field: keyof T, value: any): Promise<T | undefined> {
     return this.items.find(item => item[field] === value);
   }
 
   // fetches items by any of the properties
-  public async getPaginated(
-    paginationOptions: PaginationOptions,
-    field?: keyof T,
-    value?: any,
-  ): Promise<PaginationResult<T>> {
+  async getPaginated(paginationOptions: PaginationOptions, field?: keyof T, value?: any): Promise<PaginationResult<T>> {
     const filteredItems = field ? this.items.filter(item => item[field] === value) : this.items;
     const count = filteredItems.length;
     const startIndex = (paginationOptions.page - 1) * paginationOptions.itemsPerPage;
@@ -54,7 +50,7 @@ export default class Database<T extends DatabaseItem> {
   }
 
   // return next item id
-  public async getNextId(): Promise<number> {
+  async getNextId(): Promise<number> {
     return this.items.length + 1;
   }
 }

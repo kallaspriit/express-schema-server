@@ -19,7 +19,7 @@ export interface RouteMetadata {
 
 export interface RouteDefinition<Context> {
   path: string;
-  handler: RouteRequestHandler<Context> | Array<RouteRequestHandler<Context>>;
+  handler: RouteRequestHandler<Context> | RouteRequestHandler<Context>[];
   method?: RouteMethodVerb;
   metadata?: RouteMetadata;
   requestSchema?: JSONSchema4;
@@ -105,7 +105,7 @@ export interface JsonSchemaValidationResult {
 }
 
 export interface JsonSchemaServerOptions<Context> {
-  routes: Array<RouteSource<Context>>;
+  routes: RouteSource<Context>[];
   context: Context;
   metadata: SchemaMetadata;
 }
@@ -144,14 +144,14 @@ export interface ObjectLiteral {
 }
 
 export class DetailedError extends Error {
-  public constructor(message: string, public details: ErrorDetails | null = null) {
+  constructor(message: string, public details: ErrorDetails | null = null) {
     super(message);
   }
 }
 
 // tslint:disable-next-line:max-classes-per-file
 export class InvalidApiResponseError extends DetailedError {
-  public constructor(
+  constructor(
     responseData: RouteResponsePayload<any>,
     responseSchema: JSONSchema4,
     validationErrors: zSchema.SchemaErrorDetail[],
@@ -191,7 +191,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
   const router = Router();
 
   // map route sources to route descriptors
-  const routes: Array<RouteDescriptor<TContext>> = options.routes.map(routeSource => {
+  const routes: RouteDescriptor<TContext>[] = options.routes.map(routeSource => {
     // setup the route to get the route definition
     const routeDefinition = routeSource.setup();
 
@@ -213,9 +213,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     const method: keyof Application = route.method !== undefined ? route.method : "get";
 
     // handler can be either a single handler function or array of handlers, treat it always as an array
-    const handlers: Array<RouteRequestHandler<TContext>> = Array.isArray(route.handler)
-      ? route.handler
-      : [route.handler];
+    const handlers: RouteRequestHandler<TContext>[] = Array.isArray(route.handler) ? route.handler : [route.handler];
 
     const endpoint = buildRoutePath([route.group, route.path]);
 
@@ -244,7 +242,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
 
 export function schemaMiddleware<Context>(
   metadata: SchemaMetadata,
-  routes: Array<RouteDescriptor<Context>>,
+  routes: RouteDescriptor<Context>[],
 ): RequestHandler {
   return (request: Request, response: Response, _next: NextFunction) => {
     const schema: Schema = {
@@ -476,10 +474,10 @@ export function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximum
 export async function getRoutes<Context>(
   baseDirectory: string,
   filePattern = "**/!(*.spec|*.test|*.d).+(js|ts)",
-): Promise<Array<RouteSource<Context>>> {
+): Promise<RouteSource<Context>[]> {
   const globPattern = path.join(baseDirectory, filePattern);
 
-  return new Promise<Array<RouteSource<Context>>>((resolve, reject) => {
+  return new Promise<RouteSource<Context>[]>((resolve, reject) => {
     glob(globPattern, (error, filenames) => {
       /* istanbul ignore if */
       if (error !== null) {
@@ -488,7 +486,7 @@ export async function getRoutes<Context>(
         return;
       }
 
-      const routes: Array<RouteSource<Context>> = filenames.map(filename => ({
+      const routes: RouteSource<Context>[] = filenames.map(filename => ({
         group: getRouteGroup(filename, baseDirectory),
         name: getRouteName(filename),
         filename,

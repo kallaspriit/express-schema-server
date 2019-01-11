@@ -1,5 +1,5 @@
 export default class User {
-  public id?: number;
+  id?: number;
 
-  public constructor(public name: string, public email: string) {}
+  constructor(public name: string, public email: string) {}
 }

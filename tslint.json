@@ -1,6 +1,37 @@
 {
-  "extends": ["tslint-config-strict", "tslint-config-prettier"],
+  "extends": ["typestrict"],
   "rules": {
-    "no-any": false
+    "no-duplicate-imports": true,
+    "ordered-imports": [true, { "grouped-imports": true }],
+    "member-access": [true, "no-public"],
+    "member-ordering": [true, { "order": "fields-first" }],
+    "curly": true,
+    "no-construct": true,
+    "indent": [true, "spaces"],
+    "prefer-const": true,
+    "prefer-readonly": true,
+    "trailing-comma": true,
+    "array-type": [true, "array"],
+    "arrow-return-shorthand": true,
+    "class-name": true,
+    "encoding": true,
+    "import-spacing": true,
+    "jsdoc-format": true,
+    "newline-before-return": true,
+    "new-parens": true,
+    "no-trailing-whitespace": true,
+    "no-unnecessary-initializer": true,
+    "no-unnecessary-qualifier": true,
+    "object-literal-key-quotes": [true, "as-needed"],
+    "quotemark": [true, "double", "jsx-double", "avoid-template", "avoid-escape"],
+    "return-undefined": true,
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "space-before-function-paren": [true, { "anonymous": "never", "named": "never", "asyncArrow": "always" }],
+    "space-within-parens": [true, 0],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+    "no-unused-variable": false
+  },
+  "linterOptions": {
+    "exclude": ["**/*.json"]
   }
 }

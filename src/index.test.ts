@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
+
 import setupApp from "./example/app";
 import {
   combineMessages,
@@ -59,14 +60,14 @@ describe("express-schema-server", () => {
   });
 
   it("provides schema endpoint for all endpoints", async () => {
-    const getResponse = await app.get(`/schema`).send();
+    const getResponse = await app.get("/schema").send();
 
     expect(getResponse.status).toEqual(HttpStatus.OK);
     expect(getResponse.body).toMatchSnapshot();
   });
 
   it("provides schema endpoint for specific endpoints", async () => {
-    const getResponse = await app.get(`/schema/users/post`).send();
+    const getResponse = await app.get("/schema/users/post").send();
 
     expect(getResponse.status).toEqual(HttpStatus.OK);
     expect(getResponse.body).toMatchSnapshot();
