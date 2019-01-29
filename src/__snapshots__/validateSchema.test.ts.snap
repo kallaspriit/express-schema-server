@@ -85,7 +85,7 @@ Array [
       "valid-password",
       "",
     ],
-    "path": "#/",
+    "path": "#/password",
     "schemaId": null,
     "title": "Password",
     Symbol(z-schema/schema): Object {
@@ -165,7 +165,7 @@ Array [
       "valid-password",
       "xxx",
     ],
-    "path": "#/",
+    "path": "#/password",
     "schemaId": null,
     "title": "Password",
     Symbol(z-schema/schema): Object {
@@ -195,7 +195,7 @@ Array [
       "valid-password",
       "xxxxxx",
     ],
-    "path": "#/",
+    "path": "#/password",
     "schemaId": null,
     "title": "Password",
     Symbol(z-schema/schema): Object {

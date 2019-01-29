@@ -1,6 +1,6 @@
 {
   "name": "express-schema-server",
-  "version": "3.3.4",
+  "version": "3.4.0",
   "description": "Middleware for describing and validating your REST API routes using JSON schemas.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/kallaspriit/express-schema-server#readme",
   "dependencies": {
-    "@types/lodash": "^4.14.119",
+    "@types/lodash": "^4.14.120",
     "@types/supertest": "^2.0.7",
     "babel-core": "^6.26.3",
     "babel-jest": "^23.6.0",
@@ -51,23 +51,23 @@
     "json-schema": "^0.2.3",
     "lodash": "^4.17.11",
     "normalize-type": "^1.5.1",
-    "supertest": "^3.3.0",
+    "supertest": "^3.4.2",
     "ts-jest": "^23.10.5",
-    "z-schema": "^3.24.2"
+    "z-schema": "^3.25.1"
   },
   "devDependencies": {
-    "@types/express": "^4.16.0",
+    "@types/express": "^4.16.1",
     "@types/glob": "^7.1.1",
-    "@types/jest": "^23.3.12",
+    "@types/jest": "^23.3.13",
     "@types/json-schema": "^7.0.1",
     "@types/z-schema": "^3.16.32",
     "coveralls": "^3.0.2",
     "jest": "^23.6.0",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.1",
     "rimraf": "^2.6.3",
-    "tslint": "^5.12.0",
+    "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
-    "typescript": "^3.2.2",
+    "typescript": "^3.2.4",
     "typestrict": "^1.0.2"
   },
   "jest": {

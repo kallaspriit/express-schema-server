@@ -1064,7 +1064,7 @@ Object {
         "throws-error",
         "Jack Daniels",
       ],
-      "path": "#/",
+      "path": "#/name",
       "schemaId": null,
       "title": "Name",
       Symbol(z-schema/schema): Object {
