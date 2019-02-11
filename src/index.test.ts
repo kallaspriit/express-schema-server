@@ -164,8 +164,8 @@ describe("express-schema-server", () => {
 
     expect(routes).toEqual([
       { group: "admins", path: "/" },
-      { group: "admins", path: "/a" },
       { group: "admins", path: "/b" },
+      { group: "admins", path: "/a" },
       { group: "admins", path: "/:id" },
       { group: "users", path: "/" },
       { group: "users", path: "/deleted" },

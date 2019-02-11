@@ -188,8 +188,14 @@ export const paginationOptionsSchema: JSONSchema4 = {
   },
 };
 
+let log: Logger = dummyLogger;
+
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
-  const log = options.log || dummyLogger;
+  // set logger to use if available
+  /* istanbul ignore if */
+  if (options.log) {
+    log = options.log;
+  }
 
   // create router
   const router = Router();
@@ -527,26 +533,33 @@ export function sortRoutes(routes: SortableRoute[]) {
   routes
     // sort by number of parameters and path
     .sort((routeA, routeB) => {
+      const isSameGroup = routeA.group === routeB.group;
+
+      // sort by group name if they are different
+      if (!isSameGroup) {
+        return routeA.group.localeCompare(routeB.group);
+      }
+
+      // sort by slash count if not the same (routes with more slashes to the front)
       const slashCountA = routeA.path.split("/").length - 1;
       const slashCountB = routeB.path.split("/").length - 1;
       const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
 
-      // sort by slash count if not the same (routes with more slashes to the front)
       if (slashResult !== 0) {
         return slashResult;
       }
 
+      // sort by parameter count if not the same (routes with more parameters to the end)
       const parameterCountA = routeA.path.split(":").length - 1;
       const parameterCountB = routeB.path.split(":").length - 1;
       const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
 
-      // sort by parameter count if not the same (routes with more parameters to the end)
       if (parameterResult !== 0) {
         return parameterResult;
       }
 
-      // sort by path name if the parameter count is the same
-      return routeA.path.localeCompare(routeB.path);
+      // don't change the order
+      return 0;
     })
     // then sort by group name
     .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));
