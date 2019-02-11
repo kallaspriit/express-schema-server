@@ -1,5 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from "express";
 import { JSONSchema4 } from "json-schema";
+import { Logger } from "ts-log";
 import * as zSchema from "z-schema";
 export { JSONSchema4 } from "json-schema";
 export declare type RouteMethodVerb = "get" | "post" | "delete" | "put";
@@ -72,6 +73,7 @@ export interface JsonSchemaServerOptions<Context> {
     routes: RouteSource<Context>[];
     context: Context;
     metadata: SchemaMetadata;
+    log?: Logger;
 }
 export interface ErrorDetails {
     [x: string]: any;

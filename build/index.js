@@ -13,6 +13,7 @@ const glob = require("glob");
 const HttpStatus = require("http-status-codes");
 const normalize_type_1 = require("normalize-type");
 const path = require("path");
+const ts_log_1 = require("ts-log");
 const zSchema = require("z-schema");
 class DetailedError extends Error {
     constructor(message, details = null) {
@@ -54,6 +55,7 @@ exports.paginationOptionsSchema = {
     },
 };
 function expressSchemaServer(options) {
+    const log = options.log || ts_log_1.dummyLogger;
     // create router
     const router = express_1.Router();
     // map route sources to route descriptors
@@ -73,6 +75,10 @@ function expressSchemaServer(options) {
         // handler can be either a single handler function or array of handlers, treat it always as an array
         const handlers = Array.isArray(route.handler) ? route.handler : [route.handler];
         const endpoint = buildRoutePath([route.group, route.path]);
+        log.info("register endpoint", {
+            method,
+            endpoint,
+        });
         // register the handlers
         handlers.forEach(handler => {
             router[method](endpoint, (request, response, next) => {

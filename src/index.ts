@@ -4,6 +4,7 @@ import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import normalizeType from "normalize-type";
 import * as path from "path";
+import { dummyLogger, Logger } from "ts-log";
 import * as zSchema from "z-schema";
 
 export { JSONSchema4 } from "json-schema";
@@ -108,6 +109,7 @@ export interface JsonSchemaServerOptions<Context> {
   routes: RouteSource<Context>[];
   context: Context;
   metadata: SchemaMetadata;
+  log?: Logger;
 }
 
 export interface ErrorDetails {
@@ -187,6 +189,8 @@ export const paginationOptionsSchema: JSONSchema4 = {
 };
 
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
+  const log = options.log || dummyLogger;
+
   // create router
   const router = Router();
 
@@ -216,6 +220,11 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     const handlers: RouteRequestHandler<TContext>[] = Array.isArray(route.handler) ? route.handler : [route.handler];
 
     const endpoint = buildRoutePath([route.group, route.path]);
+
+    log.info("register endpoint", {
+      method,
+      endpoint,
+    });
 
     // register the handlers
     handlers.forEach(handler => {
