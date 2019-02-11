@@ -87,7 +87,7 @@ function expressSchemaServer(options) {
         handlers.forEach(handler => {
             router[method](endpoint, (request, response, next) => __awaiter(this, void 0, void 0, function* () {
                 // add simulated delay if requested
-                if (options.simulatedLatency) {
+                if (typeof options.simulatedLatency === "number" && options.simulatedLatency > 0) {
                     yield delay(options.simulatedLatency);
                 }
                 handler(augmentExpressRequest(request, options.context), augmentExpressResponse(response), next);

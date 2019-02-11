@@ -236,7 +236,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     handlers.forEach(handler => {
       router[method](endpoint, async (request, response, next) => {
         // add simulated delay if requested
-        if (options.simulatedLatency) {
+        if (typeof options.simulatedLatency === "number" && options.simulatedLatency > 0) {
           await delay(options.simulatedLatency);
         }
 
