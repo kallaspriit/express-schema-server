@@ -2,7 +2,7 @@ import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as path from "path";
 
-import expressSchemaServer, { getRoutes } from "../";
+import expressSchemaServer, { getRoutes, JsonSchemaServerOptions } from "../";
 
 import Database from "./lib/Database";
 import User from "./models/User";
@@ -19,7 +19,9 @@ export interface ServerContext {
 }
 
 // use a async function to be able to use async/await
-export default async function setupApp(): Promise<express.Express> {
+export default async function setupApp(
+  overrideOptions: Partial<JsonSchemaServerOptions<ServerContext>> = {},
+): Promise<express.Express> {
   // create a new express app
   const app = express();
 
@@ -52,6 +54,7 @@ export default async function setupApp(): Promise<express.Express> {
         description: "Provides example functionality",
         version: "1.0.0",
       },
+      ...overrideOptions,
     }),
   );
 

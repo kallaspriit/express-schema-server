@@ -14,7 +14,7 @@ const path = require("path");
 const __1 = require("../");
 const Database_1 = require("./lib/Database");
 // use a async function to be able to use async/await
-function setupApp() {
+function setupApp(overrideOptions = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         // create a new express app
         const app = express();
@@ -32,15 +32,12 @@ function setupApp() {
         // find all routes
         const routes = yield __1.getRoutes(path.join(__dirname, "routes"));
         // add the express schema server middleware
-        app.use("/", __1.default({
-            routes,
-            context,
-            metadata: {
+        app.use("/", __1.default(Object.assign({ routes,
+            context, metadata: {
                 title: "Example API",
                 description: "Provides example functionality",
                 version: "1.0.0",
-            },
-        }));
+            } }, overrideOptions)));
         return app;
     });
 }

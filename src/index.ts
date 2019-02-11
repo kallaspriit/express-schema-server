@@ -110,6 +110,7 @@ export interface JsonSchemaServerOptions<Context> {
   context: Context;
   metadata: SchemaMetadata;
   log?: Logger;
+  simulatedLatency?: number;
 }
 
 export interface ErrorDetails {
@@ -192,7 +193,6 @@ let log: Logger = dummyLogger;
 
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router {
   // set logger to use if available
-  /* istanbul ignore if */
   if (options.log) {
     log = options.log;
   }
@@ -234,7 +234,12 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
 
     // register the handlers
     handlers.forEach(handler => {
-      router[method](endpoint, (request, response, next) => {
+      router[method](endpoint, async (request, response, next) => {
+        // add simulated delay if requested
+        if (options.simulatedLatency) {
+          await delay(options.simulatedLatency);
+        }
+
         handler(augmentExpressRequest(request, options.context), augmentExpressResponse(response), next);
       });
     });
@@ -746,4 +751,8 @@ function getRouteWithoutParameters(route: string): string {
   const tokens = route.split(/\//);
 
   return tokens.filter(token => token.substring(0, 1) !== ":").join("/");
+}
+
+async function delay(ms = 0): Promise<void> {
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
 }

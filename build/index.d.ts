@@ -74,6 +74,7 @@ export interface JsonSchemaServerOptions<Context> {
     context: Context;
     metadata: SchemaMetadata;
     log?: Logger;
+    simulatedLatency?: number;
 }
 export interface ErrorDetails {
     [x: string]: any;

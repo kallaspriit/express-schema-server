@@ -1,5 +1,6 @@
 import * as HttpStatus from "http-status-codes";
 import * as supertest from "supertest";
+import { Logger } from "ts-log";
 
 import setupApp from "./example/app";
 import {
@@ -171,5 +172,43 @@ describe("express-schema-server", () => {
       { group: "users", path: "/deleted" },
       { group: "users", path: "/:id" },
     ]);
+  });
+});
+
+// these tests initiate their own app
+describe("express-schema-server", () => {
+  it("should accept optional logger", async () => {
+    const myLogger: Logger = {
+      trace: jest.fn(),
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
+
+    app = supertest(
+      await setupApp({
+        log: myLogger,
+      }),
+    );
+
+    // @ts-ignore
+    expect(myLogger.info.mock.calls).toMatchSnapshot();
+  });
+
+  it("should accept and apply optional simulated latency", async () => {
+    app = supertest(
+      await setupApp({
+        simulatedLatency: 100,
+      }),
+    );
+
+    const startTime = Date.now();
+    const getResponse = await app.get("/users").send();
+    const timeTaken = Date.now() - startTime;
+
+    expect(getResponse.status).toEqual(HttpStatus.OK);
+    expect(getResponse.body).toMatchSnapshot();
+    expect(timeTaken).toBeGreaterThanOrEqual(100);
   });
 });

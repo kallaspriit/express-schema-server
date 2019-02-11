@@ -57,7 +57,6 @@ exports.paginationOptionsSchema = {
 let log = ts_log_1.dummyLogger;
 function expressSchemaServer(options) {
     // set logger to use if available
-    /* istanbul ignore if */
     if (options.log) {
         log = options.log;
     }
@@ -86,9 +85,13 @@ function expressSchemaServer(options) {
         });
         // register the handlers
         handlers.forEach(handler => {
-            router[method](endpoint, (request, response, next) => {
+            router[method](endpoint, (request, response, next) => __awaiter(this, void 0, void 0, function* () {
+                // add simulated delay if requested
+                if (options.simulatedLatency) {
+                    yield delay(options.simulatedLatency);
+                }
                 handler(augmentExpressRequest(request, options.context), augmentExpressResponse(response), next);
-            });
+            }));
         });
         // create schema endpoint (so /group/path schema is available at GET /schema/group/path)
         if (route.group !== "") {
@@ -505,5 +508,10 @@ function getRouteName(filename) {
 function getRouteWithoutParameters(route) {
     const tokens = route.split(/\//);
     return tokens.filter(token => token.substring(0, 1) !== ":").join("/");
+}
+function delay(ms = 0) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    });
 }
 //# sourceMappingURL=index.js.map

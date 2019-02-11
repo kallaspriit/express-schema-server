@@ -140,4 +140,32 @@ describe("express-schema-server", () => {
         ]);
     }));
 });
+// these tests initiate their own app
+describe("express-schema-server", () => {
+    it("should accept optional logger", () => __awaiter(this, void 0, void 0, function* () {
+        const myLogger = {
+            trace: jest.fn(),
+            debug: jest.fn(),
+            info: jest.fn(),
+            warn: jest.fn(),
+            error: jest.fn(),
+        };
+        app = supertest(yield app_1.default({
+            log: myLogger,
+        }));
+        // @ts-ignore
+        expect(myLogger.info.mock.calls).toMatchSnapshot();
+    }));
+    it("should accept and apply optional simulated latency", () => __awaiter(this, void 0, void 0, function* () {
+        app = supertest(yield app_1.default({
+            simulatedLatency: 100,
+        }));
+        const startTime = Date.now();
+        const getResponse = yield app.get("/users").send();
+        const timeTaken = Date.now() - startTime;
+        expect(getResponse.status).toEqual(HttpStatus.OK);
+        expect(getResponse.body).toMatchSnapshot();
+        expect(timeTaken).toBeGreaterThanOrEqual(100);
+    }));
+});
 //# sourceMappingURL=index.test.js.map

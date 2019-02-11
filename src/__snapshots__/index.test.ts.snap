@@ -1083,3 +1083,72 @@ Object {
   "isValid": false,
 }
 `;
+
+exports[`express-schema-server should accept and apply optional simulated latency 1`] = `
+Object {
+  "error": null,
+  "payload": Object {
+    "itemCount": 0,
+    "items": Array [],
+    "itemsPerPage": 3,
+    "page": 1,
+    "pageCount": 0,
+  },
+  "success": true,
+  "validationErrors": Array [],
+}
+`;
+
+exports[`express-schema-server should accept optional logger 1`] = `
+Array [
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/",
+      "method": "get",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/auth/login",
+      "method": "get",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/test/custom-error",
+      "method": "get",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/test/invalid-success",
+      "method": "get",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/users/:id",
+      "method": "get",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/users",
+      "method": "post",
+    },
+  ],
+  Array [
+    "register endpoint",
+    Object {
+      "endpoint": "/users",
+      "method": "get",
+    },
+  ],
+]
+`;
