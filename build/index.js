@@ -72,6 +72,7 @@ function expressSchemaServer(options) {
     });
     // sort the routes in a way that routes with parameters come later
     sortRoutes(routes);
+    log.info("sorted routes", routes.map(route => ({ group: route.group, path: route.path })));
     // register dynamic routes
     routes.forEach(route => {
         // type safe method name
@@ -359,22 +360,29 @@ function sortRoutes(routes) {
         if (!isSameGroup) {
             return routeA.group.localeCompare(routeB.group);
         }
+        const pathA = routeA.path.length > 0 ? routeA.path : "/";
+        const pathB = routeB.path.length > 0 ? routeB.path : "/";
         // sort by slash count if not the same (routes with more slashes to the front)
-        const slashCountA = routeA.path.split("/").length - 1;
-        const slashCountB = routeB.path.split("/").length - 1;
+        const slashCountA = pathA.split("/").length - 1;
+        const slashCountB = pathB.split("/").length - 1;
         const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
+        // sort by slash count if different
         if (slashResult !== 0) {
             return slashResult;
         }
         // sort by parameter count if not the same (routes with more parameters to the end)
-        const parameterCountA = routeA.path.split(":").length - 1;
-        const parameterCountB = routeB.path.split(":").length - 1;
+        const parameterCountA = pathA.split(":").length - 1;
+        const parameterCountB = pathB.split(":").length - 1;
         const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
+        // sort by parameter count if different
         if (parameterResult !== 0) {
             return parameterResult;
         }
-        // don't change the order
-        return 0;
+        // build combined paths
+        const endpointA = `${routeA.group}/${routeA.path}`;
+        const endpointB = `${routeB.group}/${routeB.path}`;
+        // sort by endpoint
+        return endpointA.localeCompare(endpointB);
     })
         // then sort by group name
         .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));

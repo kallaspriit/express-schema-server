@@ -123,21 +123,42 @@ describe("express-schema-server", () => {
             { group: "users", path: "/" },
             { group: "users", path: "/:id" },
             { group: "users", path: "/deleted" },
-            { group: "admins", path: "/" },
-            { group: "admins", path: "/:id" },
             { group: "admins", path: "/b" },
+            { group: "admins", path: "/:id" },
+            { group: "admins", path: "/" },
             { group: "admins", path: "/a" },
+            { group: "invites", path: "/" },
+            { group: "invites", path: "/:inviteId" },
+            { group: "invites", path: "/user/disable" },
+            { group: "invites", path: "" },
+            { group: "invites", path: "/users" },
+            { group: "invites", path: "/users/2" },
         ];
-        index_1.sortRoutes(routes);
-        expect(routes).toEqual([
+        const expectedResult = [
             { group: "admins", path: "/" },
-            { group: "admins", path: "/b" },
             { group: "admins", path: "/a" },
+            { group: "admins", path: "/b" },
             { group: "admins", path: "/:id" },
+            { group: "invites", path: "/user/disable" },
+            { group: "invites", path: "/users/2" },
+            { group: "invites", path: "" },
+            { group: "invites", path: "/" },
+            { group: "invites", path: "/users" },
+            { group: "invites", path: "/:inviteId" },
             { group: "users", path: "/" },
             { group: "users", path: "/deleted" },
             { group: "users", path: "/:id" },
-        ]);
+        ];
+        // test provided order
+        const sortA = [...routes];
+        index_1.sortRoutes(sortA);
+        // console.log("EXPECTED", JSON.stringify(expectedResult, null, "  "));
+        // console.log("RESULT A", JSON.stringify(sortA, null, "  "));
+        expect(sortA).toEqual(expectedResult);
+        // test with inverted input
+        const sortB = [...routes].reverse();
+        index_1.sortRoutes(sortB);
+        expect(sortB).toEqual(expectedResult);
     }));
 });
 // these tests initiate their own app

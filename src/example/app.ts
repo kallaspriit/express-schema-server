@@ -54,6 +54,7 @@ export default async function setupApp(
         description: "Provides example functionality",
         version: "1.0.0",
       },
+      // log: console,
       ...overrideOptions,
     }),
   );
