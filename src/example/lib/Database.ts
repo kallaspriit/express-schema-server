@@ -32,13 +32,17 @@ export default class Database<T extends DatabaseItem> {
   }
 
   // fetches items by any of the properties
-  async getWhere(field: keyof T, value: any): Promise<T | undefined> {
-    return this.items.find(item => item[field] === value);
+  async getWhere(field: keyof T, value: unknown): Promise<T | undefined> {
+    return this.items.find((item) => item[field] === value);
   }
 
   // fetches items by any of the properties
-  async getPaginated(paginationOptions: PaginationOptions, field?: keyof T, value?: any): Promise<PaginationResult<T>> {
-    const filteredItems = field ? this.items.filter(item => item[field] === value) : this.items;
+  async getPaginated(
+    paginationOptions: PaginationOptions,
+    field?: keyof T,
+    value?: unknown,
+  ): Promise<PaginationResult<T>> {
+    const filteredItems = field ? this.items.filter((item) => item[field] === value) : this.items;
     const count = filteredItems.length;
     const startIndex = (paginationOptions.page - 1) * paginationOptions.itemsPerPage;
     const items = filteredItems.slice(startIndex, startIndex + paginationOptions.itemsPerPage);

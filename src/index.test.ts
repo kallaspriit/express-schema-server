@@ -231,8 +231,8 @@ describe("express-schema-server", () => {
       }),
     );
 
-    // @ts-ignore
-    expect(myLogger.info.mock.calls).toMatchSnapshot();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((myLogger.info as any).mock.calls).toMatchSnapshot();
   });
 
   it("should accept and apply optional simulated latency", async () => {

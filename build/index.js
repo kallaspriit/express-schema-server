@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.combineMessages = exports.getPaginationPageOptions = exports.sortRoutes = exports.getRoutes = exports.buildPaginatedResponseSchema = exports.buildResponseSchema = exports.validateJsonSchema = exports.buildRoutePath = exports.getRouteSchema = exports.schemaMiddleware = exports.paginationOptionsSchema = exports.InvalidApiResponseError = exports.DetailedError = void 0;
+const path = require("path");
 const express_1 = require("express");
 const glob = require("glob");
 const HttpStatus = require("http-status-codes");
 const normalize_type_1 = require("normalize-type");
-const path = require("path");
 const ts_log_1 = require("ts-log");
 const zSchema = require("z-schema");
 class DetailedError extends Error {
@@ -65,7 +65,7 @@ function expressSchemaServer(options) {
     // create router
     const router = express_1.Router();
     // map route sources to route descriptors
-    const routes = options.routes.map(routeSource => {
+    const routes = options.routes.map((routeSource) => {
         // setup the route to get the route definition
         const routeDefinition = routeSource.setup();
         // build route info
@@ -74,9 +74,9 @@ function expressSchemaServer(options) {
     });
     // sort the routes in a way that routes with parameters come later
     sortRoutes(routes);
-    log.info("sorted routes", routes.map(route => ({ group: route.group, path: route.path })));
+    log.info("sorted routes", routes.map((route) => ({ group: route.group, path: route.path })));
     // register dynamic routes
-    routes.forEach(route => {
+    routes.forEach((route) => {
         // type safe method name
         const method = route.method !== undefined ? route.method : "get";
         // handler can be either a single handler function or array of handlers, treat it always as an array
@@ -87,7 +87,7 @@ function expressSchemaServer(options) {
             endpoint,
         });
         // register the handlers
-        handlers.forEach(handler => {
+        handlers.forEach((handler) => {
             router[method](endpoint, (request, response, next) => __awaiter(this, void 0, void 0, function* () {
                 // add simulated delay if requested
                 if (typeof options.simulatedLatency === "number" && options.simulatedLatency > 0) {
@@ -113,7 +113,7 @@ function schemaMiddleware(metadata, routes) {
     return (request, response, _next) => {
         const schema = {
             metadata,
-            routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
+            routes: routes.map((route) => getRouteSchema(route, request.baseUrl)),
         };
         response.send(schema);
     };
@@ -160,7 +160,7 @@ function buildRoutePath(components) {
 exports.buildRoutePath = buildRoutePath;
 function validateJsonSchema(data, schema, customValidators) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, _reject) => {
+        return new Promise((resolve) => {
             // https://github.com/zaggino/z-schema#options
             const validator = new zSchema({
                 // noTypeless: true,
@@ -171,12 +171,12 @@ function validateJsonSchema(data, schema, customValidators) {
             });
             // register custom validators if requested
             if (Array.isArray(customValidators)) {
-                customValidators.forEach(customValidator => {
+                customValidators.forEach((customValidator) => {
                     const formatValidator = (value, validationCallback) => {
                         customValidator
                             .validate(value)
                             .then(validationCallback)
-                            .catch(_e => validationCallback(false));
+                            .catch((_e) => validationCallback(false));
                     };
                     // "as.." is needed because the type definitions is missing the callback signature
                     zSchema.registerFormat(customValidator.name, formatValidator);
@@ -185,7 +185,7 @@ function validateJsonSchema(data, schema, customValidators) {
             validator.validate(data, schema, (errors, isValid) => {
                 // unregister added validators
                 if (Array.isArray(customValidators)) {
-                    customValidators.forEach(customValidator => {
+                    customValidators.forEach((customValidator) => {
                         zSchema.unregisterFormat(customValidator.name);
                     });
                 }
@@ -332,7 +332,7 @@ function getRoutes(baseDirectory, filePattern = "**/!(*.spec|*.test|*.d).+(js|ts
                     reject(error);
                     return;
                 }
-                const routes = filenames.map(filename => ({
+                const routes = filenames.map((filename) => ({
                     group: getRouteGroup(filename, baseDirectory),
                     name: getRouteName(filename),
                     filename,
@@ -458,7 +458,7 @@ function combineMessages(messages) {
 }
 exports.combineMessages = combineMessages;
 function buildErrorMessage(validationErrors) {
-    const messages = validationErrors.map(error => {
+    const messages = validationErrors.map((error) => {
         const formattedPath = formatJsonPath(error.path);
         return `${formattedPath.length > 0 ? `${formattedPath}: ` : ""}${lowerCaseFirst(error.message)}`;
     });
@@ -544,11 +544,11 @@ function getRouteName(filename) {
 }
 function getRouteWithoutParameters(route) {
     const tokens = route.split(/\//);
-    return tokens.filter(token => token.substring(0, 1) !== ":").join("/");
+    return tokens.filter((token) => token.substring(0, 1) !== ":").join("/");
 }
 function delay(ms = 0) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
     });
 }
 //# sourceMappingURL=index.js.map

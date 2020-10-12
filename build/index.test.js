@@ -191,7 +191,7 @@ describe("express-schema-server", () => {
         app = supertest(yield app_1.default({
             log: myLogger,
         }));
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         expect(myLogger.info.mock.calls).toMatchSnapshot();
     }));
     it("should accept and apply optional simulated latency", () => __awaiter(void 0, void 0, void 0, function* () {

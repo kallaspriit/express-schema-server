@@ -31,13 +31,13 @@ class Database {
     // fetches items by any of the properties
     getWhere(field, value) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.items.find(item => item[field] === value);
+            return this.items.find((item) => item[field] === value);
         });
     }
     // fetches items by any of the properties
     getPaginated(paginationOptions, field, value) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filteredItems = field ? this.items.filter(item => item[field] === value) : this.items;
+            const filteredItems = field ? this.items.filter((item) => item[field] === value) : this.items;
             const count = filteredItems.length;
             const startIndex = (paginationOptions.page - 1) * paginationOptions.itemsPerPage;
             const items = filteredItems.slice(startIndex, startIndex + paginationOptions.itemsPerPage);

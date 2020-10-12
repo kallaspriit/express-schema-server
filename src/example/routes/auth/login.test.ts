@@ -11,10 +11,7 @@ describe("authentication", () => {
   });
 
   it("should return logged in user message", async () => {
-    const response = await app
-      .get("/auth/login")
-      .auth("jack", "daniels")
-      .send();
+    const response = await app.get("/auth/login").auth("jack", "daniels").send();
 
     expect(response.status).toEqual(HttpStatus.OK);
     expect(response.body.success).toBe(true);

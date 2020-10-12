@@ -1,9 +1,9 @@
+import * as path from "path";
 import { Application, NextFunction, Request, RequestHandler, Response, Router } from "express";
 import * as glob from "glob";
 import * as HttpStatus from "http-status-codes";
 import { JSONSchema4 } from "json-schema";
 import normalizeType from "normalize-type";
-import * as path from "path";
 import { dummyLogger, Logger } from "ts-log";
 import * as zSchema from "z-schema";
 
@@ -69,7 +69,7 @@ export interface RouteResponsePayload<T> {
   success: boolean;
   error: string | null;
   validationErrors: zSchema.SchemaErrorDetail[];
-  [x: string]: any; // can include additional info for errors
+  [x: string]: unknown; // can include additional info for errors
 }
 
 export type RouteRequest<Context> = Request & Context;
@@ -114,9 +114,10 @@ export interface JsonSchemaServerOptions<Context> {
 }
 
 export interface ErrorDetails {
-  [x: string]: any;
+  [x: string]: unknown;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CustomValidatorFn = (value: any) => Promise<boolean>;
 
 export interface CustomValidator {
@@ -143,7 +144,7 @@ export interface PaginationOptions {
 }
 
 export interface ObjectLiteral {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class DetailedError extends Error {
@@ -155,7 +156,7 @@ export class DetailedError extends Error {
 // tslint:disable-next-line:max-classes-per-file
 export class InvalidApiResponseError extends DetailedError {
   constructor(
-    responseData: RouteResponsePayload<any>,
+    responseData: RouteResponsePayload<unknown>,
     responseSchema: JSONSchema4,
     validationErrors: zSchema.SchemaErrorDetail[],
   ) {
@@ -201,7 +202,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
   const router = Router();
 
   // map route sources to route descriptors
-  const routes: RouteDescriptor<TContext>[] = options.routes.map(routeSource => {
+  const routes: RouteDescriptor<TContext>[] = options.routes.map((routeSource) => {
     // setup the route to get the route definition
     const routeDefinition = routeSource.setup();
 
@@ -219,11 +220,11 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
 
   log.info(
     "sorted routes",
-    routes.map(route => ({ group: route.group, path: route.path })),
+    routes.map((route) => ({ group: route.group, path: route.path })),
   );
 
   // register dynamic routes
-  routes.forEach(route => {
+  routes.forEach((route) => {
     // type safe method name
     const method: keyof Application = route.method !== undefined ? route.method : "get";
 
@@ -238,7 +239,7 @@ export default function expressSchemaServer<TContext>(options: JsonSchemaServerO
     });
 
     // register the handlers
-    handlers.forEach(handler => {
+    handlers.forEach((handler) => {
       router[method](endpoint, async (request, response, next) => {
         // add simulated delay if requested
         if (typeof options.simulatedLatency === "number" && options.simulatedLatency > 0) {
@@ -272,7 +273,7 @@ export function schemaMiddleware<Context>(
   return (request: Request, response: Response, _next: NextFunction) => {
     const schema: Schema = {
       metadata,
-      routes: routes.map(route => getRouteSchema(route, request.baseUrl)),
+      routes: routes.map((route) => getRouteSchema(route, request.baseUrl)),
     };
 
     response.send(schema);
@@ -326,11 +327,11 @@ export function buildRoutePath(components: string[]): string {
 }
 
 export async function validateJsonSchema(
-  data: any,
+  data: unknown,
   schema: JSONSchema4,
   customValidators?: CustomValidator[],
 ): Promise<JsonSchemaValidationResult> {
-  return new Promise<JsonSchemaValidationResult>((resolve, _reject) => {
+  return new Promise<JsonSchemaValidationResult>((resolve) => {
     // https://github.com/zaggino/z-schema#options
     const validator = new zSchema({
       // noTypeless: true,
@@ -342,23 +343,23 @@ export async function validateJsonSchema(
 
     // register custom validators if requested
     if (Array.isArray(customValidators)) {
-      customValidators.forEach(customValidator => {
-        const formatValidator = (value: any, validationCallback: (isValid: boolean) => void) => {
+      customValidators.forEach((customValidator) => {
+        const formatValidator = (value: unknown, validationCallback: (isValid: boolean) => void) => {
           customValidator
             .validate(value)
             .then(validationCallback)
-            .catch(_e => validationCallback(false));
+            .catch((_e) => validationCallback(false));
         };
 
         // "as.." is needed because the type definitions is missing the callback signature
-        zSchema.registerFormat(customValidator.name, formatValidator as (value: any) => boolean);
+        zSchema.registerFormat(customValidator.name, formatValidator as (value: unknown) => boolean);
       });
     }
 
     validator.validate(data, schema, (errors, isValid) => {
       // unregister added validators
       if (Array.isArray(customValidators)) {
-        customValidators.forEach(customValidator => {
+        customValidators.forEach((customValidator) => {
           zSchema.unregisterFormat(customValidator.name);
         });
       }
@@ -511,7 +512,7 @@ export async function getRoutes<Context>(
         return;
       }
 
-      const routes: RouteSource<Context>[] = filenames.map(filename => ({
+      const routes: RouteSource<Context>[] = filenames.map((filename) => ({
         group: getRouteGroup(filename, baseDirectory),
         name: getRouteName(filename),
         filename,
@@ -622,7 +623,7 @@ export function sortRoutes(routes: SortableRoute[]) {
   // .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));
 }
 
-export function getPaginationPageOptions(query: any, defaultItemsPerPage = 10): PaginationOptions {
+export function getPaginationPageOptions(query: unknown, defaultItemsPerPage = 10): PaginationOptions {
   const options = normalizeType<PaginationOptionsPartial>(query);
 
   return {
@@ -673,7 +674,7 @@ export function combineMessages(messages: string[]): string {
 }
 
 function buildErrorMessage(validationErrors: zSchema.SchemaErrorDetail[]) {
-  const messages = validationErrors.map(error => {
+  const messages = validationErrors.map((error) => {
     const formattedPath = formatJsonPath(error.path);
 
     return `${formattedPath.length > 0 ? `${formattedPath}: ` : ""}${lowerCaseFirst(error.message)}`;
@@ -802,9 +803,9 @@ function getRouteName(filename: string): string {
 function getRouteWithoutParameters(route: string): string {
   const tokens = route.split(/\//);
 
-  return tokens.filter(token => token.substring(0, 1) !== ":").join("/");
+  return tokens.filter((token) => token.substring(0, 1) !== ":").join("/");
 }
 
 async function delay(ms = 0): Promise<void> {
-  return new Promise<void>(resolve => setTimeout(resolve, ms));
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }

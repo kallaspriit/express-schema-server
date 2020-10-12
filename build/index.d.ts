@@ -54,7 +54,7 @@ export interface RouteResponsePayload<T> {
     success: boolean;
     error: string | null;
     validationErrors: zSchema.SchemaErrorDetail[];
-    [x: string]: any;
+    [x: string]: unknown;
 }
 export declare type RouteRequest<Context> = Request & Context;
 export interface RouteResponse extends Response {
@@ -77,7 +77,7 @@ export interface JsonSchemaServerOptions<Context> {
     simulatedLatency?: number;
 }
 export interface ErrorDetails {
-    [x: string]: any;
+    [x: string]: unknown;
 }
 export declare type CustomValidatorFn = (value: any) => Promise<boolean>;
 export interface CustomValidator {
@@ -100,24 +100,24 @@ export interface PaginationOptions {
     itemsPerPage: number;
 }
 export interface ObjectLiteral {
-    [key: string]: any;
+    [key: string]: unknown;
 }
 export declare class DetailedError extends Error {
     details: ErrorDetails | null;
     constructor(message: string, details?: ErrorDetails | null);
 }
 export declare class InvalidApiResponseError extends DetailedError {
-    constructor(responseData: RouteResponsePayload<any>, responseSchema: JSONSchema4, validationErrors: zSchema.SchemaErrorDetail[]);
+    constructor(responseData: RouteResponsePayload<unknown>, responseSchema: JSONSchema4, validationErrors: zSchema.SchemaErrorDetail[]);
 }
 export declare const paginationOptionsSchema: JSONSchema4;
 export default function expressSchemaServer<TContext>(options: JsonSchemaServerOptions<TContext>): Router;
 export declare function schemaMiddleware<Context>(metadata: SchemaMetadata, routes: RouteDescriptor<Context>[]): RequestHandler;
 export declare function getRouteSchema<Context>(route: RouteDescriptor<Context>, baseUrl: string): RouteSchema;
 export declare function buildRoutePath(components: string[]): string;
-export declare function validateJsonSchema(data: any, schema: JSONSchema4, customValidators?: CustomValidator[]): Promise<JsonSchemaValidationResult>;
+export declare function validateJsonSchema(data: unknown, schema: JSONSchema4, customValidators?: CustomValidator[]): Promise<JsonSchemaValidationResult>;
 export declare function buildResponseSchema(payloadSchema: JSONSchema4): JSONSchema4;
 export declare function buildPaginatedResponseSchema(payloadSchema: JSONSchema4, maximumItemsPerPage?: number): JSONSchema4;
 export declare function getRoutes<Context>(baseDirectory: string, filePattern?: string): Promise<RouteSource<Context>[]>;
 export declare function sortRoutes(routes: SortableRoute[]): void;
-export declare function getPaginationPageOptions(query: any, defaultItemsPerPage?: number): PaginationOptions;
+export declare function getPaginationPageOptions(query: unknown, defaultItemsPerPage?: number): PaginationOptions;
 export declare function combineMessages(messages: string[]): string;

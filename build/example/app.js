@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
 const bodyParser = require("body-parser");
 const express = require("express");
-const path = require("path");
 const __1 = require("../");
 const Database_1 = require("./lib/Database");
 // use a async function to be able to use async/await

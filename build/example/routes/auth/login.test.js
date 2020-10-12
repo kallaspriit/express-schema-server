@@ -18,10 +18,7 @@ describe("authentication", () => {
         app = supertest(yield app_1.default());
     }));
     it("should return logged in user message", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield app
-            .get("/auth/login")
-            .auth("jack", "daniels")
-            .send();
+        const response = yield app.get("/auth/login").auth("jack", "daniels").send();
         expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body.success).toBe(true);
         expect(response.body.payload).toMatchSnapshot();
