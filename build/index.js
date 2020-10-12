@@ -1,13 +1,15 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.combineMessages = exports.getPaginationPageOptions = exports.sortRoutes = exports.getRoutes = exports.buildPaginatedResponseSchema = exports.buildResponseSchema = exports.validateJsonSchema = exports.buildRoutePath = exports.getRouteSchema = exports.schemaMiddleware = exports.paginationOptionsSchema = exports.InvalidApiResponseError = exports.DetailedError = void 0;
 const express_1 = require("express");
 const glob = require("glob");
 const HttpStatus = require("http-status-codes");
@@ -67,7 +69,7 @@ function expressSchemaServer(options) {
         // setup the route to get the route definition
         const routeDefinition = routeSource.setup();
         // build route info
-        const route = Object.assign({}, routeSource, routeDefinition);
+        const route = Object.assign(Object.assign({}, routeSource), routeDefinition);
         return route;
     });
     // sort the routes in a way that routes with parameters come later
@@ -360,32 +362,59 @@ function sortRoutes(routes) {
         if (!isSameGroup) {
             return routeA.group.localeCompare(routeB.group);
         }
+        // return 0;
         const pathA = routeA.path.length > 0 ? routeA.path : "/";
         const pathB = routeB.path.length > 0 ? routeB.path : "/";
-        // sort by slash count if not the same (routes with more slashes to the front)
-        const slashCountA = pathA.split("/").length - 1;
-        const slashCountB = pathB.split("/").length - 1;
-        const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
-        // sort by slash count if different
-        if (slashResult !== 0) {
-            return slashResult;
-        }
         // sort by parameter count if not the same (routes with more parameters to the end)
         const parameterCountA = pathA.split(":").length - 1;
         const parameterCountB = pathB.split(":").length - 1;
         const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
-        // sort by parameter count if different
         if (parameterResult !== 0) {
             return parameterResult;
         }
-        // build combined paths
+        // sort by slash count if not the same (routes with more slashes to the front)
+        const slashCountA = pathA.split("/").length - 1;
+        const slashCountB = pathB.split("/").length - 1;
+        const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
+        if (slashResult !== 0) {
+            return slashResult;
+        }
         const endpointA = `${routeA.group}/${routeA.path}`;
         const endpointB = `${routeB.group}/${routeB.path}`;
         // sort by endpoint
         return endpointA.localeCompare(endpointB);
-    })
-        // then sort by group name
-        .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));
+    });
+    // routes.sort((routeA, routeB) => {
+    //   const isSameGroup = routeA.group === routeB.group;
+    //   if (!isSameGroup) {
+    //     return 0;
+    //   }
+    //   const pathA = routeA.path.length > 0 ? routeA.path : "/";
+    //   const pathB = routeB.path.length > 0 ? routeB.path : "/";
+    //   // sort by parameter count if not the same (routes with more parameters to the end)
+    //   const parameterCountA = pathA.split(":").length - 1;
+    //   const parameterCountB = pathB.split(":").length - 1;
+    //   const parameterResult = parameterCountA > parameterCountB ? 1 : parameterCountA < parameterCountB ? -1 : 0;
+    //   return parameterResult;
+    // });
+    // .sort((routeA, routeB) => {
+    //   const pathA = routeA.path.length > 0 ? routeA.path : "/";
+    //   const pathB = routeB.path.length > 0 ? routeB.path : "/";
+    //   // sort by slash count if not the same (routes with more slashes to the front)
+    //   const slashCountA = pathA.split("/").length - 1;
+    //   const slashCountB = pathB.split("/").length - 1;
+    //   const slashResult = slashCountA > slashCountB ? -1 : slashCountA < slashCountB ? 1 : 0;
+    //   return slashResult;
+    // })
+    // .sort((routeA, routeB) => {
+    //   // build combined paths
+    //   const endpointA = `${routeA.group}/${routeA.path}`;
+    //   const endpointB = `${routeB.group}/${routeB.path}`;
+    //   // sort by endpoint
+    //   return endpointA.localeCompare(endpointB);
+    // });
+    // then sort by group name
+    // .sort((routeA, routeB) => routeA.group.localeCompare(routeB.group));
 }
 exports.sortRoutes = sortRoutes;
 function getPaginationPageOptions(query, defaultItemsPerPage = 10) {

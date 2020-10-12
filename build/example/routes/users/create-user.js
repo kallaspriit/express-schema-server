@@ -1,13 +1,15 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.responseSchema = exports.requestSchema = void 0;
 const normalize_type_1 = require("normalize-type");
 const __1 = require("../../../");
 const user_schema_1 = require("../../schemas/user-schema");
@@ -54,7 +56,7 @@ exports.default = () => ({
     },
     requestSchema: exports.requestSchema,
     responseSchema: exports.responseSchema,
-    handler: (request, response, _next) => __awaiter(this, void 0, void 0, function* () {
+    handler: (request, response, _next) => __awaiter(void 0, void 0, void 0, function* () {
         const requestData = normalize_type_1.normalizeType(request.body);
         const validators = [validateUniqueEmail_1.default(request.db.user)];
         const validationResult = yield __1.validateJsonSchema(requestData, exports.requestSchema, validators);

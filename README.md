@@ -27,13 +27,13 @@ npm install express-schema-server
 
 ## Commands
 
-- `yarn build` to build the production version.
-- `yarn test` to run tests.
-- `yarn lint` to lint the codebase.
-- `yarn start` to start the example application.
-- `yarn debug` to start the example application in debug mode (`--inspect`).
-- `yarn coverage` to gather code coverage.
-- `yarn prettier` to run prettier.
+- `npm run build` to build the production version.
+- `npm run test` to run tests.
+- `npm run lint` to lint the codebase.
+- `npm run start` to start the example application.
+- `npm run debug` to start the example application in debug mode (`--inspect`).
+- `npm run coverage` to gather code coverage.
+- `npm run prettier` to run prettier.
 
 ## Example
 
@@ -42,11 +42,11 @@ See `src/example` directory for a full working example code and run `npm start` 
 Following is an example route for [creating a new user](https://github.com/kallaspriit/express-schema-server/blob/master/src/example/routes/users/create-user.ts).
 
 ```typescript
-import {normalizeType} from 'normalize-type';
-import {buildResponseSchema, ICustomValidator, IRouteDefinition, JSONSchema4, validateJsonSchema} from '../../../';
-import {IServerContext} from '../../app';
-import validateUniqueEmail from '../../validators/validateUniqueEmail';
-import {IUser, transformUser, userSchema} from './users';
+import { normalizeType } from "normalize-type";
+import { buildResponseSchema, ICustomValidator, IRouteDefinition, JSONSchema4, validateJsonSchema } from "../../../";
+import { IServerContext } from "../../app";
+import validateUniqueEmail from "../../validators/validateUniqueEmail";
+import { IUser, transformUser, userSchema } from "./users";
 
 export interface CreateUserRequest {
   name: string;
@@ -54,45 +54,45 @@ export interface CreateUserRequest {
 }
 
 export const requestSchema: JSONSchema4 = {
-  title: 'Create user',
-  description: 'Create a new user account',
-  type: 'object',
+  title: "Create user",
+  description: "Create a new user account",
+  type: "object",
   properties: {
     name: {
-      type: 'string',
-      title: 'Name',
-      description: 'User name',
+      type: "string",
+      title: "Name",
+      description: "User name",
       minLength: 3,
       maxLength: 100,
     },
     email: {
-      type: 'string',
-      title: 'Email',
-      description: 'Email address',
+      type: "string",
+      title: "Email",
+      description: "Email address",
       minLength: 3,
       maxLength: 256,
       allOf: [
         {
-          format: 'email',
+          format: "email",
         },
         {
-          format: 'unique-email',
+          format: "unique-email",
         },
       ],
     },
   },
-  required: ['name', 'email'],
+  required: ["name", "email"],
 };
 
 export const responseSchema: JSONSchema4 = buildResponseSchema(userSchema);
 
 export default (): IRouteDefinition<IServerContext> => ({
-  path: '',
-  method: 'post',
+  path: "",
+  method: "post",
   metadata: {
-    title: 'Register user',
-    description: 'Register a new user account',
-    sinceVersion: '1.0.0',
+    title: "Register user",
+    description: "Register a new user account",
+    sinceVersion: "1.0.0",
     isDeprecated: false,
   },
   requestSchema,

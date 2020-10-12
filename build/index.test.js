@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -51,56 +52,56 @@ function validateThrowsError() {
     };
 }
 describe("express-schema-server", () => {
-    beforeEach(() => __awaiter(this, void 0, void 0, function* () {
+    beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         app = supertest(yield app_1.default());
     }));
-    it("provides schema endpoint for all endpoints", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides schema endpoint for all endpoints", () => __awaiter(void 0, void 0, void 0, function* () {
         const getResponse = yield app.get("/schema").send();
         expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));
-    it("provides schema endpoint for specific endpoints", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides schema endpoint for specific endpoints", () => __awaiter(void 0, void 0, void 0, function* () {
         const getResponse = yield app.get("/schema/users/post").send();
         expect(getResponse.status).toEqual(HttpStatus.OK);
         expect(getResponse.body).toMatchSnapshot();
     }));
-    it("performs valid json schema validation", () => __awaiter(this, void 0, void 0, function* () {
+    it("performs valid json schema validation", () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
             name: "Jack Daniels",
         };
         const validationResult = yield index_1.validateJsonSchema(data, normalSchema);
         expect(validationResult).toMatchSnapshot();
     }));
-    it("performs invalid json schema validation", () => __awaiter(this, void 0, void 0, function* () {
+    it("performs invalid json schema validation", () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
             name: "J",
         };
         const validationResult = yield index_1.validateJsonSchema(data, normalSchema);
         expect(validationResult).toMatchSnapshot();
     }));
-    it("schema validation fails if missing validator", () => __awaiter(this, void 0, void 0, function* () {
+    it("schema validation fails if missing validator", () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
             name: "Jack Daniels",
         };
         const validationResult = yield index_1.validateJsonSchema(data, errorSchema, [validateThrowsError()]);
         expect(validationResult).toMatchSnapshot();
     }));
-    it("provides detailed error class", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides detailed error class", () => __awaiter(void 0, void 0, void 0, function* () {
         const error = new index_1.DetailedError("Message", { foo: "bar" });
         expect(error).toMatchSnapshot();
     }));
-    it("provides detailed error class, details are optional", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides detailed error class, details are optional", () => __awaiter(void 0, void 0, void 0, function* () {
         const error = new index_1.DetailedError("Message");
         expect(error).toMatchSnapshot();
     }));
-    it("provides helper for pagination page options", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides helper for pagination page options", () => __awaiter(void 0, void 0, void 0, function* () {
         const options = index_1.getPaginationPageOptions({
             page: "2",
             itemsPerPage: "5",
         });
         expect(options).toMatchSnapshot();
     }));
-    it("provides helper for pagination page options, one can specify default items per page", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides helper for pagination page options, one can specify default items per page", () => __awaiter(void 0, void 0, void 0, function* () {
         const defaultItemsPerPage = 5;
         const options = index_1.getPaginationPageOptions({
             page: "2",
@@ -108,7 +109,7 @@ describe("express-schema-server", () => {
         }, defaultItemsPerPage);
         expect(options).toMatchSnapshot();
     }));
-    it("provides helper for combining messages", () => __awaiter(this, void 0, void 0, function* () {
+    it("provides helper for combining messages", () => __awaiter(void 0, void 0, void 0, function* () {
         const message1 = index_1.combineMessages([]);
         const message2 = index_1.combineMessages(["Test1"]);
         const message3 = index_1.combineMessages(["Test1", "Test2"]);
@@ -118,22 +119,38 @@ describe("express-schema-server", () => {
         expect(message3).toMatchSnapshot();
         expect(message4).toMatchSnapshot();
     }));
-    it("sorts routes correctly", () => __awaiter(this, void 0, void 0, function* () {
+    it("sorts routes correctly", () => __awaiter(void 0, void 0, void 0, function* () {
         const routes = [
+            { group: "invites", path: "/:inviteId" },
+            { group: "admins", path: "/" },
             { group: "users", path: "/" },
             { group: "users", path: "/:id" },
             { group: "users", path: "/deleted" },
             { group: "admins", path: "/b" },
-            { group: "admins", path: "/:id" },
-            { group: "admins", path: "/" },
-            { group: "admins", path: "/a" },
             { group: "invites", path: "/" },
-            { group: "invites", path: "/:inviteId" },
+            { group: "admins", path: "/:id" },
+            { group: "invites", path: "/users" },
+            { group: "admins", path: "/a" },
             { group: "invites", path: "/user/disable" },
             { group: "invites", path: "" },
-            { group: "invites", path: "/users" },
             { group: "invites", path: "/users/2" },
         ];
+        // TODO: ideally we'd like to see this
+        // const expectedResult = [
+        //   { group: "admins", path: "/a" },
+        //   { group: "admins", path: "/b" },
+        //   { group: "admins", path: "/" },
+        //   { group: "admins", path: "/:id" },
+        //   { group: "invites", path: "/user/disable" },
+        //   { group: "invites", path: "/users/2" },
+        //   { group: "invites", path: "/users" },
+        //   { group: "invites", path: "/" },
+        //   { group: "invites", path: "" },
+        //   { group: "invites", path: "/:inviteId" },
+        //   { group: "users", path: "/deleted" },
+        //   { group: "users", path: "/" },
+        //   { group: "users", path: "/:id" },
+        // ];
         const expectedResult = [
             { group: "admins", path: "/" },
             { group: "admins", path: "/a" },
@@ -163,7 +180,7 @@ describe("express-schema-server", () => {
 });
 // these tests initiate their own app
 describe("express-schema-server", () => {
-    it("should accept optional logger", () => __awaiter(this, void 0, void 0, function* () {
+    it("should accept optional logger", () => __awaiter(void 0, void 0, void 0, function* () {
         const myLogger = {
             trace: jest.fn(),
             debug: jest.fn(),
@@ -177,7 +194,7 @@ describe("express-schema-server", () => {
         // @ts-ignore
         expect(myLogger.info.mock.calls).toMatchSnapshot();
     }));
-    it("should accept and apply optional simulated latency", () => __awaiter(this, void 0, void 0, function* () {
+    it("should accept and apply optional simulated latency", () => __awaiter(void 0, void 0, void 0, function* () {
         app = supertest(yield app_1.default({
             simulatedLatency: 100,
         }));

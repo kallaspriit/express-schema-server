@@ -1,24 +1,24 @@
 {
   "name": "express-schema-server",
-  "version": "3.7.1",
+  "version": "3.8.0",
   "description": "Middleware for describing and validating your REST API routes using JSON schemas.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "start": "ts-node src/example/index.ts",
-    "build": "yarn tidy:build && tsc",
+    "build": "npm run tidy:build && tsc",
     "production": "node build/example/index",
     "lint": "tslint --project tsconfig.json --format codeFrame",
-    "lint-fix": "yarn lint --fix",
+    "lint-fix": "npm run lint --fix",
     "prettier": "prettier --write src/**/*.ts",
-    "tidy": "yarn tidy:build && yarn tidy:coverage",
+    "tidy": "npm run tidy:build && npm run tidy:coverage",
     "tidy:build": "rimraf build",
     "tidy:coverage": "rimraf coverage",
     "test": "jest",
     "test-watch": "jest --watch --collectCoverage",
-    "coverage": "yarn tidy:coverage && jest --collectCoverage",
+    "coverage": "npm run tidy:coverage && jest --collectCoverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "validate": "yarn prettier && yarn build && yarn lint && yarn coverage"
+    "validate": "npm run prettier && npm run build && npm run lint && npm run coverage"
   },
   "repository": {
     "type": "git",

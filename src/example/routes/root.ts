@@ -22,9 +22,7 @@ export default (): RouteDefinition<ServerContext> => ({
       <h2>Schemas</h2>
       <ul>
         <li><a href="${request.baseUrl}/schema" target="schema-frame">json schema index for all endpoints</a></li>
-        <li><a href="${
-          request.baseUrl
-        }/schema/users/post" target="schema-frame">json schema example for a specific endpoint</a></li>
+        <li><a href="${request.baseUrl}/schema/users/post" target="schema-frame">json schema example for a specific endpoint</a></li>
       </ul>
       <iframe name="schema-frame" style="${iframeStyle}"></iframe>
 

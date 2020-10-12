@@ -152,20 +152,38 @@ describe("express-schema-server", () => {
 
   it("sorts routes correctly", async () => {
     const routes = [
+      { group: "invites", path: "/:inviteId" },
+      { group: "admins", path: "/" },
       { group: "users", path: "/" },
       { group: "users", path: "/:id" },
       { group: "users", path: "/deleted" },
       { group: "admins", path: "/b" },
-      { group: "admins", path: "/:id" },
-      { group: "admins", path: "/" },
-      { group: "admins", path: "/a" },
       { group: "invites", path: "/" },
-      { group: "invites", path: "/:inviteId" },
+      { group: "admins", path: "/:id" },
+      { group: "invites", path: "/users" },
+      { group: "admins", path: "/a" },
       { group: "invites", path: "/user/disable" },
       { group: "invites", path: "" },
-      { group: "invites", path: "/users" },
       { group: "invites", path: "/users/2" },
     ];
+
+    // TODO: ideally we'd like to see this
+    // const expectedResult = [
+    //   { group: "admins", path: "/a" },
+    //   { group: "admins", path: "/b" },
+    //   { group: "admins", path: "/" },
+    //   { group: "admins", path: "/:id" },
+    //   { group: "invites", path: "/user/disable" },
+    //   { group: "invites", path: "/users/2" },
+    //   { group: "invites", path: "/users" },
+    //   { group: "invites", path: "/" },
+    //   { group: "invites", path: "" },
+    //   { group: "invites", path: "/:inviteId" },
+    //   { group: "users", path: "/deleted" },
+    //   { group: "users", path: "/" },
+    //   { group: "users", path: "/:id" },
+    // ];
+
     const expectedResult = [
       { group: "admins", path: "/" },
       { group: "admins", path: "/a" },
